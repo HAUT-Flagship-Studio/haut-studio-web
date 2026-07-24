@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { useQuiz } from './QuizProvider'
 import LegalModal, { type LegalModalType } from './LegalModal'
 import { STUDIO } from '@/lib/data'
@@ -31,7 +32,15 @@ const FOOTER_LINKS = {
 
 export default function Footer() {
   const { openQuiz } = useQuiz()
+  const pathname = usePathname()
   const [legalModal, setLegalModal] = useState<LegalModalType>(null)
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
 
   return (
     <footer
@@ -76,7 +85,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 mb-6 w-fit group" aria-label="HAUT Flagship Studio Home">
+            <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 mb-6 w-fit group" aria-label="HAUT Flagship Studio Home">
               <Image
                 src="/assets/logo.png"
                 alt="HAUT"
