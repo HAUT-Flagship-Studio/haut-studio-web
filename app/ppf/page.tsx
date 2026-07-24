@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Hero from '@/components/Hero'
 import FilmSpecs from '@/components/FilmSpecs'
 import OurProcess from '@/components/OurProcess'
+import ProcessBanner from '@/components/ProcessBanner'
 import Packages from '@/components/Packages'
 import PricingMatrix from '@/components/PricingMatrix'
 import { PPF_PACKAGES, PPF_FEATURE_MATRIX } from '@/lib/data'
@@ -23,6 +24,17 @@ export default function PPFPage() {
       <FilmSpecs />
 
       <OurProcess />
+
+      <ProcessBanner
+        heading={
+          <>
+            Also See Our
+            <br />
+            <span className="text-[#9FFE0A]">Ceramic & Window Tint Process</span>
+          </>
+        }
+        subtitle="PPF is one of three services built around the same zero-blade, digital-precision philosophy. See the full step-by-step process for ceramic coating and window tinting too."
+      />
 
       <Packages packages={PPF_PACKAGES} />
 

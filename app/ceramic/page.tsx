@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import QuoteButton from '@/components/QuoteButton'
+import ProcessBanner from '@/components/ProcessBanner'
 import { CERAMIC_PACKAGE } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -127,6 +128,18 @@ export default function CeramicPage() {
           </div>
         </div>
       </section>
+
+      <ProcessBanner
+        eyebrow="How Ceramic Coating Is Applied"
+        heading={
+          <>
+            From Paint Correction
+            <br />
+            <span className="text-[#9FFE0A]">to Hydrophobic Cure</span>
+          </>
+        }
+        subtitle="Every ceramic coating application at HAUT follows a 4-step process — multi-stage paint correction, surface degreasing, dual-layer 9H application, and infrared curing. See the full breakdown alongside our PPF and window tint process."
+      />
     </main>
   )
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import PageHero from '@/components/PageHero'
 import Packages from '@/components/Packages'
 import PricingMatrix from '@/components/PricingMatrix'
+import ProcessBanner from '@/components/ProcessBanner'
 import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -117,6 +118,18 @@ export default function WindowTintPage() {
           <PricingMatrix packages={WINDOW_TINT_PACKAGES} features={TINT_FEATURE_MATRIX} />
         </div>
       </section>
+
+      <ProcessBanner
+        eyebrow="How Window Tinting Is Applied"
+        heading={
+          <>
+            From Glass Prep
+            <br />
+            <span className="text-[#9FFE0A]">to Optical Clarity Inspection</span>
+          </>
+        }
+        subtitle="Every tint install at HAUT follows a 4-step process — glass prep, DAP computerized pattern cutting, heat shrinking, and dot matrix edge trim inspection. See the full breakdown alongside our PPF and ceramic coating process."
+      />
     </main>
   )
 }

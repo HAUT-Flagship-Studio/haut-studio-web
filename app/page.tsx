@@ -1,6 +1,7 @@
 import Hero from '@/components/Hero'
 import ServicesOverview from '@/components/ServicesOverview'
 import FilmSpecs from '@/components/FilmSpecs'
+import ProcessBanner from '@/components/ProcessBanner'
 import Reviews from '@/components/Reviews'
 import LocationMap from '@/components/LocationMap'
 
@@ -25,7 +26,18 @@ export default function HomePage() {
 
       <ServicesOverview />
 
-      <FilmSpecs limit={3} ctaHref="/ppf" />
+      <FilmSpecs limit={3} />
+
+      <ProcessBanner
+        heading={
+          <>
+            Zero-Blade Precision,
+            <br />
+            <span className="text-[#9FFE0A]">Every Panel, Every Install</span>
+          </>
+        }
+        subtitle="From paint decontamination to final inspection, every PPF, ceramic coating, and window tint install at HAUT follows the same DAP digital precision process in our climate-controlled Hackensack, NJ studio. See the full step-by-step breakdown for all three services."
+      />
 
       <Reviews limit={3} />
 

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import LegalModal, { type LegalModalType } from './LegalModal'
-import AboutStudioModal from './AboutStudioModal'
 import { STUDIO } from '@/lib/data'
 
 const FOOTER_LINKS = {
@@ -22,8 +21,8 @@ const FOOTER_LINKS = {
     { label: 'Get a Custom Estimate', href: 'quiz' },
   ],
   Company: [
-    { label: 'About the Studio', href: 'about' },
-    { label: 'Our Process', href: '/ppf#process' },
+    { label: 'About the Studio', href: '/about' },
+    { label: 'Our Process', href: '/our-process' },
     { label: 'Contact Us', href: '/#contact' },
     { label: 'Privacy Policy', href: 'privacy' },
     { label: 'Terms of Service', href: 'terms' },
@@ -33,7 +32,6 @@ const FOOTER_LINKS = {
 export default function Footer() {
   const { openQuiz } = useQuiz()
   const [legalModal, setLegalModal] = useState<LegalModalType>(null)
-  const [aboutOpen, setAboutOpen] = useState(false)
 
   return (
     <footer
@@ -148,14 +146,6 @@ export default function Footer() {
                       >
                         {link.label}
                       </button>
-                    ) : link.href === 'about' ? (
-                      <button
-                        type="button"
-                        onClick={() => setAboutOpen(true)}
-                        className="font-roboto text-[#DADADA]/60 hover:text-[#9FFE0A] text-sm transition-colors text-left"
-                      >
-                        {link.label}
-                      </button>
                     ) : link.href === 'privacy' || link.href === 'terms' ? (
                       <button
                         type="button"
@@ -193,7 +183,6 @@ export default function Footer() {
       </div>
 
       <LegalModal type={legalModal} onClose={() => setLegalModal(null)} />
-      <AboutStudioModal isOpen={aboutOpen} onClose={() => setAboutOpen(false)} />
     </footer>
   )
 }

@@ -9,7 +9,7 @@ import { STUDIO } from '@/lib/data'
 
 const NAV_LINKS = [
   { href: '/ppf', label: 'PPF' },
-  { href: '/ppf#process', label: 'Our Process' },
+  { href: '/our-process', label: 'Our Process' },
   { href: '/ceramic', label: 'Ceramic' },
   { href: '/window-tint', label: 'Window Tint' },
   { href: '/blog', label: 'Blog' },
