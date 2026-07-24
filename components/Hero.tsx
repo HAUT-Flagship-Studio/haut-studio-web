@@ -15,16 +15,16 @@ const DEFAULT_HEADING = (
 )
 
 const DEFAULT_TRUST_BADGES = [
-  'Military-Grade TPU',
-  'Self-Healing Topcoat',
-  'DAP Digital Precision Cut',
+  'Climate-Controlled Studio',
+  'Self-Healing Optical TPU',
+  'DAP Digital Precision (Zero-Blade Contact)',
   '10-Year Warranty',
 ]
 
 export default function Hero({
   locationBadge = 'Hackensack, NJ • Certified Master Installers',
   heading = DEFAULT_HEADING,
-  subtitle = "Military-grade TPU film, cut from DAP digital precision patterns so the blade never touches your paint. Self-healing topcoat, 10-year manufacturer warranty, installed by Bergen County's certified master installers.",
+  subtitle = "Self-healing optical TPU film, cut from DAP digital precision patterns for zero-blade contact with your paint — applied in our climate-controlled studio and backed by a 10-year manufacturer warranty, for Bergen County's most discerning owners.",
   trustBadges = DEFAULT_TRUST_BADGES,
   imageSrc = 'https://placehold.co/1920x1080/1A292E/9FFE0A.webp?text=Hero+Car+Photo',
   imageAlt = 'PPF wrapped vehicle at HAUT Flagship Studio Hackensack NJ',

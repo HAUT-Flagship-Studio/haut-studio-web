@@ -48,7 +48,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'High-Impact Rock Chip Defense',
     price: 2399,
     description:
-      "Military-grade TPU film on the panels that take the worst of highway debris — bumper, full hood, fenders, mirrors, and headlights. DAP digital precision patterns are cut to your vehicle's exact contours before the blade ever reaches paint, so rock chips and swirl marks stop at the film.",
+      "Self-healing optical TPU film applied to the panels that absorb the worst of highway debris — bumper, full hood, fenders, mirrors, and headlights. DAP digital precision patterns are cut to your vehicle's exact contours with zero-blade contact, so rock chips and swirl marks stop at the film, not your paint.",
     inclusions: [
       'Full Front Bumper',
       'Full Hood Panel',
@@ -67,7 +67,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'Full Perimeter Chip Defense',
     price: 3199,
     description:
-      'Everything in Front End, plus the rocker panels, A-pillars, and rear bumper impact zone that catch tire spray and trailing debris at highway speed. Same military-grade TPU, same DAP digital precision cut, extended to the full perimeter most daily drivers actually need.',
+      'Everything in Front End, plus the rocker panels, A-pillars, and rear bumper impact zone that catch tire spray and trailing debris at highway speed. Same self-healing optical TPU, same zero-blade DAP precision cut, extended to the full perimeter most daily drivers actually need.',
     inclusions: [
       'Everything in Front End',
       'Rocker Panels (pair)',
@@ -86,7 +86,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'Complete Body Chip & UV Defense',
     price: 6499,
     description:
-      'Complete body encapsulation in military-grade TPU, cut panel-for-panel from DAP digital precision patterns — every edge, every contour, zero on-car cutting. The standard for owners protecting resale value on exotic and luxury vehicles. Includes free enclosed trailer transport to and from our studio.',
+      'Complete body encapsulation in self-healing optical TPU, cut panel-for-panel from DAP digital precision patterns — every edge, every contour, zero on-car cutting. The standard for owners protecting resale value on exotic and luxury vehicles, applied in our climate-controlled studio. Includes free enclosed trailer transport to and from our studio.',
     inclusions: [
       '100% Body Coverage',
       'All Panels + Roof',
@@ -179,7 +179,7 @@ export const SERVICES_OVERVIEW = [
   {
     id: 'ppf',
     name: 'Paint Protection Film',
-    tagline: 'Military-grade TPU film that stops rock chips and swirl marks before they reach your clear coat.',
+    tagline: 'Self-healing optical TPU film that stops rock chips and swirl marks before they ever reach your clear coat.',
     priceFrom: PPF_PACKAGES[0].price,
     href: '/ppf',
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Paint+Protection+Film',

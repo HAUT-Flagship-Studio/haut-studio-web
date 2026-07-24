@@ -119,7 +119,7 @@ export default function CeramicPage() {
             </h3>
             <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
               Ceramic coating adds gloss and hydrophobic performance — it does not stop rock chips. For
-              full protection, pair it with military-grade TPU film on the panels that take the most impact.
+              full protection, pair it with self-healing optical TPU film on the panels that take the most impact.
             </p>
             <Link href="/ppf" className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start">
               View PPF Packages →

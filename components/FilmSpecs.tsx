@@ -21,9 +21,9 @@ const SPECS = [
   {
     icon: '◐',
     title: '9H Hardness Rating',
-    teaser: 'Military-grade TPU film rated 9H — stops rock chips before they reach clear coat.',
+    teaser: 'Premium optical-clarity TPU film rated 9H — stops rock chips before they ever reach clear coat.',
     detail:
-      'Military-grade TPU (aliphatic polyurethane) film with 9H pencil hardness resists rock chips, road debris, and minor abrasion. Film thickness ranges from 6–8 mils (150–200 µm), providing a substantial physical barrier.',
+      'Premium-grade TPU (aliphatic polyurethane) film with 9H pencil hardness resists rock chips, road debris, and minor abrasion. Film thickness ranges from 6–8 mils (150–200 µm), providing a substantial physical barrier.',
   },
   {
     icon: '◑',

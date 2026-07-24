@@ -24,7 +24,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
   description:
-    "HAUT Flagship Studio in Hackensack, NJ delivers military-grade paint protection film, ceramic coatings, and window tinting for Bergen County and Northern NJ's exotic and luxury vehicle owners. Self-healing topcoat, 10-year manufacturer warranty, installed by certified master installers.",
+    "HAUT Flagship Studio in Hackensack, NJ delivers premium paint protection film, ceramic coatings, and window tinting for Bergen County and Northern NJ's exotic and luxury vehicle owners. Self-healing optical TPU, 10-year manufacturer warranty, installed by certified master installers in a climate-controlled studio.",
   keywords:
     'PPF Hackensack NJ, paint protection film New Jersey, ceramic coating Hackensack, window tinting NJ, self-healing film, certified master installer Bergen County, HAUT Flagship Studio',
   openGraph: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: 'HAUT Flagship Studio',
     title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
     description:
-      "Military-grade paint protection film, ceramic coatings, and window tinting in Hackensack, NJ. Self-healing topcoat and 10-year manufacturer warranty, installed by Bergen County's certified master installers.",
+      "Premium paint protection film, ceramic coatings, and window tinting in Hackensack, NJ. Self-healing optical TPU and 10-year manufacturer warranty, installed by Bergen County's certified master installers.",
     images: [
       {
         url: 'https://placehold.co/1200x630/1A292E/9FFE0A.webp?text=HAUT+Flagship+Studio',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'HAUT Flagship Studio — PPF & Ceramic Coatings Hackensack NJ',
     description:
-      'Military-grade paint protection film, ceramic coatings, and window tinting installed by certified master installers in Hackensack, NJ.',
+      'Premium paint protection film, ceramic coatings, and window tinting installed by certified master installers in Hackensack, NJ.',
     images: ['https://placehold.co/1200x630/1A292E/9FFE0A.webp?text=HAUT+Flagship+Studio'],
   },
   robots: {
