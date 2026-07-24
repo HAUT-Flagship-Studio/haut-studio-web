@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path . -Recurse -Depth 3 -Name | Where-Object { $_ -notmatch 'node_modules|\\\\.next|\\\\.git' })",
+      "PowerShell(Get-ChildItem -Path . -Recurse -Depth 4 -Directory -Name | Where-Object { $_ -notmatch 'node_modules|\\\\.next|\\\\.git' })",
+      "PowerShell(Test-Path node_modules; if \\(Test-Path node_modules\\\\next\\\\package.json\\) { \\(Get-Content node_modules\\\\next\\\\package.json | ConvertFrom-Json\\).version })",
+      "Skill(run)",
+      "Skill(run:*)",
+      "PowerShell(Get-Command chromium-cli -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command npx -ErrorAction SilentlyContinue)",
+      "PowerShell(Test-Path node_modules\\\\playwright; Test-Path node_modules\\\\playwright-core; Test-Path node_modules\\\\.bin\\\\playwright; $env:LOCALAPPDATA + \"\\\\ms-playwright\" | ForEach-Object { Test-Path $_ })"
+    ]
+  }
+}

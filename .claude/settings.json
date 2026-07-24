@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Remove-Item -Path \"components\\\\BlogSection.tsx\" -Confirm:$false)",
+      "PowerShell(npx tsc --noEmit 2>&1)",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(npm run lint 2>&1)",
+      "PowerShell(npx next lint 2>&1)"
+    ]
+  }
+}
