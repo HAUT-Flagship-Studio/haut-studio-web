@@ -9,11 +9,12 @@ import { STUDIO } from '@/lib/data'
 
 const NAV_LINKS = [
   { href: '/ppf', label: 'PPF' },
-  { href: '/our-process', label: 'Our Process' },
   { href: '/ceramic', label: 'Ceramic' },
   { href: '/window-tint', label: 'Window Tint' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/our-process', label: 'Our Process' },
+  { href: '/about', label: 'About' },
   { href: '/reviews', label: 'Reviews' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 export default function Header() {
