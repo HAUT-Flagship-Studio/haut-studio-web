@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
 
@@ -36,9 +37,20 @@ export default function Hero({
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden precision-grid"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
       aria-label="Hero section"
     >
+
+      {/* Background photo */}
+      <Image
+        src="/assets/hero-car-photo.webp"
+        alt="HAUT PPF Studio paint protection film installation"
+        fill
+        priority
+        className="object-cover"
+        unoptimized
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#1A292E] via-[#1A292E]/85 to-[#1A292E]/50" />
 
       {/* Green accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-[#9FFE0A] z-10" />
@@ -102,12 +114,6 @@ export default function Hero({
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-60">
-        <span className="text-[#DADADA] font-roboto text-xs tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-10 bg-gradient-to-b from-[#9FFE0A] to-transparent animate-pulse" />
       </div>
     </section>
   )
