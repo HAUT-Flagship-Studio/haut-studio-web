@@ -1,7 +1,6 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
 
@@ -26,15 +25,11 @@ export default function Hero({
   heading = DEFAULT_HEADING,
   subtitle = "Self-healing optical TPU film, cut from DAP digital precision patterns for zero-blade contact with your paint — applied in our climate-controlled studio and backed by a 10-year manufacturer warranty, for Bergen County's most discerning owners.",
   trustBadges = DEFAULT_TRUST_BADGES,
-  imageSrc = 'https://placehold.co/1920x1080/1A292E/9FFE0A.webp?text=Hero+Car+Photo',
-  imageAlt = 'PPF wrapped vehicle at HAUT Flagship Studio Hackensack NJ',
 }: {
   locationBadge?: string
   heading?: ReactNode
   subtitle?: string
   trustBadges?: string[]
-  imageSrc?: string
-  imageAlt?: string
 }) {
   const { openQuiz } = useQuiz()
 
@@ -44,20 +39,6 @@ export default function Hero({
       className="relative min-h-screen flex items-center justify-center overflow-hidden precision-grid"
       aria-label="Hero section"
     >
-      {/* Background hero image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={imageSrc}
-          alt={imageAlt}
-          fill
-          className="object-cover opacity-30"
-          priority
-          unoptimized
-        />
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1A292E] via-[#1A292E]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A292E] via-transparent to-transparent" />
-      </div>
 
       {/* Green accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-[#9FFE0A] z-10" />
@@ -66,11 +47,13 @@ export default function Hero({
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="max-w-3xl">
           {/* Location pill */}
-          <div className="inline-flex items-center gap-2 border border-[#9FFE0A]/40 bg-[#9FFE0A]/10 px-4 py-1.5 mb-6 animate-fade-up">
-            <span className="w-2 h-2 rounded-full bg-[#9FFE0A] animate-pulse" />
-            <span className="text-[#9FFE0A] font-roboto text-xs tracking-widest uppercase">
-              {locationBadge}
-            </span>
+          <div className="flex justify-center mb-6">
+            <div className="inline-flex items-center gap-2 border border-[#9FFE0A]/40 bg-[#9FFE0A]/10 px-4 py-1.5 animate-fade-up">
+              <span className="w-2 h-2 rounded-full bg-[#9FFE0A] animate-pulse" />
+              <span className="text-[#9FFE0A] font-roboto text-xs tracking-widest uppercase">
+                {locationBadge}
+              </span>
+            </div>
           </div>
 
           {/* H1 */}
@@ -110,9 +93,9 @@ export default function Hero({
           </div>
 
           {/* Trust badges */}
-          <div className="mt-8 flex flex-wrap items-center gap-6">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 justify-center gap-x-6 gap-y-3 text-center">
             {trustBadges.map((badge) => (
-              <div key={badge} className="flex items-center gap-2 text-sm">
+              <div key={badge} className="flex items-center justify-center gap-2 text-sm">
                 <span className="text-[#9FFE0A] text-xs">✦</span>
                 <span className="text-[#DADADA] font-roboto">{badge}</span>
               </div>

@@ -9,19 +9,18 @@ export default function HomePage() {
   return (
     <main>
       <Hero
-        locationBadge="Hackensack, NJ • Certified Master Installers"
+        locationBadge="HAUT FLAGSHIP STUDIO • HACKENSACK, NJ"
         heading={
           <>
-            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">Paint Damage.</span>
-            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">Faded Tint.</span>
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">PPF & Ceramic.</span>
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">Window Tinting.</span>
             <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-[#9FFE0A]">
-              Stopped Cold.
+              Total Protection.
             </span>
           </>
         }
-        subtitle="Bergen County and Northern NJ's certified installers for self-healing optical TPU paint protection film, dual-layer ceramic coating, and precision window tinting — every install cut from DAP digital precision patterns for zero-blade contact, backed by a 10-year manufacturer warranty on film."
-        trustBadges={['Self-Healing Optical TPU', 'Dual-Layer Ceramic', 'Precision Window Tint', '10-Year PPF Warranty']}
-        imageAlt="Vehicle protected by HAUT Flagship Studio in Hackensack, NJ"
+        subtitle="As the official manufacturer flagship studio, we set the installation benchmarks the rest of the industry tries to follow. We deliver elite master-class craftsmanship across our three core disciplines: Paint Protection Film, Ceramic Coating, and Window Tinting. Experience direct-from-source quality you can trust, secured by a direct manufacturer warranty valid in any state nationwide."
+        trustBadges={['Durable Optic Clear PPF', 'Extra Shiny Ceramic Coating', 'Heat & UV Rejected Window Tint', 'Nationwide Manufacturer Warranty']}
       />
 
       <ServicesOverview />
