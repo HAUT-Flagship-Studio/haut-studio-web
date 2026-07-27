@@ -13,12 +13,12 @@ export default function ServicesOverview() {
         {/* Section Header */}
         <div className="mb-14">
           <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
-            Bergen County&apos;s Certified Installers
+            ✦ OUR EXPERTISE
           </p>
           <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
-            Three Services
+            Flawless Inside & Out.
             <br />
-            <span className="text-[#9FFE0A]">One Studio</span>
+            <span className="text-[#9FFE0A]">New Car Feeling, Every Day.</span>
           </h2>
           <div className="w-16 h-0.5 bg-[#9FFE0A]" />
         </div>

@@ -37,7 +37,7 @@ export default function Hero({
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1A292E]"
       aria-label="Hero section"
     >
 
@@ -47,7 +47,7 @@ export default function Hero({
         alt="HAUT PPF Studio paint protection film installation"
         fill
         priority
-        className="object-cover"
+        className="object-contain sm:object-cover object-center -translate-y-[230px] sm:translate-y-0"
         unoptimized
       />
       <div className="absolute inset-0 bg-gradient-to-r from-[#1A292E] via-[#1A292E]/85 to-[#1A292E]/50" />
@@ -105,9 +105,9 @@ export default function Hero({
           </div>
 
           {/* Trust badges */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 justify-center gap-x-6 gap-y-3 text-center">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 justify-start sm:justify-center gap-x-6 gap-y-3 text-left sm:text-center">
             {trustBadges.map((badge) => (
-              <div key={badge} className="flex items-center justify-center gap-2 text-sm">
+              <div key={badge} className="flex items-center justify-start sm:justify-center gap-2 text-sm">
                 <span className="text-[#9FFE0A] text-xs">✦</span>
                 <span className="text-[#DADADA] font-roboto">{badge}</span>
               </div>

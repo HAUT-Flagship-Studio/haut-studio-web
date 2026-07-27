@@ -19,7 +19,7 @@ export default function HomePage() {
             </span>
           </>
         }
-        subtitle="As the official manufacturer flagship studio, we set the installation benchmarks the rest of the industry tries to follow. We deliver elite master-class craftsmanship across our three core disciplines: Paint Protection Film, Ceramic Coating, and Window Tinting. Experience direct-from-source quality you can trust, secured by a direct manufacturer warranty valid in any state nationwide."
+        subtitle="As the manufacturer flagship studio, we set the installation benchmarks the rest of the industry tries to follow. We deliver elite master-class craftsmanship across our three core disciplines: Paint Protection Film, Ceramic Coating, and Window Tinting. Experience direct-from-source quality you can trust, secured by a direct manufacturer warranty valid in any state nationwide."
         trustBadges={['Durable Optic Clear PPF', 'Extra Shiny Ceramic Coating', 'Heat & UV Rejected Window Tint', 'Nationwide Manufacturer Warranty']}
       />
 

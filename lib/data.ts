@@ -179,8 +179,8 @@ export const SERVICES_OVERVIEW = [
   {
     id: 'ppf',
     name: 'Paint Protection Film',
-    tagline: 'Self-healing optical TPU film that stops rock chips and swirl marks before they ever reach your clear coat.',
-    priceFrom: PPF_PACKAGES[0].price,
+    tagline: 'High-performance physical shield designed to absorb everyday road impact, helping defend your factory paint against rock chips, swirl marks, and road wear.',
+    priceFrom: 1399,
     href: '/ppf',
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Paint+Protection+Film',
     imageAlt: 'Paint protection film service overview',
@@ -188,8 +188,8 @@ export const SERVICES_OVERVIEW = [
   {
     id: 'ceramic',
     name: 'Ceramic Coating',
-    tagline: 'Dual-layer 9H ceramic that blocks the UV fade and grime dulling your resale value.',
-    priceFrom: CERAMIC_PACKAGE.price,
+    tagline: 'Ultra-gloss hydrophobic barrier that repels dirt and water, making routine washes effortless while helping preserve your paint’s depth and UV resistance.',
+    priceFrom: 799,
     href: '/ceramic',
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Ceramic+Coating',
     imageAlt: 'Ceramic coating service overview',
@@ -197,8 +197,8 @@ export const SERVICES_OVERVIEW = [
   {
     id: 'window-tint',
     name: 'Window Tinting',
-    tagline: 'Ceramic IR film that cuts cabin heat and UV fade without killing your signal.',
-    priceFrom: WINDOW_TINT_PACKAGES[0].price,
+    tagline: 'Advanced ceramic tint engineered to reduce cabin heat and block harmful UV rays—enhancing everyday driving comfort while protecting your interior leather and trim.',
+    priceFrom: 199,
     href: '/window-tint',
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Window+Tinting',
     imageAlt: 'Window tinting service overview',
