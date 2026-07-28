@@ -182,7 +182,7 @@ export const SERVICES_OVERVIEW = [
     tagline: 'High-performance physical shield designed to absorb everyday road impact, helping defend your factory paint against rock chips, swirl marks, and road wear.',
     priceFrom: 1399,
     href: '/ppf',
-    image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Paint+Protection+Film',
+    image: '/assets/service-ppf.webp',
     imageAlt: 'Paint protection film service overview',
   },
   {
@@ -191,7 +191,7 @@ export const SERVICES_OVERVIEW = [
     tagline: 'Ultra-gloss hydrophobic barrier that repels dirt and water, making routine washes effortless while helping preserve your paint’s depth and UV resistance.',
     priceFrom: 799,
     href: '/ceramic',
-    image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Ceramic+Coating',
+    image: '/assets/service-ceramic-coating.webp',
     imageAlt: 'Ceramic coating service overview',
   },
   {
@@ -200,7 +200,7 @@ export const SERVICES_OVERVIEW = [
     tagline: 'Advanced ceramic tint engineered to reduce cabin heat and block harmful UV rays—enhancing everyday driving comfort while protecting your interior leather and trim.',
     priceFrom: 199,
     href: '/window-tint',
-    image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Window+Tinting',
+    image: '/assets/service-window-tinting.webp',
     imageAlt: 'Window tinting service overview',
   },
 ]
