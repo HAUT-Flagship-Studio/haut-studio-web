@@ -1,6 +1,6 @@
 import Hero from '@/components/Hero'
 import ServicesOverview from '@/components/ServicesOverview'
-import FilmSpecs from '@/components/FilmSpecs'
+import RoadHazards from '@/components/RoadHazards'
 import ProcessBanner from '@/components/ProcessBanner'
 import Reviews from '@/components/Reviews'
 import LocationMap from '@/components/LocationMap'
@@ -25,7 +25,7 @@ export default function HomePage() {
 
       <ServicesOverview />
 
-      <FilmSpecs limit={3} />
+      <RoadHazards />
 
       <ProcessBanner
         heading={
