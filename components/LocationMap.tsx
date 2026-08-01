@@ -10,21 +10,20 @@ export default function LocationMap() {
   return (
     <section
       id="contact"
-      className="bg-[#1A292E] py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
       aria-label="Studio location and contact"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14">
-          <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
-            Visit the Studio
+        <div className="mb-14 text-left">
+          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+            ✦ Visit the Studio
           </p>
-          <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
             Find Us in
             <br />
             <span className="text-[#9FFE0A]">Hackensack, NJ</span>
           </h2>
-          <div className="w-16 h-0.5 bg-[#9FFE0A]" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

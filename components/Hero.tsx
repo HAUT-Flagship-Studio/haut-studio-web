@@ -17,14 +17,14 @@ const DEFAULT_HEADING = (
 const DEFAULT_TRUST_BADGES = [
   'Climate-Controlled Studio',
   'Self-Healing Optical TPU',
-  'DAP Digital Precision (Zero-Blade Contact)',
+  'HAUT Precision Scan (Zero-Blade Contact)',
   '10-Year Warranty',
 ]
 
 export default function Hero({
   locationBadge = 'Hackensack, NJ • Certified Master Installers',
   heading = DEFAULT_HEADING,
-  subtitle = "Self-healing optical TPU film, cut from DAP digital precision patterns for zero-blade contact with your paint — applied in our climate-controlled studio and backed by a 10-year manufacturer warranty, for Bergen County's most discerning owners.",
+  subtitle = "Self-healing optical TPU film, cut from HAUT Precision Scan patterns for zero-blade contact with your paint — applied in our climate-controlled studio and backed by a 10-year HAUT manufacturer warranty, for Bergen County's most discerning owners.",
   trustBadges = DEFAULT_TRUST_BADGES,
 }: {
   locationBadge?: string
@@ -59,7 +59,7 @@ export default function Hero({
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="max-w-3xl">
           {/* Location pill */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-start mb-6">
             <div className="inline-flex items-center gap-2 border border-[#9FFE0A]/40 bg-[#9FFE0A]/10 px-4 py-1.5 animate-fade-up">
               <span className="w-2 h-2 rounded-full bg-[#9FFE0A] animate-pulse" />
               <span className="text-[#9FFE0A] font-roboto text-xs tracking-widest uppercase">
@@ -105,9 +105,9 @@ export default function Hero({
           </div>
 
           {/* Trust badges */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 justify-start sm:justify-center gap-x-6 gap-y-3 text-left sm:text-center">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-left">
             {trustBadges.map((badge) => (
-              <div key={badge} className="flex items-center justify-start sm:justify-center gap-2 text-sm">
+              <div key={badge} className="flex items-center justify-start gap-2 text-sm">
                 <span className="text-[#9FFE0A] text-xs">✦</span>
                 <span className="text-[#DADADA] font-roboto">{badge}</span>
               </div>

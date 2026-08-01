@@ -40,10 +40,10 @@ const SPECS = [
   },
   {
     icon: '◓',
-    title: 'DAP Digital Precision Patterns',
+    title: 'HAUT Precision Scan Patterns',
     teaser: 'Zero-blade paint contact — the pattern is cut before it ever touches your car.',
     detail:
-      'Every panel template is generated from vehicle-specific 3D scan data via DAP (Digital Application Pattern) software, then cut before installation — 100% zero-blade contact with your paint. Patterns include all recessed edges, door jambs, and mirror housings for seamless full-panel coverage.',
+      'Every panel template is generated from vehicle-specific 3D scan data via HAUT Precision Scan technology, then cut before installation — 100% zero-blade contact with your paint. Patterns include all recessed edges, door jambs, and mirror housings for seamless full-panel coverage.',
   },
 ]
 
@@ -179,7 +179,7 @@ export default function FilmSpecs({ limit }: { limit?: number }) {
                         ['Adhesive Type', 'Pressure-Sensitive Acrylic'],
                         ['Removability', 'Residue-free within 10 years'],
                         ['Warranty', 'Manufacturer 10-Year Limited'],
-                        ['Pattern Software', 'DAP (Digital Application Pattern)'],
+                        ['Pattern Technology', 'HAUT Precision Scan'],
                         ['Installation Method', 'Wet application + heat-forming'],
                       ].map(([prop, val]) => (
                         <tr key={prop}>

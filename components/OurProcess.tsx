@@ -6,8 +6,8 @@ const PROCESS_STEPS = [
   },
   {
     step: '02',
-    title: 'Digital DAP Precision Pattern Cut',
-    body: "Vehicle-specific 3D scan data drives the DAP cutter, generating a panel-exact template — every recessed edge, door jamb, and mirror housing — with zero blade contact on your paint.",
+    title: 'HAUT Precision Scan Cut',
+    body: "Vehicle-specific 3D scan data drives our HAUT Precision Scan cutter, generating a panel-exact template — every recessed edge, door jamb, and mirror housing — with zero blade contact on your paint.",
   },
   {
     step: '03',

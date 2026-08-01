@@ -5,7 +5,9 @@
       "PowerShell(npx tsc --noEmit 2>&1)",
       "PowerShell(npm run build 2>&1)",
       "PowerShell(npm run lint 2>&1)",
-      "PowerShell(npx next lint 2>&1)"
+      "PowerShell(npx next lint 2>&1)",
+      "Bash(npx eslint *)",
+      "Bash(node test3.js)"
     ]
   }
 }

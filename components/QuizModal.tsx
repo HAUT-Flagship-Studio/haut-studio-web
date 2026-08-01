@@ -1,212 +1,269 @@
 'use client'
 
-import { useState } from 'react'
-import { PPF_PACKAGES, CERAMIC_PACKAGE, WINDOW_TINT_PACKAGES, STUDIO } from '@/lib/data'
+import { useEffect, useMemo, useState } from 'react'
+import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type ServiceOption, type VehicleCategory } from '@/lib/pricing'
+import type { CalculatorPrefill } from './CalculatorModal'
 
-declare global {
-  interface Window {
-    fbq?: (...args: unknown[]) => void
-  }
+const OWNERSHIP_OPTIONS = [
+  { id: 'leased', label: 'Leased' },
+  { id: 'owned', label: 'Owned or Financed' },
+  { id: 'collector', label: 'Exotic or Collector' },
+] as const
+
+const ROUTE_OPTIONS = [
+  { id: 'highway', label: 'Heavy Highway & Interstates' },
+  { id: 'city', label: 'City & Local' },
+  { id: 'mixed', label: 'Mixed' },
+] as const
+
+const PARKING_OPTIONS = [
+  { id: 'outdoor', label: 'Outdoor + Auto Washes' },
+  { id: 'garage-diy', label: 'Garage + DIY Wash' },
+  { id: 'garage-pro', label: 'Garage + Pro Detailing' },
+] as const
+
+const CABIN_OPTIONS = [
+  { id: 'kids-pets', label: 'Kids, Pets or Passengers' },
+  { id: 'solo', label: 'Solo Driving' },
+] as const
+
+type Ownership = (typeof OWNERSHIP_OPTIONS)[number]['id']
+type Route = (typeof ROUTE_OPTIONS)[number]['id']
+type Parking = (typeof PARKING_OPTIONS)[number]['id']
+type Cabin = (typeof CABIN_OPTIONS)[number]['id']
+
+interface Answers {
+  year: string
+  make: string
+  model: string
+  bodyType: VehicleCategory | ''
+  ownership: Ownership | ''
+  route: Route | ''
+  parking: Parking | ''
+  cabin: Cabin | ''
+}
+
+const INITIAL_ANSWERS: Answers = {
+  year: '',
+  make: '',
+  model: '',
+  bodyType: '',
+  ownership: '',
+  route: '',
+  parking: '',
+  cabin: '',
+}
+
+interface Recommendation {
+  id: string
+  name: string
+  price: number
+  reasons: string[]
+  optional?: boolean
 }
 
 const STEPS = [
-  {
-    id: 1,
-    title: 'What type of vehicle?',
-    subtitle: 'Select the category that best describes your car.',
-  },
-  {
-    id: 2,
-    title: 'Select coverage level',
-    subtitle: 'Choose how much of your vehicle to protect.',
-  },
-  {
-    id: 3,
-    title: 'Add-on services',
-    subtitle: 'Combine with ceramic or tint for full protection.',
-  },
-  {
-    id: 4,
-    title: 'Your contact details',
-    subtitle: 'We\'ll send your personalised quote within 2 hours.',
-  },
+  { title: 'Tell us about your vehicle', subtitle: 'Select your body type.' },
+  { title: 'How do you own it?', subtitle: 'This changes how we protect resale and lease-return value.' },
+  { title: 'Where do you drive most?', subtitle: 'Route exposure drives our film coverage recommendation.' },
+  { title: 'How is it parked & cared for?', subtitle: 'Parking and wash habits drive our ceramic recommendation.' },
+  { title: "Who's usually in the cabin?", subtitle: 'Passengers change our window tint recommendation.' },
 ]
 
-const VEHICLE_TYPES = [
-  { id: 'sedan', label: 'Sedan / Coupe', icon: '🚗', multiplier: 1 },
-  { id: 'suv', label: 'SUV / Crossover', icon: '🚙', multiplier: 1.15 },
-  { id: 'truck', label: 'Truck / Van', icon: '🛻', multiplier: 1.2 },
-  { id: 'exotic', label: 'Exotic / Supercar', icon: '🏎️', multiplier: 1.35 },
-]
-
-const COVERAGE_LEVELS = PPF_PACKAGES.map((pkg) => ({
-  id: pkg.id,
-  label: pkg.name,
-  basePrice: pkg.price,
-  description: pkg.tagline,
-}))
-
-const ADDONS = [
-  {
-    id: 'ceramic',
-    label: CERAMIC_PACKAGE.name,
-    price: CERAMIC_PACKAGE.price,
-    description: CERAMIC_PACKAGE.tagline,
-  },
-  {
-    id: 'window-tint',
-    label: 'Window Tinting',
-    price: WINDOW_TINT_PACKAGES[1].price,
-    description: WINDOW_TINT_PACKAGES[1].tagline,
-  },
-]
-
-interface FormData {
-  vehicle: string
-  coverage: string
-  addons: string[]
-  name: string
-  phone: string
-  email: string
-  message: string
+function isGWagon(model: string) {
+  return /g[\s-]?(class|wagon|63|550|500)/i.test(model)
 }
 
-const INITIAL_FORM_DATA: FormData = {
-  vehicle: '',
-  coverage: '',
-  addons: [],
-  name: '',
-  phone: '',
-  email: '',
-  message: '',
+// Every category below is a single else-if chain — each recommendation set
+// can only ever contain ONE PPF tier, ONE ceramic tier, and ONE tint tier,
+// so the engine can never surface overlapping/duplicate coverage.
+function buildRecommendations(answers: Answers): Recommendation[] {
+  if (!answers.bodyType) return []
+  const cat = answers.bodyType
+  const rec = new Map<string, Recommendation>()
+
+  const add = (service: ServiceOption, reason: string, optional = false) => {
+    const existing = rec.get(service.id)
+    if (existing) {
+      if (!existing.reasons.includes(reason)) existing.reasons.push(reason)
+      return
+    }
+    rec.set(service.id, { id: service.id, name: service.name, price: service.prices[cat], reasons: [reason], optional })
+  }
+
+  // PPF — single tier. Leased vehicles are capped below Highway/Full Body —
+  // those tiers overprotect a car you're returning, so leased always resolves
+  // to Bikini (light city use) or Front End (everything else) instead.
+  if (answers.ownership === 'leased') {
+    if (answers.route === 'city') {
+      add(PPF.bikini, "Leased vehicles don't need investment-grade coverage — Bikini PPF protects the highest-impact panels for light city driving without over-spending on a car you're returning.")
+    } else {
+      add(PPF.frontEnd, 'Leased vehicles are capped at Front End PPF — solid protection for your lease-return condition without the cost of Highway or Full Body coverage.')
+    }
+  } else if (answers.ownership === 'collector') {
+    add(PPF.fullBody, 'Full-body coverage protects the entire investment value of an exotic or collector vehicle.')
+  } else if (answers.route === 'highway') {
+    add(PPF.highway, 'Extended front, rocker & mirror coverage matches your heavy highway mileage exposure.')
+  } else {
+    add(PPF.frontEnd, 'Core front-end coverage protects the highest-impact panels for your daily driving.')
+  }
+
+  if (isGWagon(answers.model) || answers.bodyType === 'cybertruck' || answers.route === 'highway') {
+    add(WSPF.windshieldArmor, 'High-speed highway travel and rugged body styles face constant windshield pitting — this shields against chips and cracks.')
+  }
+
+  // Ceramic and tint are only ever added for an explicit trigger — never
+  // as a blanket add-on for ownership type — to keep lean vehicles lean.
+  if (answers.route === 'highway') {
+    add(CERAMIC.body, 'Heavy highway mileage exposes paint to salt, grime, and swirl-inducing automatic washes — ceramic coating adds a durable, easy-clean barrier.')
+  }
+  if (answers.parking === 'outdoor') {
+    add(CERAMIC.body, 'Outdoor parking and automatic washes expose paint to UV, water spots, and swirl marks — ceramic coating adds a durable, easy-clean barrier.')
+  }
+
+  if (answers.cabin === 'kids-pets') {
+    add(TINT.fullCabin, 'Passengers, kids, and pets benefit from full-cabin UV/heat rejection and added privacy.')
+  }
+
+  // Cybertruck-exclusive upsell — surfaced as an optional add-on, not
+  // auto-selected, since it's a premium upgrade rather than a fit-driven need.
+  if (answers.bodyType === 'cybertruck') {
+    add(
+      PPF_CYBERTRUCK_COLOR,
+      'A Cybertruck-exclusive full vehicle color-change film — an optional upgrade over standard Clear PPF.',
+      true
+    )
+  }
+
+  return Array.from(rec.values())
+}
+
+function resolveChoices(items: Recommendation[]) {
+  let ppf: CalculatorPrefill['ppf'] = 'none'
+  const ceramic: CalculatorPrefill['ceramic'] = []
+  let tint: CalculatorPrefill['tint'] = 'none'
+  let wspf: CalculatorPrefill['wspf'] = 'none'
+
+  for (const item of items) {
+    if (item.id === PPF.bikini.id) ppf = 'bikini'
+    else if (item.id === PPF.frontEnd.id) ppf = 'frontEnd'
+    else if (item.id === PPF.highway.id) ppf = 'highway'
+    else if (item.id === PPF.fullBody.id) ppf = 'fullBody'
+    else if (item.id === CERAMIC.body.id) ceramic.push('body')
+    else if (item.id === TINT.fullCabin.id) tint = 'fullCabin'
+    else if (item.id === WSPF.windshieldArmor.id) wspf = 'windshieldArmor'
+    else if (item.id === PPF_CYBERTRUCK_COLOR.id) ppf = 'colorPPF'
+  }
+
+  return { ppf, ceramic, tint, wspf }
 }
 
 export default function QuizModal({
   isOpen,
   onClose,
+  onApply,
 }: {
   isOpen: boolean
   onClose: () => void
+  onApply: (prefill: CalculatorPrefill) => void
 }) {
   const [step, setStep] = useState(1)
-  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState('')
+  const [answers, setAnswers] = useState<Answers>(INITIAL_ANSWERS)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  const recommendations = useMemo(() => buildRecommendations(answers), [answers])
+
+  useEffect(() => {
+    if (step === 6) setSelectedIds(recommendations.filter((r) => !r.optional).map((r) => r.id))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step])
 
   if (!isOpen) return null
 
-  const vehicleType = VEHICLE_TYPES.find((v) => v.id === formData.vehicle)
-  const coverageLevel = COVERAGE_LEVELS.find((c) => c.id === formData.coverage)
-  const addonsTotal = ADDONS.filter((a) => formData.addons.includes(a.id)).reduce(
-    (sum, a) => sum + a.price,
-    0
-  )
-  const estimatedPrice = coverageLevel
-    ? Math.round(coverageLevel.basePrice * (vehicleType?.multiplier || 1)) + addonsTotal
-    : null
+  const isResults = step === 6
+  const totalSteps = 5
+  const progressPct = isResults ? 100 : ((step - 1) / totalSteps) * 100
+
+  const canAdvance =
+    (step === 1 && !!answers.bodyType && !!answers.year.trim() && !!answers.make.trim() && !!answers.model.trim()) ||
+    (step === 2 && !!answers.ownership) ||
+    (step === 3 && !!answers.route) ||
+    (step === 4 && !!answers.parking) ||
+    (step === 5 && !!answers.cabin)
 
   const handleNext = () => {
-    if (step === 1 && !formData.vehicle) return
-    if (step === 2 && !formData.coverage) return
-
-    if (step === 1) {
-      // Fire QuizStarted pixel event
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('trackCustom', 'QuizStarted', { vehicle: formData.vehicle })
-      }
-    }
-    setStep((s) => Math.min(s + 1, 4))
+    if (!canAdvance) return
+    setStep((s) => Math.min(s + 1, 6))
   }
 
   const handleBack = () => setStep((s) => Math.max(s - 1, 1))
 
   const handleReset = () => {
     setStep(1)
-    setFormData(INITIAL_FORM_DATA)
-    setError('')
-    setSubmitted(false)
+    setAnswers(INITIAL_ANSWERS)
+    setSelectedIds([])
   }
 
-  const toggleAddon = (id: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      addons: prev.addons.includes(id)
-        ? prev.addons.filter((a) => a !== id)
-        : [...prev.addons, id],
-    }))
+  const toggleSelected = (id: string) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
-    setError('')
-    try {
-      const res = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          estimatedPrice,
-          vehicleLabel: vehicleType?.label,
-          coverageLabel: coverageLevel?.label,
-        }),
-      })
-      if (!res.ok) throw new Error('Submission failed')
-      // Fire Lead pixel event
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'Lead', {
-          value: estimatedPrice,
-          currency: 'USD',
-          content_name: coverageLevel?.label,
-        })
-      }
-      setSubmitted(true)
-    } catch {
-      setError(`Something went wrong. Please call us directly at ${STUDIO.phone}.`)
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  const selectedItems = recommendations.filter((r) => selectedIds.includes(r.id))
+  const total = selectedItems.reduce((sum, r) => sum + r.price, 0)
+  const comboEligible = selectedItems.length >= 2
 
-  const progressPct = ((step - 1) / 3) * 100
+  const vehicleLabel = [answers.year, answers.make, answers.model].filter(Boolean).join(' ').toUpperCase() || 'VEHICLE'
+
+  const handleApply = () => {
+    const choices = resolveChoices(selectedItems)
+    onApply({
+      vehicleLabel,
+      bodyType: answers.bodyType as VehicleCategory,
+      ...choices,
+      notes: selectedItems.length
+        ? `Imported from Tailored Package Assessment — recommended: ${selectedItems.map((i) => i.name).join(', ')}.`
+        : undefined,
+    })
+    onClose()
+  }
 
   return (
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="PPF Quote Calculator"
+      aria-label="Tailored Package Assessment"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 w-full max-w-lg">
+      <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="p-6 border-b border-[#DADADA]/15 flex items-center justify-between">
+        <div className="p-6 border-b border-[#DADADA]/15 flex items-center justify-between flex-shrink-0">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <p className="text-[#9FFE0A] font-roboto text-xs tracking-widest uppercase">
-                Step {step} of 4
+                {isResults ? 'Your Results' : `Step ${step} of ${totalSteps}`}
               </p>
-              <button
-                type="button"
-                onClick={handleReset}
-                disabled={submitting}
-                className="text-[#DADADA]/50 hover:text-[#9FFE0A] font-roboto text-xs underline underline-offset-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                Reset
-              </button>
+              {!isResults && (
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="text-[#DADADA]/50 hover:text-[#9FFE0A] font-roboto text-xs underline underline-offset-2 transition-colors"
+                >
+                  Reset
+                </button>
+              )}
             </div>
             <h2 className="font-kanit font-bold text-white text-xl">
-              {STEPS[step - 1].title}
+              {isResults ? 'Your Tailored Package' : STEPS[step - 1].title}
             </h2>
             <p className="font-roboto text-[#DADADA]/60 text-sm mt-0.5">
-              {STEPS[step - 1].subtitle}
+              {isResults ? 'Built from your answers — adjust selections before applying.' : STEPS[step - 1].subtitle}
             </p>
           </div>
           <button
             onClick={onClose}
             className="text-[#DADADA] hover:text-[#9FFE0A] transition-colors flex-shrink-0"
-            aria-label="Close calculator"
+            aria-label="Close assessment"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -215,229 +272,273 @@ export default function QuizModal({
         </div>
 
         {/* Progress bar */}
-        <div className="quiz-progress mx-6 mt-4">
+        <div className="quiz-progress mx-6 mt-4 flex-shrink-0">
           <div className="quiz-progress-fill" style={{ width: `${progressPct}%` }} />
         </div>
 
-        {/* Body */}
-        <div className="p-6">
-          {submitted ? (
-            <div className="text-center py-8">
-              <div className="text-[#9FFE0A] text-5xl mb-4">✓</div>
-              <h3 className="font-kanit font-bold text-white text-2xl mb-2">Quote Received!</h3>
-              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-4">
-                We&apos;ll review your vehicle details and send a precise quote within 2 hours.
-                For immediate assistance, call us directly.
-              </p>
-              {estimatedPrice && (
-                <div className="bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-4 mb-6">
-                  <p className="text-[#DADADA] text-xs font-roboto mb-1">Estimated Starting Price</p>
-                  <p className="font-kanit font-black text-[#9FFE0A] text-4xl">
-                    ${estimatedPrice.toLocaleString()}
-                  </p>
-                </div>
-              )}
-              <a href={STUDIO.phoneHref} className="btn-green px-6 py-3 text-sm inline-block rounded-none">
-                Call {STUDIO.phone}
-              </a>
-            </div>
-          ) : (
-            <>
-              {/* Step 1 — Vehicle Type */}
-              {step === 1 && (
-                <div className="grid grid-cols-2 gap-3">
-                  {VEHICLE_TYPES.map((v) => (
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Step 1 — Body Type */}
+          {step === 1 && (
+            <div className="space-y-4">
+              <div className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
+                <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-3">
+                  1. Select Body Type <span className="text-[#DADADA]/50 normal-case font-roboto font-normal tracking-normal">(required for pricing)</span>
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {BODY_TYPES.map((b) => (
                     <button
-                      key={v.id}
-                      onClick={() => setFormData((p) => ({ ...p, vehicle: v.id }))}
-                      className={`p-4 border text-left transition-all duration-200 rounded-none ${
-                        formData.vehicle === v.id
-                          ? 'border-[#9FFE0A] bg-[#9FFE0A]/10'
-                          : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
+                      key={b.id}
+                      type="button"
+                      onClick={() => setAnswers((p) => ({ ...p, bodyType: b.id }))}
+                      className={`p-3 border text-left transition-all duration-200 rounded-none font-kanit font-semibold text-white text-sm ${
+                        answers.bodyType === b.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
                       }`}
-                      aria-pressed={formData.vehicle === v.id}
+                      aria-pressed={answers.bodyType === b.id}
                     >
-                      <span className="text-2xl block mb-2">{v.icon}</span>
-                      <span className="font-kanit font-semibold text-white text-sm">{v.label}</span>
+                      {b.label}
                     </button>
                   ))}
                 </div>
-              )}
+              </div>
 
-              {/* Step 2 — Coverage Level */}
-              {step === 2 && (
-                <div className="space-y-3">
-                  {COVERAGE_LEVELS.map((c) => {
-                    const price = Math.round(c.basePrice * (vehicleType?.multiplier || 1))
-                    return (
-                      <button
-                        key={c.id}
-                        onClick={() => setFormData((p) => ({ ...p, coverage: c.id }))}
-                        className={`w-full p-4 border text-left transition-all duration-200 rounded-none flex items-center justify-between ${
-                          formData.coverage === c.id
-                            ? 'border-[#9FFE0A] bg-[#9FFE0A]/10'
-                            : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
-                        }`}
-                        aria-pressed={formData.coverage === c.id}
-                      >
-                        <div>
-                          <p className="font-kanit font-semibold text-white text-sm">{c.label}</p>
-                          <p className="font-roboto text-[#DADADA]/60 text-xs mt-0.5">{c.description}</p>
-                        </div>
-                        <span className="font-kanit font-bold text-[#9FFE0A] text-lg whitespace-nowrap ml-4">
-                          ${price.toLocaleString()}+
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-
-              {/* Step 3 — Add-ons */}
-              {step === 3 && (
-                <div className="space-y-3">
-                  <p className="font-roboto text-[#DADADA]/60 text-xs mb-4">
-                    Optional — select any add-on services to include in your quote.
-                  </p>
-                  {ADDONS.map((addon) => (
-                    <button
-                      key={addon.id}
-                      onClick={() => toggleAddon(addon.id)}
-                      className={`w-full p-4 border text-left transition-all duration-200 rounded-none flex items-center justify-between ${
-                        formData.addons.includes(addon.id)
-                          ? 'border-[#9FFE0A] bg-[#9FFE0A]/10'
-                          : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
-                      }`}
-                      aria-pressed={formData.addons.includes(addon.id)}
-                    >
-                      <div>
-                        <p className="font-kanit font-semibold text-white text-sm">{addon.label}</p>
-                        <p className="font-roboto text-[#DADADA]/60 text-xs mt-0.5">{addon.description}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-kanit font-bold text-[#9FFE0A] text-sm whitespace-nowrap">
-                          +${addon.price}
-                        </span>
-                        <div className={`w-5 h-5 border flex items-center justify-center flex-shrink-0 ${
-                          formData.addons.includes(addon.id)
-                            ? 'border-[#9FFE0A] bg-[#9FFE0A]'
-                            : 'border-[#DADADA]/40'
-                        }`}>
-                          {formData.addons.includes(addon.id) && (
-                            <svg className="w-3 h-3 text-[#1A292E]" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-
-                  {estimatedPrice && (
-                    <div className="mt-4 bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-3 flex items-center justify-between">
-                      <span className="font-roboto text-[#DADADA] text-sm">Estimated Total:</span>
-                      <span className="font-kanit font-black text-[#9FFE0A] text-xl">
-                        ${estimatedPrice.toLocaleString()}+
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Step 4 — Contact Form */}
-              {step === 4 && (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {estimatedPrice && (
-                    <div className="bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-3 flex items-center justify-between mb-4">
-                      <span className="font-roboto text-[#DADADA] text-sm">Your Estimate:</span>
-                      <span className="font-kanit font-black text-[#9FFE0A] text-xl">
-                        ${estimatedPrice.toLocaleString()}+
-                      </span>
-                    </div>
-                  )}
-                  {[
-                    { name: 'name', label: 'Full Name', type: 'text', placeholder: 'John Smith', required: true },
-                    { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+1 (201) 555-0100', required: true },
-                    { name: 'email', label: 'Email Address', type: 'email', placeholder: 'john@email.com', required: true },
-                  ].map((field) => (
-                    <div key={field.name}>
-                      <label className="block font-roboto text-[#DADADA] text-xs tracking-wide uppercase mb-1.5">
-                        {field.label} {field.required && <span className="text-[#9FFE0A]">*</span>}
-                      </label>
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        placeholder={field.placeholder}
-                        required={field.required}
-                        value={formData[field.name as keyof FormData] as string}
-                        onChange={(e) => setFormData((p) => ({ ...p, [field.name]: e.target.value }))}
-                        className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-3 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none"
-                      />
-                    </div>
-                  ))}
+              <div className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
+                <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-3">
+                  2. Vehicle Details <span className="text-[#9FFE0A]/80 normal-case font-roboto font-normal tracking-normal">(required)</span>
+                </p>
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block font-roboto text-[#DADADA] text-xs tracking-wide uppercase mb-1.5">
-                      Notes (optional)
-                    </label>
-                    <textarea
-                      name="message"
-                      placeholder="Vehicle year, make, model, paint color, or any special instructions..."
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))}
-                      className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-3 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none resize-none"
+                    <p className="font-roboto text-[#DADADA]/60 text-xs uppercase tracking-widest mb-2">Year</p>
+                    <input
+                      type="text"
+                      placeholder="e.g. 2024"
+                      value={answers.year}
+                      onChange={(e) => setAnswers((p) => ({ ...p, year: e.target.value }))}
+                      className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-2.5 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none"
                     />
                   </div>
-                  {error && (
-                    <p className="text-red-400 font-roboto text-sm">{error}</p>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={handleBack}
-                      disabled={submitting}
-                      className="btn-outline px-5 py-4 text-sm rounded-none flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      ← Back
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="btn-green flex-1 py-4 text-sm tracking-wider rounded-none disabled:opacity-60"
-                      id="quiz-submit-btn"
-                    >
-                      {submitting ? 'Sending...' : 'Send My Quote Request →'}
-                    </button>
+                  <div>
+                    <p className="font-roboto text-[#DADADA]/60 text-xs uppercase tracking-widest mb-2">Make</p>
+                    <input
+                      type="text"
+                      placeholder="e.g. Porsche"
+                      value={answers.make}
+                      onChange={(e) => setAnswers((p) => ({ ...p, make: e.target.value }))}
+                      className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-2.5 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none"
+                    />
                   </div>
-                  <p className="font-roboto text-[#DADADA]/40 text-xs text-center">
-                    No spam. No pressure. We reply within 2 hours.
-                  </p>
-                </form>
-              )}
+                  <div className="col-span-2">
+                    <p className="font-roboto text-[#DADADA]/60 text-xs uppercase tracking-widest mb-2">Model</p>
+                    <input
+                      type="text"
+                      placeholder="e.g. GT3 RS / G63"
+                      value={answers.model}
+                      onChange={(e) => setAnswers((p) => ({ ...p, model: e.target.value }))}
+                      className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-2.5 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-              {/* Navigation */}
-              {step < 4 && (
-                <div className="flex items-center justify-between mt-8 pt-4 border-t border-[#DADADA]/15">
-                  {step > 1 ? (
-                    <button
-                      onClick={handleBack}
-                      className="btn-outline px-5 py-2.5 text-sm rounded-none"
+          {/* Step 2 — Ownership */}
+          {step === 2 && (
+            <div className="space-y-3">
+              {OWNERSHIP_OPTIONS.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setAnswers((p) => ({ ...p, ownership: o.id }))}
+                  className={`w-full p-4 border text-left transition-all duration-200 rounded-none font-kanit font-semibold text-white text-sm ${
+                    answers.ownership === o.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
+                  }`}
+                  aria-pressed={answers.ownership === o.id}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Step 3 — Route */}
+          {step === 3 && (
+            <div className="space-y-3">
+              {ROUTE_OPTIONS.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setAnswers((p) => ({ ...p, route: o.id }))}
+                  className={`w-full p-4 border text-left transition-all duration-200 rounded-none font-kanit font-semibold text-white text-sm ${
+                    answers.route === o.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
+                  }`}
+                  aria-pressed={answers.route === o.id}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Step 4 — Parking & Care */}
+          {step === 4 && (
+            <div className="space-y-3">
+              {PARKING_OPTIONS.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setAnswers((p) => ({ ...p, parking: o.id }))}
+                  className={`w-full p-4 border text-left transition-all duration-200 rounded-none font-kanit font-semibold text-white text-sm ${
+                    answers.parking === o.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
+                  }`}
+                  aria-pressed={answers.parking === o.id}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Step 5 — Cabin */}
+          {step === 5 && (
+            <div className="space-y-3">
+              {CABIN_OPTIONS.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setAnswers((p) => ({ ...p, cabin: o.id }))}
+                  className={`w-full p-4 border text-left transition-all duration-200 rounded-none font-kanit font-semibold text-white text-sm ${
+                    answers.cabin === o.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
+                  }`}
+                  aria-pressed={answers.cabin === o.id}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Results */}
+          {isResults && (
+            <div className="space-y-4">
+              <h3 className="font-kanit font-bold text-[#9FFE0A] text-sm tracking-wide uppercase">
+                Recommended Setup For Your {vehicleLabel}
+              </h3>
+
+              <div className="space-y-3">
+                {recommendations.map((r) => {
+                  const checked = selectedIds.includes(r.id)
+                  return (
+                    <div
+                      key={r.id}
+                      className={`p-4 border transition-all duration-200 rounded-none ${
+                        checked ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20'
+                      }`}
                     >
-                      ← Back
-                    </button>
-                  ) : (
-                    <div />
-                  )}
-                  <button
-                    onClick={handleNext}
-                    disabled={(step === 1 && !formData.vehicle) || (step === 2 && !formData.coverage)}
-                    className="btn-green px-6 py-2.5 text-sm rounded-none disabled:opacity-40 disabled:cursor-not-allowed"
-                    id={`quiz-next-step-${step}`}
-                  >
-                    {step === 3 ? 'Continue →' : 'Next →'}
-                  </button>
+                      <div className="flex items-start justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={() => toggleSelected(r.id)}
+                          className="flex items-start gap-3 text-left flex-1"
+                          aria-pressed={checked}
+                        >
+                          <div className={`w-5 h-5 mt-0.5 border flex items-center justify-center flex-shrink-0 ${
+                            checked ? 'border-[#9FFE0A] bg-[#9FFE0A]' : 'border-[#DADADA]/40'
+                          }`}>
+                            {checked && (
+                              <svg className="w-3 h-3 text-[#1A292E]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-kanit font-semibold text-white text-sm">{r.name}</p>
+                              {r.optional && (
+                                <span className="font-roboto text-[#9FFE0A] text-[10px] tracking-widest uppercase border border-[#9FFE0A]/40 px-1.5 py-0.5">
+                                  Optional Upgrade
+                                </span>
+                              )}
+                            </div>
+                            <ul className="mt-1 space-y-1">
+                              {r.reasons.map((reason) => (
+                                <li key={reason} className="font-roboto text-[#DADADA]/60 text-xs leading-relaxed flex gap-1.5">
+                                  <span className="text-[#9FFE0A] flex-shrink-0">·</span>
+                                  {reason}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </button>
+                        <span className="font-kanit font-bold text-[#9FFE0A] text-lg whitespace-nowrap">
+                          ${r.price.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className="bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-4 flex items-center justify-between">
+                <span className="font-roboto text-[#DADADA] text-sm">Total Package Price:</span>
+                <span className="font-kanit font-black text-[#9FFE0A] text-2xl">${total.toLocaleString()}</span>
+              </div>
+
+              {comboEligible && (
+                <div className="border border-[#9FFE0A] bg-[#9FFE0A]/10 p-4 space-y-1.5">
+                  <span className="inline-block font-kanit font-bold text-[#1A292E] bg-[#9FFE0A] text-xs tracking-wide px-2 py-1">
+                    🎁 COMBO BUNDLE DISCOUNT ELIGIBLE
+                  </span>
+                  <p className="font-roboto text-[#DADADA] text-sm leading-relaxed">
+                    You&apos;ve selected a multi-service protection bundle. Leave your contact details below, and our
+                    Studio Manager will apply your exclusive Combo Bundle Discount to send your final locked-in quote
+                    within 2 hours.
+                  </p>
                 </div>
               )}
+            </div>
+          )}
+        </div>
+
+        {/* Fixed bottom nav bar — always visible, never clipped */}
+        <div className="p-4 bg-[#111] border-t border-white/10 flex justify-between items-center z-10 flex-shrink-0 gap-3">
+          {isResults ? (
+            <>
+              <button
+                type="button"
+                onClick={handleBack}
+                className="btn-outline px-5 py-4 text-sm rounded-none flex-shrink-0"
+              >
+                ← Back
+              </button>
+              <button
+                type="button"
+                onClick={handleApply}
+                disabled={selectedItems.length === 0}
+                className="btn-green flex-1 py-4 text-sm tracking-wider rounded-none disabled:opacity-60 disabled:cursor-not-allowed"
+                id="tailored-quiz-apply-btn"
+              >
+                Apply Package to Price Estimator →
+              </button>
+            </>
+          ) : (
+            <>
+              {step > 1 ? (
+                <button type="button" onClick={handleBack} className="btn-outline px-5 py-2.5 text-sm rounded-none flex-shrink-0">
+                  ← Back
+                </button>
+              ) : (
+                <div />
+              )}
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!canAdvance}
+                className="btn-green flex-1 py-3 text-sm tracking-wider rounded-none disabled:opacity-40 disabled:cursor-not-allowed"
+                id={`tailored-quiz-next-step-${step}`}
+              >
+                {step === 5 ? 'See My Package →' : 'Next Step →'}
+              </button>
             </>
           )}
         </div>

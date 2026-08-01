@@ -1,41 +1,98 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useQuiz } from './QuizProvider'
 
 const HAZARDS = [
   {
-    icon: '◈',
-    title: '01. Highway Debris & Rock Chips',
+    number: '01',
+    title: 'Highway Debris & Rock Chips',
     teaser:
       'High-speed gravel, road debris, and swirl marks that dull and damage your factory paint.',
-    popupTitle: 'Impact Absorption & Self-Healing',
-    popupContent:
+    fixLabel: 'Paint Protection Film',
+    fixName: 'Impact Absorption & Self-Healing',
+    fixDescription:
       'Paint Protection Film acts as a physical shock absorber. Elastic polymers dissipate impact energy from stones and gravel before reaching your clear coat. Built-in heat activation allows minor scratches and swirls to self-heal over time.',
+    image: '/assets/service-ppf.webp',
+    imageAlt: 'Paint protection film shielding a front bumper from rock chips',
+    href: '/ppf',
   },
   {
-    icon: '◉',
-    title: '02. Chemical Grime & UV Fade',
+    number: '02',
+    title: 'Chemical Grime & UV Fade',
     teaser:
       "Bird droppings, road salt, hard water spots, and UV radiation etching into your vehicle's clear coat.",
-    popupTitle: '9H Hydrophobic Glass Matrix',
-    popupContent:
+    fixLabel: 'Ceramic Coating',
+    fixName: '9H Hydrophobic Glass Matrix',
+    fixDescription:
       'Ceramic coating fills microscopic pores in factory paint, forming a slick, durable shield. Water and contaminants roll off easily, preventing chemical etching and making routine washes effortless.',
+    image: '/assets/service-ceramic-coating.webp',
+    imageAlt: 'Ceramic coating beading water off a painted panel',
+    href: '/ceramic',
   },
   {
-    icon: '◐',
-    title: '03. Solar Heat & Interior Aging',
+    number: '03',
+    title: 'Solar Heat & Interior Aging',
     teaser:
       'Extreme cabin heat, blinding glare, and UV rays drying out leather trim and overheating passengers.',
-    popupTitle: 'Nano-Ceramic Thermal Barrier',
-    popupContent:
+    fixLabel: 'Window Tinting',
+    fixName: 'Nano-Ceramic Thermal Barrier',
+    fixDescription:
       'Advanced Nano-Ceramic film targets infrared solar heat and blocks up to 99% of UV radiation. It maintains cabin comfort and protects leather trim without affecting mobile or GPS signal reception.',
+    image: '/assets/service-window-tinting.webp',
+    imageAlt: 'Ceramic window tint reducing cabin glare and heat',
+    href: '/window-tint',
   },
 ]
 
+function FixPreview({ hazard }: { hazard: (typeof HAZARDS)[0] }) {
+  return (
+    <>
+      <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden card-folded border border-slate-800">
+        <Image
+          key={hazard.image}
+          src={hazard.image}
+          alt={hazard.imageAlt}
+          fill
+          className="object-cover"
+          unoptimized
+        />
+      </div>
+      <div className="mt-6">
+        <p className="text-xs font-bold tracking-widest text-[#9FFE0A] uppercase mb-2">
+          {hazard.fixLabel}
+        </p>
+        <h3 className="font-kanit font-bold text-white text-xl md:text-2xl mb-3">
+          {hazard.fixName}
+        </h3>
+        <p className="font-roboto text-sm text-[#DADADA]/70 leading-relaxed mb-5">
+          {hazard.fixDescription}
+        </p>
+        <Link
+          href={hazard.href}
+          className="group inline-flex items-center gap-2 text-[#9FFE0A] font-bold text-sm"
+        >
+          Explore {hazard.fixLabel}
+          <svg
+            className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Link>
+      </div>
+    </>
+  )
+}
+
 export default function RoadHazards() {
-  const [activeHazard, setActiveHazard] = useState<(typeof HAZARDS)[0] | null>(null)
-  const { openQuiz } = useQuiz()
+  const [active, setActive] = useState(0)
+  const { openAssessment } = useQuiz()
+  const activeHazard = HAZARDS[active]
 
   return (
     <section
@@ -45,96 +102,102 @@ export default function RoadHazards() {
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14">
-          <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
+        <div className="mb-14 text-left">
+          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
             ✦ TAILORED PROTECTION
           </p>
-          <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
             Real Road Hazards.
             <br />
             <span className="text-[#9FFE0A]">Smart Protection Solutions.</span>
           </h2>
-          <div className="w-16 h-0.5 bg-[#9FFE0A]" />
+          <p className="text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed">
+            From highway rock chips to UV fade and cabin heat soak, every hazard demands a
+            different defense. We match the right film, coating, or tint to the threat your
+            vehicle actually faces.
+          </p>
         </div>
 
-        {/* Hazard Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-          {HAZARDS.map((hazard) => (
-            <button
-              key={hazard.title}
-              type="button"
-              onClick={() => setActiveHazard(hazard)}
-              className="card-folded text-left bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-6 hover:border-[#9FFE0A]/40 transition-all duration-300 group"
-              aria-label={`Learn more about ${hazard.title}`}
-            >
-              <span className="text-[#9FFE0A] text-2xl mb-4 block group-hover:scale-110 transition-transform duration-200">
-                {hazard.icon}
-              </span>
-              <h3 className="font-kanit font-semibold text-white text-lg mb-2 group-hover:text-[#9FFE0A] transition-colors">
-                {hazard.title}
-              </h3>
-              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
-                {hazard.teaser}
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1 text-[#9FFE0A] text-xs font-roboto opacity-0 group-hover:opacity-100 transition-opacity">
-                Learn more
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
-            </button>
-          ))}
+        {/* Threat list + fix preview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 items-start">
+          {/* Left: hazard list */}
+          <div>
+            {HAZARDS.map((hazard, index) => {
+              const isActive = index === active
+              return (
+                <div key={hazard.title} className="border-b border-white/10 first:border-t">
+                  <button
+                    type="button"
+                    onClick={() => setActive(index)}
+                    className="w-full text-left py-6 flex items-start gap-4"
+                    aria-expanded={isActive}
+                  >
+                    <span
+                      className={`font-mono text-xs font-bold tracking-wider pt-1 transition-colors ${
+                        isActive ? 'text-[#9FFE0A]' : 'text-[#DADADA]/40'
+                      }`}
+                    >
+                      {hazard.number}
+                    </span>
+                    <div className="flex-1">
+                      <h3
+                        className={`font-kanit font-bold text-lg transition-colors ${
+                          isActive ? 'text-white' : 'text-[#DADADA]/50'
+                        }`}
+                      >
+                        {hazard.title}
+                      </h3>
+                      <p
+                        className={`font-roboto text-sm leading-relaxed mt-2 transition-colors ${
+                          isActive ? 'text-[#DADADA]/70' : 'text-[#DADADA]/40'
+                        }`}
+                      >
+                        {hazard.teaser}
+                      </p>
+                    </div>
+                    <svg
+                      className={`w-4 h-4 mt-1 shrink-0 transition-transform duration-300 ${
+                        isActive ? 'rotate-90 text-[#9FFE0A]' : 'text-[#DADADA]/40'
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  {/* Mobile-only inline fix preview (no sticky column on small screens) */}
+                  <div
+                    className={`md:hidden overflow-hidden transition-all duration-300 ${
+                      isActive ? 'max-h-[720px] pb-6' : 'max-h-0'
+                    }`}
+                  >
+                    <FixPreview hazard={hazard} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Right: sticky fix preview (desktop only) */}
+          <div className="hidden md:block sticky top-24">
+            <FixPreview hazard={activeHazard} />
+          </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center">
+        <div className="mt-14 flex justify-center">
           <button
             type="button"
-            onClick={openQuiz}
-            className="btn-outline px-8 py-4 text-sm tracking-wider rounded-none inline-flex items-center gap-2"
+            onClick={openAssessment}
+            className="btn-green px-8 py-4 text-sm tracking-wider rounded-none inline-flex items-center gap-2"
             id="specs-quiz-btn"
           >
-            <span>✦ Find Your Custom Protection Package (1-Min Quiz)</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <span>✦ Find Your Tailored Package (20-Sec Assessment) →</span>
           </button>
         </div>
       </div>
-
-      {/* Hazard Modal */}
-      {activeHazard && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Hazard protection details"
-          onClick={(e) => { if (e.target === e.currentTarget) setActiveHazard(null) }}
-        >
-          <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-[#DADADA]/15">
-              <h3 className="font-kanit font-bold text-white text-xl">{activeHazard.popupTitle}</h3>
-              <button
-                type="button"
-                onClick={() => setActiveHazard(null)}
-                className="text-[#DADADA] hover:text-[#9FFE0A] transition-colors p-1"
-                aria-label="Close hazard modal"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6">
-              <span className="text-[#9FFE0A] text-4xl block mb-4">{activeHazard.icon}</span>
-              <p className="font-roboto text-[#DADADA] leading-relaxed">{activeHazard.popupContent}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   )
 }

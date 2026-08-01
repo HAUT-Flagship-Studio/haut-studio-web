@@ -27,8 +27,8 @@ const TINT_SPECS = [
   },
   {
     icon: '◈',
-    title: 'DAP Digital Precision Cut',
-    detail: 'DAP digital patterns plotted for every window — no hand-trimming against the glass.',
+    title: 'HAUT Precision Scan Cut',
+    detail: 'HAUT Precision Scan patterns plotted for every window — no hand-trimming against the glass.',
   },
   {
     icon: '◉',
@@ -49,7 +49,7 @@ export default function WindowTintPage() {
             <span className="text-[#9FFE0A]">Blocked at the Glass.</span>
           </>
         }
-        subtitle="Ceramic IR film blocks the heat and UV exposure that fade interior trim and crack dashboards — cut from the same DAP digital precision patterns as our PPF, installed by Bergen County's certified master installers."
+        subtitle="Ceramic IR film blocks the heat and UV exposure that fade interior trim and crack dashboards — cut from the same HAUT Precision Scan patterns as our PPF, installed by Bergen County's certified master installers."
         ctaLabel="Get Custom Estimate"
       />
 
@@ -128,7 +128,7 @@ export default function WindowTintPage() {
             <span className="text-[#9FFE0A]">to Optical Clarity Inspection</span>
           </>
         }
-        subtitle="Every tint install at HAUT follows a 4-step process — glass prep, DAP computerized pattern cutting, heat shrinking, and dot matrix edge trim inspection. See the full breakdown alongside our PPF and ceramic coating process."
+        subtitle="Every tint install at HAUT follows a 4-step process — glass prep, HAUT Precision Scan pattern cutting, heat shrinking, and dot matrix edge trim inspection. See the full breakdown alongside our PPF and ceramic coating process."
       />
     </main>
   )

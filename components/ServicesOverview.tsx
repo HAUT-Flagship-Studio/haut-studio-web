@@ -6,21 +6,20 @@ export default function ServicesOverview() {
   return (
     <section
       id="services"
-      className="bg-[#1A292E] py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
       aria-label="Services overview"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14">
-          <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
+        <div className="mb-14 text-center">
+          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
             ✦ OUR EXPERTISE
           </p>
-          <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
             Flawless Inside & Out.
             <br />
             <span className="text-[#9FFE0A]">New Car Feeling, Every Day.</span>
           </h2>
-          <div className="w-16 h-0.5 bg-[#9FFE0A]" />
         </div>
 
         {/* Service Cards */}

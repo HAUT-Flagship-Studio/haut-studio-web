@@ -22,7 +22,7 @@ const HIGHLIGHTS = [
   {
     icon: '◉',
     title: 'Certified Master Installers',
-    body: 'Our technicians are factory-trained and certified on DAP digital pattern software and wet-application heat-forming technique — not weekend-course installers working off YouTube tutorials.',
+    body: 'Our technicians are factory-trained and certified on HAUT Precision Scan technology and wet-application heat-forming technique — not weekend-course installers working off YouTube tutorials.',
   },
   {
     icon: '◐',
@@ -32,7 +32,7 @@ const HIGHLIGHTS = [
   {
     icon: '◑',
     title: 'Zero-Blade Digital Precision',
-    body: 'Every panel and every window is cut from vehicle-specific 3D scan data through DAP software before it ever touches your paint or glass — zero on-car blade contact, zero guesswork, a factory-exact fit on the first try.',
+    body: 'Every panel and every window is cut from vehicle-specific 3D scan data through HAUT Precision Scan technology before it ever touches your paint or glass — zero on-car blade contact, zero guesswork, a factory-exact fit on the first try.',
   },
 ]
 
@@ -55,7 +55,7 @@ export default function AboutPage() {
             <span className="text-[#9FFE0A]">Flagship Protection Studio</span>
           </>
         }
-        subtitle="HAUT Flagship Studio is Hackensack, NJ's dedicated paint protection film, ceramic coating, and window tint installer — built around a single idea: precision beats speed. Every vehicle that comes through our doors gets the same climate-controlled, dust-free environment and the same zero-blade DAP digital-cut process, whether it's a daily driver or a six-figure exotic."
+        subtitle="HAUT Flagship Studio is Hackensack, NJ's dedicated paint protection film, ceramic coating, and window tint installer — built around a single idea: precision beats speed. Every vehicle that comes through our doors gets the same climate-controlled, dust-free environment and the same zero-blade HAUT Precision Scan cutting process, whether it's a daily driver or a six-figure exotic."
         ctaLabel="Get Custom Estimate"
       />
 
@@ -77,8 +77,8 @@ export default function AboutPage() {
               That standard is what separates a flagship studio from a mobile installer working out of a van in a
               parking lot. Every vehicle that comes through our bays — whether it&apos;s a daily commuter racking up
               miles on the Garden State Parkway or a six-figure exotic seeing daylight twice a month — goes
-              through the same climate-controlled, dust-free installation environment and the same DAP digital
-              pattern-cutting process. No shortcuts, no on-car blade trimming, no exceptions.
+              through the same climate-controlled, dust-free installation environment and the same HAUT
+              Precision Scan pattern-cutting process. No shortcuts, no on-car blade trimming, no exceptions.
             </p>
             <p>
               Over time, that consistency is what built our reputation across Bergen County: word of mouth from

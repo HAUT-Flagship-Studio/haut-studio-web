@@ -30,7 +30,7 @@ const REVIEWS = [
     name: 'Anthony R.',
     vehicle: '2021 Chevrolet Corvette C8',
     rating: 5,
-    text: 'They use the DAP digital patterns so the cuts are vehicle-specific — no trimming on the car. The shop is clean, the techs are meticulous, and they gave me a full walkthrough of every panel before I drove off.',
+    text: 'They use HAUT’s own precision-scan patterns so the cuts are vehicle-specific — no trimming on the car. The shop is clean, the techs are meticulous, and they gave me a full walkthrough of every panel before I drove off.',
     date: 'February 2025',
   },
   {
@@ -80,16 +80,15 @@ export default function Reviews({ limit, showHeader = true }: { limit?: number; 
       aria-label="Customer reviews"
     >
       {showHeader && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
-          <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
-            Client Reviews
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 text-center">
+          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+            ✦ Client Reviews
           </p>
-          <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
             What Clients
             <br />
             <span className="text-[#9FFE0A]">Say About the Work</span>
           </h2>
-          <div className="w-16 h-0.5 bg-[#9FFE0A]" />
         </div>
       )}
 

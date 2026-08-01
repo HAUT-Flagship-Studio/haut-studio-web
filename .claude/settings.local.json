@@ -8,7 +8,20 @@
       "Skill(run:*)",
       "PowerShell(Get-Command chromium-cli -ErrorAction SilentlyContinue)",
       "PowerShell(Get-Command npx -ErrorAction SilentlyContinue)",
-      "PowerShell(Test-Path node_modules\\\\playwright; Test-Path node_modules\\\\playwright-core; Test-Path node_modules\\\\.bin\\\\playwright; $env:LOCALAPPDATA + \"\\\\ms-playwright\" | ForEach-Object { Test-Path $_ })"
+      "PowerShell(Test-Path node_modules\\\\playwright; Test-Path node_modules\\\\playwright-core; Test-Path node_modules\\\\.bin\\\\playwright; $env:LOCALAPPDATA + \"\\\\ms-playwright\" | ForEach-Object { Test-Path $_ })",
+      "Bash(npx next *)",
+      "Bash(npx eslint *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3411/)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --yes playwright --version)",
+      "Bash(mkdir -p /c/Users/vadim/AppData/Local/Temp/claude/c--Users-vadim-OneDrive-Desktop-hautppfstudio-com/74ae3c9a-dbc2-4a4b-869a-acadd268e467/scratchpad/pw)",
+      "Read(//c/Users/vadim/AppData/Local/Temp/claude/c--Users-vadim-OneDrive-Desktop-hautppfstudio-com/74ae3c9a-dbc2-4a4b-869a-acadd268e467/scratchpad/**)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Read(//c/Users/vadim/AppData/Local/Temp/claude/c--Users-vadim-OneDrive-Desktop-hautppfstudio-com/74ae3c9a-dbc2-4a4b-869a-acadd268e467/scratchpad/pw/**)",
+      "Bash(npx playwright *)"
     ]
   }
 }

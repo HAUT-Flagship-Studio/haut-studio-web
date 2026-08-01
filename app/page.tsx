@@ -28,14 +28,30 @@ export default function HomePage() {
       <RoadHazards />
 
       <ProcessBanner
-        heading={
-          <>
-            Zero-Blade Precision,
-            <br />
-            <span className="text-[#9FFE0A]">Every Panel, Every Install</span>
-          </>
-        }
-        subtitle="From paint decontamination to final inspection, every PPF, ceramic coating, and window tint install at HAUT follows the same DAP digital precision process in our climate-controlled Hackensack, NJ studio. See the full step-by-step breakdown for all three services."
+        eyebrow="✦ How It Works"
+        heading="The HAUT Installation Standard."
+        subtitle="Precision technology, specialized installation, and zero shortcuts across all three protection disciplines."
+        buttonText="See Our Step-by-Step Workflow"
+        cards={[
+          {
+            badge: 'Paint Protection Film',
+            title: 'Custom-Wrapped Edges (Zero Blades on Paint)',
+            description:
+              'We custom-adjust digital templates to wrap film behind panel edges wherever possible. Every pattern is pre-cut before fitting—zero razor blades ever touch your factory paint.',
+          },
+          {
+            badge: 'Ceramic Window Tint',
+            title: 'Plotter-Cut Precision',
+            description:
+              'All tint patterns are precision-cut on a digital plotter prior to application. This eliminates hand-trimming on your vehicle, preventing glass scratches and uneven edges.',
+          },
+          {
+            badge: 'Ceramic Coating',
+            title: 'Complete Millimeter-Scale Coverage',
+            description:
+              'Applied strictly to professional standards following deep surface decontamination. We execute a precise cross-hatch application method, ensuring every single millimeter of the surface is fully protected.',
+          },
+        ]}
       />
 
       <Reviews limit={3} />

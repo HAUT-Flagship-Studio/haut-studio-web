@@ -48,7 +48,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'High-Impact Rock Chip Defense',
     price: 2399,
     description:
-      "Self-healing optical TPU film applied to the panels that absorb the worst of highway debris — bumper, full hood, fenders, mirrors, and headlights. DAP digital precision patterns are cut to your vehicle's exact contours with zero-blade contact, so rock chips and swirl marks stop at the film, not your paint.",
+      "Self-healing optical TPU film applied to the panels that absorb the worst of highway debris — bumper, full hood, fenders, mirrors, and headlights. HAUT Precision Scan patterns are cut to your vehicle's exact contours with zero-blade contact, so rock chips and swirl marks stop at the film, not your paint.",
     inclusions: [
       'Full Front Bumper',
       'Full Hood Panel',
@@ -67,7 +67,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'Full Perimeter Chip Defense',
     price: 3199,
     description:
-      'Everything in Front End, plus the rocker panels, A-pillars, and rear bumper impact zone that catch tire spray and trailing debris at highway speed. Same self-healing optical TPU, same zero-blade DAP precision cut, extended to the full perimeter most daily drivers actually need.',
+      'Everything in Front End, plus the rocker panels, A-pillars, and rear bumper impact zone that catch tire spray and trailing debris at highway speed. Same self-healing optical TPU, same zero-blade HAUT Precision Scan cut, extended to the full perimeter most daily drivers actually need.',
     inclusions: [
       'Everything in Front End',
       'Rocker Panels (pair)',
@@ -86,7 +86,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     tagline: 'Complete Body Chip & UV Defense',
     price: 6499,
     description:
-      'Complete body encapsulation in self-healing optical TPU, cut panel-for-panel from DAP digital precision patterns — every edge, every contour, zero on-car cutting. The standard for owners protecting resale value on exotic and luxury vehicles, applied in our climate-controlled studio. Includes free enclosed trailer transport to and from our studio.',
+      'Complete body encapsulation in self-healing optical TPU, cut panel-for-panel from HAUT Precision Scan patterns — every edge, every contour, zero on-car cutting. The standard for owners protecting resale value on exotic and luxury vehicles, applied in our climate-controlled studio. Includes free enclosed trailer transport to and from our studio.',
     inclusions: [
       '100% Body Coverage',
       'All Panels + Roof',
@@ -127,12 +127,12 @@ export const WINDOW_TINT_PACKAGES: PackageItem[] = [
     tagline: 'Daily Heat & UV Defense',
     price: 150,
     description:
-      'Ceramic IR film on the front driver and passenger windows — the two panels that take the most direct UV exposure and cabin heat on every drive. DAP-cut for a factory-clean edge with zero bubbling.',
+      'Ceramic IR film on the front driver and passenger windows — the two panels that take the most direct UV exposure and cabin heat on every drive. HAUT Precision Scan-cut for a factory-clean edge with zero bubbling.',
     inclusions: [
       'Front Driver Window',
       'Front Passenger Window',
       'Ceramic IR Film — Blocks Heat & UV',
-      'DAP Precision-Cut Pattern',
+      'HAUT Precision Scan Cut Pattern',
     ],
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Front+Window+Tint',
     imageAlt: 'Front window ceramic tint coverage',
@@ -149,7 +149,7 @@ export const WINDOW_TINT_PACKAGES: PackageItem[] = [
       'All Side Windows',
       'Rear Window',
       'Ceramic IR Film — Blocks Heat & UV',
-      'DAP Precision-Cut Pattern',
+      'HAUT Precision Scan Cut Pattern',
       'No-Bubble Adhesive',
     ],
     image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=Full+Vehicle+Tint',
@@ -287,7 +287,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     content: [
       'Most clients arrive expecting a same-day job. PPF installation — done correctly — takes time. A full vehicle wrap at HAUT requires 3–5 business days depending on vehicle complexity and film selection.',
       'Day 1: Paint Inspection and Decontamination. Before any film is cut or applied, the vehicle goes through a full decontamination wash, clay bar treatment, and paint correction if needed. Applying PPF over contamination or swirl marks locks those defects under the film permanently.',
-      'Day 1–2: Digital Pattern Generation. Every panel template is generated using vehicle-specific 3D scan data through DAP software. This eliminates on-car trimming — a practice that risks cutting through the clear coat. Patterns account for every recessed edge, antenna mount, and body line.',
+      'Day 1–2: Digital Pattern Generation. Every panel template is generated using vehicle-specific 3D scan data through HAUT Precision Scan technology. This eliminates on-car trimming — a practice that risks cutting through the clear coat. Patterns account for every recessed edge, antenna mount, and body line.',
       'Day 2–4: Film Application. Panels are applied in sections, starting with the most complex geometry (front bumper, hood leading edge). Each section is wet-applied using a slip solution, positioned precisely, then heat-formed around edges and into recesses. Heat guns and squeegees remove all moisture and air.',
       'Day 4–5: Cure and Quality Check. The film requires 24–48 hours to fully bond. During this window, the vehicle stays in a climate-controlled bay. After cure, every panel is inspected under LED lighting for lifting edges, contamination, or optical distortion.',
       'Day 5: Client Delivery and Care Briefing. Every client receives a written care guide: no car washes for 7 days, avoid high-pressure direct spraying on edges for 30 days, use pH-neutral wash soap. We walk through every panel and explain what to expect as the film settles.',

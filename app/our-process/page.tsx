@@ -8,7 +8,7 @@ import { STUDIO } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Our Process | PPF, Ceramic Coating & Window Tint Installation | HAUT Flagship Studio',
   description:
-    "See exactly how HAUT Flagship Studio installs paint protection film, ceramic coating, and window tint in Hackensack, NJ — DAP digital pattern plotting, climate-controlled dust-free bays, and zero-blade contact on every panel. The full step-by-step process for Bergen County's certified master installers.",
+    "See exactly how HAUT Flagship Studio installs paint protection film, ceramic coating, and window tint in Hackensack, NJ — HAUT Precision Scan pattern plotting, climate-controlled dust-free bays, and zero-blade contact on every panel. The full step-by-step process for Bergen County's certified master installers.",
   alternates: {
     canonical: 'https://hautppfstudio.com/our-process',
   },
@@ -28,8 +28,8 @@ const PPF_STEPS = [
   },
   {
     step: '02',
-    title: 'DAP Digital Pattern Plotting (Zero-Blade Contact)',
-    body: "Your vehicle's exact panel geometry — every recessed edge, door jamb, mirror housing, and body line — is pulled from vehicle-specific 3D scan data and plotted through DAP (Digital Application Pattern) software. Every template is cut before it ever touches your paint, eliminating the on-car blade trimming that risks scoring your clear coat.",
+    title: 'HAUT Precision Scan Plotting (Zero-Blade Contact)',
+    body: "Your vehicle's exact panel geometry — every recessed edge, door jamb, mirror housing, and body line — is pulled from vehicle-specific 3D scan data and plotted through HAUT Precision Scan technology. Every template is cut before it ever touches your paint, eliminating the on-car blade trimming that risks scoring your clear coat.",
   },
   {
     step: '03',
@@ -74,8 +74,8 @@ const TINT_STEPS = [
   },
   {
     step: '02',
-    title: 'DAP Digital Computerized Glass Pattern Cutting',
-    body: "Each window's exact profile is plotted through our computerized DAP glass-cutting system, producing a panel-exact template for every pane before it's applied — no hand-trimming against the glass edge.",
+    title: 'HAUT Precision Scan Glass Cutting',
+    body: "Each window's exact profile is plotted through our computerized HAUT Precision Scan glass-cutting system, producing a panel-exact template for every pane before it's applied — no hand-trimming against the glass edge.",
   },
   {
     step: '03',
@@ -175,7 +175,7 @@ export default function OurProcessPage() {
           <p className="font-roboto text-[#DADADA] text-base leading-relaxed mb-4">
             Most shops still hand-trim film directly on the car — a blade a few millimeters from your clear coat,
             on every single edge. At HAUT, every pattern for every panel and every window is plotted digitally
-            through DAP (Digital Application Pattern) software before installation ever begins. That means zero
+            through HAUT Precision Scan technology before installation ever begins. That means zero
             on-car cutting, zero risk of a stray blade mark, and a factory-exact fit on the first try.
           </p>
           <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
@@ -214,7 +214,7 @@ export default function OurProcessPage() {
             <span className="text-[#9FFE0A]">Installation Process</span>
           </>
         }
-        intro="Self-healing optical TPU film, cut with zero-blade DAP precision and installed in a climate-controlled Hackensack bay — the process that protects Bergen County's daily drivers and exotics alike from rock chips, swirl marks, and UV fade."
+        intro="Self-healing optical TPU film, cut with zero-blade HAUT Precision Scan and installed in a climate-controlled Hackensack bay — the process that protects Bergen County's daily drivers and exotics alike from rock chips, swirl marks, and UV fade."
         steps={PPF_STEPS}
         ctaLabel="Get PPF Estimate →"
         serviceHref="/ppf"
