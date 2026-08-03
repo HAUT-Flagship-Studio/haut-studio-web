@@ -47,6 +47,7 @@ export default function AboutPage() {
   return (
     <main>
       <PageHero
+        backgroundImage="/assets/hero-car-photo.webp"
         eyebrow="About the Studio"
         heading={
           <>

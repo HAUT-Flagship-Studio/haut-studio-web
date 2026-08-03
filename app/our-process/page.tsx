@@ -153,6 +153,7 @@ export default function OurProcessPage() {
   return (
     <main>
       <PageHero
+        backgroundImage="/assets/service-ppf.webp"
         eyebrow="How It's Done"
         heading={
           <>

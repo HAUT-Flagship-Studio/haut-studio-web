@@ -16,21 +16,23 @@ const DEFAULT_HEADING = (
 
 const DEFAULT_TRUST_BADGES = [
   'Climate-Controlled Studio',
-  'Self-Healing Optical TPU',
-  'HAUT Precision Scan (Zero-Blade Contact)',
-  '10-Year Warranty',
+  '100% Digital Plotter Cut (Zero Blades)',
+  'Custom Extended-Wrapped Edges',
+  '10-Year Transferable Warranty',
 ]
 
 export default function Hero({
   locationBadge = 'Hackensack, NJ • Certified Master Installers',
   heading = DEFAULT_HEADING,
-  subtitle = "Self-healing optical TPU film, cut from HAUT Precision Scan patterns for zero-blade contact with your paint — applied in our climate-controlled studio and backed by a 10-year HAUT manufacturer warranty, for Bergen County's most discerning owners.",
+  subtitle = 'Preserve your irreplaceable factory finish with self-healing optical TPU. Digitally cut with zero razor blades on paint, extended for wrapped edges, and backed by a 10-year manufacturer warranty.',
   trustBadges = DEFAULT_TRUST_BADGES,
+  backgroundImage = '/assets/hero-car-photo.webp',
 }: {
   locationBadge?: string
   heading?: ReactNode
   subtitle?: string
   trustBadges?: string[]
+  backgroundImage?: string
 }) {
   const { openQuiz } = useQuiz()
 
@@ -43,14 +45,15 @@ export default function Hero({
 
       {/* Background photo */}
       <Image
-        src="/assets/hero-car-photo.webp"
+        src={backgroundImage}
         alt="HAUT PPF Studio paint protection film installation"
         fill
         priority
         className="object-contain object-center -translate-y-[275px] md:translate-y-0 md:object-cover md:object-center"
         unoptimized
       />
-      <div className="absolute inset-0 bg-[#1A292E]/70 md:bg-gradient-to-r md:from-[#1A292E] md:via-[#1A292E]/85 md:to-[#1A292E]/50" />
+      <div className="absolute inset-0 bg-[#1A292E]/50" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_65%_at_28%_50%,rgba(0,0,0,0.4),transparent_70%)]" />
 
       {/* Green accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-[#9FFE0A] z-10" />

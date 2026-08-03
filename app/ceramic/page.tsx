@@ -41,6 +41,7 @@ export default function CeramicPage() {
   return (
     <main>
       <PageHero
+        backgroundImage="/assets/service-ceramic-coating.webp"
         eyebrow="Ceramic Coating"
         heading={
           <>

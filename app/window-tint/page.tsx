@@ -41,6 +41,7 @@ export default function WindowTintPage() {
   return (
     <main>
       <PageHero
+        backgroundImage="/assets/service-window-tinting.webp"
         eyebrow="Window Tinting"
         heading={
           <>

@@ -15,6 +15,7 @@ export default function ReviewsPage() {
   return (
     <main>
       <PageHero
+        backgroundImage="/assets/hero-car-photo.webp"
         eyebrow="Client Reviews"
         heading={
           <>
