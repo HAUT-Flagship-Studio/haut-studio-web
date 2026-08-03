@@ -21,7 +21,7 @@ export default function HomePage() {
           </>
         }
         subtitle="As the manufacturer's own flagship studio, we install the patterns and processes the rest of the industry licenses secondhand — across Paint Protection Film, Ceramic Coating, and Window Tinting. Every install is backed by a direct manufacturer warranty, honored in any state nationwide."
-        trustBadges={['★ 5.0 Google Reviews', 'Manufacturer Flagship Studio', '10-Year Nationwide Warranty', 'Same-Week Appointments Available']}
+        trustBadges={['★ 5.0 Google Reviews', 'Manufacturer Flagship Studio', '10-Year Nationwide Warranty', 'Exotic & Supercar Specialists']}
       />
 
       <RoadHazards />
@@ -29,7 +29,7 @@ export default function HomePage() {
       <ProcessBanner
         eyebrow="✦ How It Works"
         heading="The HAUT Installation Standard."
-        subtitle="Precision technology, specialized installation, and zero shortcuts across all three protection disciplines."
+        subtitle="With over 10+ years of hands-on experience, our master technicians spent years refining their trade as trusted partners for regional Ferrari, Porsche, McLaren, and Lamborghini dealerships. Today, HAUT operates 100% direct-to-owner, applying those exact factory-certified standards directly to your vehicle with zero volume compromises."
         buttonText="See Our Step-by-Step Workflow"
         cards={[
           {

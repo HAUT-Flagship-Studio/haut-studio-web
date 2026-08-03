@@ -2,7 +2,7 @@ const TRUST_ITEMS = [
   '★ 5.0 Google Reviews',
   'Manufacturer Flagship Studio',
   '10-Year Nationwide Warranty',
-  'Same-Week Appointments Available',
+  'Exotic & Supercar Specialists',
 ]
 
 export default function TrustBar() {
