@@ -5,6 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useQuiz } from './QuizProvider'
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void
+  }
+}
+
 const HAZARDS = [
   {
     number: '01',
@@ -64,15 +70,15 @@ function FixPreview({ hazard }: { hazard: (typeof HAZARDS)[0] }) {
         <p className="text-xs font-bold tracking-widest text-[#9FFE0A] uppercase mb-2">
           {hazard.fixLabel}
         </p>
-        <h3 className="font-kanit font-bold text-white text-xl md:text-2xl mb-3">
+        <h3 className="text-lg md:text-xl font-bold text-white tracking-tight mb-3">
           {hazard.fixName}
         </h3>
-        <p className="font-roboto text-sm text-[#DADADA]/70 leading-relaxed mb-5">
+        <p className="text-sm text-gray-400 leading-relaxed mb-5">
           {hazard.fixDescription}
         </p>
         <Link
           href={hazard.href}
-          className="group inline-flex items-center gap-2 text-[#9FFE0A] font-bold text-sm"
+          className="group inline-flex items-center gap-1.5 text-xs md:text-sm font-bold text-[#9FFE0A]"
         >
           Explore {hazard.fixLabel}
           <svg
@@ -97,29 +103,47 @@ export default function RoadHazards() {
   return (
     <section
       id="specs"
-      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Technical specifications"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14 text-left">
-          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+        <div className="mb-8 md:mb-12 text-left">
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">
             ✦ TAILORED PROTECTION
           </p>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
             Real Road Hazards.
             <br />
             <span className="text-[#9FFE0A]">Smart Protection Solutions.</span>
           </h2>
-          <p className="text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed">
+          <p className="text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed mb-8 md:mb-12">
             From highway rock chips to UV fade and cabin heat soak, every hazard demands a
             different defense. We match the right film, coating, or tint to the threat your
             vehicle actually faces.
           </p>
         </div>
 
-        {/* Threat list + fix preview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 items-start">
+        {/* Mobile: fully expanded vertical feed (no accordions) */}
+        <div className="md:hidden flex flex-col gap-10">
+          {HAZARDS.map((hazard) => (
+            <div key={hazard.title}>
+              <span className="font-mono text-xs font-bold tracking-wider text-[#9FFE0A]">
+                {hazard.number}
+              </span>
+              <h3 className="text-lg font-bold text-white tracking-tight mt-1">
+                {hazard.title}
+              </h3>
+              <p className="text-sm text-gray-400 leading-relaxed mt-2">{hazard.teaser}</p>
+              <div className="mt-6">
+                <FixPreview hazard={hazard} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: interactive list + sticky fix preview */}
+        <div className="hidden md:grid md:grid-cols-2 gap-x-12 items-start">
           {/* Left: hazard list */}
           <div>
             {HAZARDS.map((hazard, index) => {
@@ -128,9 +152,14 @@ export default function RoadHazards() {
                 <div key={hazard.title} className="border-b border-white/10 first:border-t">
                   <button
                     type="button"
-                    onClick={() => setActive(index)}
-                    className="w-full text-left py-6 flex items-start gap-4"
-                    aria-expanded={isActive}
+                    onClick={() => {
+                      setActive(index)
+                      if (typeof window !== 'undefined' && window.fbq) {
+                        window.fbq('trackCustom', 'HazardViewed', { hazard: hazard.title })
+                      }
+                    }}
+                    className="w-full text-left py-6 flex items-start gap-4 cursor-pointer transition-colors duration-200 hover:bg-white/[0.03] active:bg-white/[0.06]"
+                    aria-pressed={isActive}
                   >
                     <span
                       className={`font-mono text-xs font-bold tracking-wider pt-1 transition-colors ${
@@ -141,47 +170,39 @@ export default function RoadHazards() {
                     </span>
                     <div className="flex-1">
                       <h3
-                        className={`font-kanit font-bold text-lg transition-colors ${
+                        className={`text-lg md:text-xl font-bold tracking-tight transition-colors ${
                           isActive ? 'text-white' : 'text-[#DADADA]/50'
                         }`}
                       >
                         {hazard.title}
                       </h3>
                       <p
-                        className={`font-roboto text-sm leading-relaxed mt-2 transition-colors ${
-                          isActive ? 'text-[#DADADA]/70' : 'text-[#DADADA]/40'
+                        className={`text-sm leading-relaxed mt-2 transition-colors ${
+                          isActive ? 'text-gray-400' : 'text-[#DADADA]/40'
                         }`}
                       >
                         {hazard.teaser}
                       </p>
                     </div>
+                    {/* Indicator: shows which hazard drives the sticky preview */}
                     <svg
                       className={`w-4 h-4 mt-1 shrink-0 transition-transform duration-300 ${
-                        isActive ? 'rotate-90 text-[#9FFE0A]' : 'text-[#DADADA]/40'
+                        isActive ? 'rotate-45 text-[#9FFE0A]' : 'text-[#DADADA]/40'
                       }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                   </button>
-
-                  {/* Mobile-only inline fix preview (no sticky column on small screens) */}
-                  <div
-                    className={`md:hidden overflow-hidden transition-all duration-300 ${
-                      isActive ? 'max-h-[720px] pb-6' : 'max-h-0'
-                    }`}
-                  >
-                    <FixPreview hazard={hazard} />
-                  </div>
                 </div>
               )
             })}
           </div>
 
-          {/* Right: sticky fix preview (desktop only) */}
-          <div className="hidden md:block sticky top-24">
+          {/* Right: sticky fix preview */}
+          <div className="sticky top-24">
             <FixPreview hazard={activeHazard} />
           </div>
         </div>

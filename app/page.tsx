@@ -3,6 +3,7 @@ import ServicesOverview from '@/components/ServicesOverview'
 import RoadHazards from '@/components/RoadHazards'
 import ProcessBanner from '@/components/ProcessBanner'
 import Reviews from '@/components/Reviews'
+import FAQSection from '@/components/FAQSection'
 import LocationMap from '@/components/LocationMap'
 
 export default function HomePage() {
@@ -19,11 +20,9 @@ export default function HomePage() {
             </span>
           </>
         }
-        subtitle="As the manufacturer flagship studio, we set the installation benchmarks the rest of the industry tries to follow. We deliver elite master-class craftsmanship across our three core disciplines: Paint Protection Film, Ceramic Coating, and Window Tinting. Experience direct-from-source quality you can trust, secured by a direct manufacturer warranty valid in any state nationwide."
-        trustBadges={['Durable Optic Clear PPF', 'Extra Shiny Ceramic Coating', 'Heat & UV Rejected Window Tint', 'Nationwide Manufacturer Warranty']}
+        subtitle="As the manufacturer's own flagship studio, we install the patterns and processes the rest of the industry licenses secondhand — across Paint Protection Film, Ceramic Coating, and Window Tinting. Every install is backed by a direct manufacturer warranty, honored in any state nationwide."
+        trustBadges={['★ 5.0 Google Reviews', 'Manufacturer Flagship Studio', '10-Year Nationwide Warranty', 'Same-Week Appointments Available']}
       />
-
-      <ServicesOverview />
 
       <RoadHazards />
 
@@ -54,7 +53,11 @@ export default function HomePage() {
         ]}
       />
 
-      <Reviews limit={3} />
+      <Reviews />
+
+      <ServicesOverview />
+
+      <FAQSection />
 
       <LocationMap />
     </main>

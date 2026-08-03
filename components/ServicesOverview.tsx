@@ -6,16 +6,16 @@ export default function ServicesOverview() {
   return (
     <section
       id="services"
-      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Services overview"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14 text-center">
-          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+        <div className="mb-8 md:mb-12 text-left">
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">
             ✦ OUR EXPERTISE
           </p>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
             Flawless Inside & Out.
             <br />
             <span className="text-[#9FFE0A]">New Car Feeling, Every Day.</span>
@@ -48,13 +48,13 @@ export default function ServicesOverview() {
               </div>
 
               <div className="flex flex-col flex-1 p-6">
-                <h3 className="font-kanit font-bold text-white text-xl mb-2 group-hover:text-[#9FFE0A] transition-colors">
+                <h3 className="text-lg md:text-xl font-bold text-white tracking-tight mb-2 group-hover:text-[#9FFE0A] transition-colors">
                   {service.name}
                 </h3>
-                <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed flex-1 mb-4">
+                <p className="text-sm text-gray-400 leading-relaxed flex-1 mb-4">
                   {service.tagline}
                 </p>
-                <span className="inline-flex items-center gap-2 text-[#9FFE0A] font-roboto text-sm group-hover:gap-3 transition-all duration-200">
+                <span className="inline-flex items-center gap-1.5 text-xs md:text-sm font-bold text-[#9FFE0A] group-hover:gap-3 transition-all duration-200">
                   Explore {service.name}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -22,18 +22,18 @@ export default function ProcessBanner({
 }) {
   return (
     <section
-      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Our process preview"
     >
-      <div className={cards ? 'max-w-6xl mx-auto' : 'max-w-5xl mx-auto text-center'}>
+      <div className={cards ? 'max-w-7xl mx-auto' : 'max-w-7xl mx-auto text-center'}>
         <div className={cards ? 'text-left' : ''}>
-          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">{eyebrow}</p>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">{heading}</h2>
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">{eyebrow}</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">{heading}</h2>
           <p
             className={
               cards
-                ? 'text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed mb-8'
-                : 'text-sm md:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8'
+                ? 'text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed mb-8 md:mb-12'
+                : 'text-sm md:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8 md:mb-12'
             }
           >
             {subtitle}
@@ -50,8 +50,8 @@ export default function ProcessBanner({
                 <p className="text-[#9FFE0A] font-roboto text-xs tracking-[0.2em] uppercase mb-3">
                   {card.badge}
                 </p>
-                <h3 className="font-kanit font-semibold text-white text-lg mb-2">{card.title}</h3>
-                <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">{card.description}</p>
+                <h3 className="text-lg md:text-xl font-bold text-white tracking-tight mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">{card.description}</p>
               </div>
             ))}
           </div>

@@ -10,16 +10,16 @@ export default function LocationMap() {
   return (
     <section
       id="contact"
-      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Studio location and contact"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-14 text-left">
-          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+        <div className="mb-8 md:mb-12 text-left">
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">
             ✦ Visit the Studio
           </p>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
             Find Us in
             <br />
             <span className="text-[#9FFE0A]">Hackensack, NJ</span>
@@ -53,7 +53,7 @@ export default function LocationMap() {
           {/* Info card */}
           <div className="lg:col-span-2 card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-between">
             <div>
-              <h3 className="font-kanit font-bold text-white text-xl mb-5">HAUT Flagship Studio</h3>
+              <h3 className="text-lg md:text-xl font-bold text-white tracking-tight mb-5">HAUT Flagship Studio</h3>
               <div className="space-y-5">
                 <div className="flex items-start gap-3">
                   <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#9FFE0A]" fill="currentColor" viewBox="0 0 20 20">
@@ -75,7 +75,7 @@ export default function LocationMap() {
                   <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#9FFE0A]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                   </svg>
-                  <div className="font-roboto text-[#DADADA]/80 text-sm leading-relaxed">
+                  <div className="text-sm text-gray-400 leading-relaxed">
                     <p>Mon–Fri: 9AM – 6PM</p>
                     <p>Saturday: 9AM – 4PM</p>
                   </div>

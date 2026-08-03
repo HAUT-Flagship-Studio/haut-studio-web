@@ -28,6 +28,11 @@ export interface BlogArticle {
   content: string[]
 }
 
+export interface FAQItem {
+  question: string
+  answer: string
+}
+
 export const STUDIO = {
   name: 'HAUT Flagship Studio',
   phone: '+1 (201) 201-0170',
@@ -180,7 +185,7 @@ export const SERVICES_OVERVIEW = [
     id: 'ppf',
     name: 'Paint Protection Film',
     tagline: 'High-performance physical shield designed to absorb everyday road impact, helping defend your factory paint against rock chips, swirl marks, and road wear.',
-    priceFrom: 1399,
+    priceFrom: 2399,
     href: '/ppf',
     image: '/assets/service-ppf.webp',
     imageAlt: 'Paint protection film service overview',
@@ -189,7 +194,7 @@ export const SERVICES_OVERVIEW = [
     id: 'ceramic',
     name: 'Ceramic Coating',
     tagline: 'Ultra-gloss hydrophobic barrier that repels dirt and water, making routine washes effortless while helping preserve your paint’s depth and UV resistance.',
-    priceFrom: 799,
+    priceFrom: 999,
     href: '/ceramic',
     image: '/assets/service-ceramic-coating.webp',
     imageAlt: 'Ceramic coating service overview',
@@ -198,7 +203,7 @@ export const SERVICES_OVERVIEW = [
     id: 'window-tint',
     name: 'Window Tinting',
     tagline: 'Advanced ceramic tint engineered to reduce cabin heat and block harmful UV rays—enhancing everyday driving comfort while protecting your interior leather and trim.',
-    priceFrom: 199,
+    priceFrom: 150,
     href: '/window-tint',
     image: '/assets/service-window-tinting.webp',
     imageAlt: 'Window tinting service overview',
@@ -226,6 +231,39 @@ export const TINT_FEATURE_MATRIX: FeatureRow[] = [
   { label: 'Ceramic IR Film', included: [true, true, true] },
   { label: 'No-Bubble Adhesive', included: [false, true, true] },
   { label: 'Windshield Visor Strip', included: [false, false, true] },
+]
+
+export const FAQ_ITEMS: FAQItem[] = [
+  {
+    question: 'How long does Paint Protection Film last?',
+    answer:
+      'High-quality PPF with a self-healing topcoat typically lasts 8–12 years when properly maintained. HAUT installs precision-cut film that covers every exposed panel edge.',
+  },
+  {
+    question: 'Does PPF eliminate the need for waxing?',
+    answer:
+      'Yes. The hydrophobic topcoat on modern PPF repels water, dirt, and road grime — making traditional wax completely unnecessary. A simple rinse restores gloss.',
+  },
+  {
+    question: 'What is the difference between PPF and ceramic coating?',
+    answer:
+      'PPF is a physical urethane film that absorbs rock chips and road debris while self-healing minor scratches. Ceramic coating is a nano-chemical sealant applied on top of clear coat or PPF that adds hydrophobic gloss and UV protection. Both can be combined for maximum coverage.',
+  },
+  {
+    question: 'What does the 10-year warranty actually cover?',
+    answer:
+      'The manufacturer warranty covers yellowing, cracking, and adhesive failure of the self-healing TPU film for 10 years, and is honored nationwide — not just at the installing studio. It does not cover damage from improper washing (automatic brush washes) or physical cuts from an accident.',
+  },
+  {
+    question: 'How far in advance do I need to book?',
+    answer:
+      'Most services, including Front End and Highway PPF, can be booked same-week. Full Vehicle PPF and combined packages that require multiple days in our climate-controlled bay may need 1–2 weeks of lead time depending on the season.',
+  },
+  {
+    question: 'Where is HAUT Flagship Studio located?',
+    answer:
+      'HAUT Flagship Studio is located at 361 NJ-17, Hackensack, NJ 07601. We serve the greater Bergen County area and offer free enclosed trailer transport for Full Vehicle PPF packages.',
+  },
 ]
 
 export const BLOG_ARTICLES: BlogArticle[] = [

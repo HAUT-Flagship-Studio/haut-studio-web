@@ -76,15 +76,15 @@ export default function Reviews({ limit, showHeader = true }: { limit?: number; 
   return (
     <section
       id="reviews"
-      className="bg-[#1A292E] precision-grid py-20 md:py-28 overflow-hidden"
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 overflow-hidden"
       aria-label="Customer reviews"
     >
       {showHeader && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 text-center">
-          <p className="text-xs md:text-sm font-bold tracking-widest text-[#9FFE0A] uppercase">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12 text-left">
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">
             ✦ Client Reviews
           </p>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mt-2 mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
             What Clients
             <br />
             <span className="text-[#9FFE0A]">Say About the Work</span>
@@ -113,13 +113,13 @@ export default function Reviews({ limit, showHeader = true }: { limit?: number; 
               </div>
 
               {/* Review text */}
-              <blockquote className="font-roboto text-[#DADADA]/80 text-sm leading-relaxed mb-5">
+              <blockquote className="text-sm text-gray-400 leading-relaxed mb-5">
                 &ldquo;{review.text}&rdquo;
               </blockquote>
 
               {/* Reviewer */}
               <div className="border-t border-[#DADADA]/10 pt-4">
-                <p className="font-kanit font-semibold text-white text-sm">{review.name}</p>
+                <p className="text-lg md:text-xl font-bold text-white tracking-tight">{review.name}</p>
                 <p className="font-roboto text-[#9FFE0A] text-xs mt-0.5">{review.vehicle}</p>
               </div>
             </article>

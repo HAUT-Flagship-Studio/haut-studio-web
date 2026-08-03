@@ -1,0 +1,67 @@
+'use client'
+
+import { useState } from 'react'
+import { FAQ_ITEMS } from '@/lib/data'
+
+export default function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
+
+  return (
+    <section
+      className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
+      aria-label="Frequently asked questions"
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8 md:mb-12 text-left">
+          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-[#9FFE0A] uppercase mb-2 flex items-center gap-2">
+            ✦ Common Questions
+          </p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+            Before You Book,
+            <br />
+            <span className="text-[#9FFE0A]">Here&apos;s What People Ask.</span>
+          </h2>
+        </div>
+
+        <div className="max-w-3xl border-t border-white/10">
+          {FAQ_ITEMS.map((item, index) => {
+            const isOpen = openIndex === index
+            return (
+              <div key={item.question} className="border-b border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="w-full text-left py-6 flex items-start justify-between gap-4"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-lg md:text-xl font-bold text-white tracking-tight">
+                    {item.question}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 mt-1 shrink-0 transition-transform duration-300 ${
+                      isOpen ? 'rotate-45 text-[#9FFE0A]' : 'text-[#DADADA]/40'
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    isOpen ? 'max-h-[320px] pb-6' : 'max-h-0'
+                  }`}
+                >
+                  <p className="text-sm text-gray-400 leading-relaxed max-w-2xl">
+                    {item.answer}
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

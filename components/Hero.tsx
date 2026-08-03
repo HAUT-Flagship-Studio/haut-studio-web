@@ -47,10 +47,10 @@ export default function Hero({
         alt="HAUT PPF Studio paint protection film installation"
         fill
         priority
-        className="object-contain sm:object-cover object-center -translate-y-[230px] sm:translate-y-0"
+        className="object-contain object-center -translate-y-[275px] md:translate-y-0 md:object-cover md:object-center"
         unoptimized
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1A292E] via-[#1A292E]/85 to-[#1A292E]/50" />
+      <div className="absolute inset-0 bg-[#1A292E]/70 md:bg-gradient-to-r md:from-[#1A292E] md:via-[#1A292E]/85 md:to-[#1A292E]/50" />
 
       {/* Green accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-[#9FFE0A] z-10" />

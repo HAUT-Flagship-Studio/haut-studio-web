@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type ServiceOption, type VehicleCategory } from '@/lib/pricing'
+import { STUDIO } from '@/lib/data'
 import type { CalculatorPrefill } from './CalculatorModal'
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void
+  }
+}
 
 const OWNERSHIP_OPTIONS = [
   { id: 'leased', label: 'Leased' },
@@ -170,6 +177,8 @@ export default function QuizModal({
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState<Answers>(INITIAL_ANSWERS)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [capturePhone, setCapturePhone] = useState('')
+  const [captureStatus, setCaptureStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
   const recommendations = useMemo(() => buildRecommendations(answers), [answers])
 
@@ -177,6 +186,12 @@ export default function QuizModal({
     if (step === 6) setSelectedIds(recommendations.filter((r) => !r.optional).map((r) => r.id))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
+
+  useEffect(() => {
+    if (isOpen && typeof window !== 'undefined' && window.fbq) {
+      window.fbq('trackCustom', 'AssessmentStarted')
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -193,6 +208,9 @@ export default function QuizModal({
 
   const handleNext = () => {
     if (!canAdvance) return
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('trackCustom', 'AssessmentStep', { step: step + 1 })
+    }
     setStep((s) => Math.min(s + 1, 6))
   }
 
@@ -202,6 +220,8 @@ export default function QuizModal({
     setStep(1)
     setAnswers(INITIAL_ANSWERS)
     setSelectedIds([])
+    setCapturePhone('')
+    setCaptureStatus('idle')
   }
 
   const toggleSelected = (id: string) => {
@@ -225,6 +245,32 @@ export default function QuizModal({
         : undefined,
     })
     onClose()
+  }
+
+  const handleSendEstimate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!capturePhone.trim()) return
+    setCaptureStatus('sending')
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: capturePhone,
+          vehicleLabel,
+          selectedServices: selectedItems.map((i) => i.name),
+          estimatedPrice: total,
+          partial: true,
+        }),
+      })
+      if (!res.ok) throw new Error('Submission failed')
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('trackCustom', 'PartialLead', { value: total, currency: 'USD' })
+      }
+      setCaptureStatus('sent')
+    } catch {
+      setCaptureStatus('error')
+    }
   }
 
   return (
@@ -482,6 +528,42 @@ export default function QuizModal({
               <div className="bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-4 flex items-center justify-between">
                 <span className="font-roboto text-[#DADADA] text-sm">Total Package Price:</span>
                 <span className="font-kanit font-black text-[#9FFE0A] text-2xl">${total.toLocaleString()}</span>
+              </div>
+
+              <div className="border border-[#DADADA]/20 bg-white/5 p-4 space-y-3">
+                {captureStatus === 'sent' ? (
+                  <p className="font-roboto text-[#9FFE0A] text-sm">
+                    Got it — we&apos;ll text this estimate to {capturePhone} shortly.
+                  </p>
+                ) : (
+                  <>
+                    <p className="font-roboto text-[#DADADA]/70 text-xs">
+                      Not ready to finish the estimator? Leave your number and we&apos;ll text you this exact estimate.
+                    </p>
+                    <form onSubmit={handleSendEstimate} className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="tel"
+                        required
+                        placeholder="Phone number"
+                        value={capturePhone}
+                        onChange={(e) => setCapturePhone(e.target.value)}
+                        className="flex-1 bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-2.5 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none"
+                      />
+                      <button
+                        type="submit"
+                        disabled={captureStatus === 'sending'}
+                        className="btn-outline px-5 py-2.5 text-sm rounded-none disabled:opacity-50 whitespace-nowrap"
+                      >
+                        {captureStatus === 'sending' ? 'Sending…' : 'Text Me This →'}
+                      </button>
+                    </form>
+                    {captureStatus === 'error' && (
+                      <p className="font-roboto text-red-400 text-xs">
+                        Something went wrong — call us directly at {STUDIO.phone}.
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
 
               {comboEligible && (

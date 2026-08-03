@@ -9,13 +9,17 @@ export async function POST(req: NextRequest) {
       phone,
       email,
       message,
-      vehicle,
+      bodyType,
       vehicleLabel,
-      coverage,
-      coverageLabel,
-      addons,
+      selectedServices,
       estimatedPrice,
+      partial,
     } = body
+
+    const vehicle = bodyType || vehicleLabel || 'unknown'
+    const coverageLabel: string = Array.isArray(selectedServices) && selectedServices.length
+      ? selectedServices.join(', ')
+      : 'Not selected yet'
 
     // ── 1. Forward to GoHighLevel CRM ────────────────────────────────────────
     const ghlWebhookUrl = process.env.GHL_WEBHOOK_URL
@@ -24,16 +28,15 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName: name?.split(' ')[0] || name,
+          firstName: name?.split(' ')[0] || name || '',
           lastName: name?.split(' ').slice(1).join(' ') || '',
           phone,
           email,
-          source: 'HAUT Website Quiz',
-          tags: ['haut-quiz', `vehicle-${vehicle}`, `coverage-${coverage}`],
+          source: partial ? 'HAUT Website Quiz (Partial)' : 'HAUT Website Quiz',
+          tags: ['haut-quiz', `vehicle-${vehicle}`, partial ? 'partial-lead' : 'full-lead'],
           customField: {
-            vehicleType: vehicleLabel,
+            vehicleType: vehicleLabel || bodyType || 'N/A',
             coverageLevel: coverageLabel,
-            addons: addons?.join(', ') || 'None',
             estimatedPrice: estimatedPrice ? `$${estimatedPrice.toLocaleString()}` : 'N/A',
             notes: message || '',
           },
@@ -51,13 +54,12 @@ export async function POST(req: NextRequest) {
       telegramChatId !== 'your_chat_id_here'
     ) {
       const telegramMessage = [
-        '🚗 *New HAUT Lead*',
-        `👤 Name: ${name}`,
-        `📞 Phone: ${phone}`,
-        `📧 Email: ${email}`,
-        `🚘 Vehicle: ${vehicleLabel}`,
+        partial ? '🟡 *Partial HAUT Lead (Quiz Result)*' : '🚗 *New HAUT Lead*',
+        `👤 Name: ${name || 'Not provided yet'}`,
+        `📞 Phone: ${phone || 'N/A'}`,
+        `📧 Email: ${email || 'Not provided yet'}`,
+        `🚘 Vehicle: ${vehicleLabel || bodyType || 'N/A'}`,
         `🛡️ Coverage: ${coverageLabel}`,
-        `➕ Add-ons: ${addons?.join(', ') || 'None'}`,
         `💰 Estimate: $${estimatedPrice?.toLocaleString() || 'N/A'}`,
         message ? `📝 Notes: ${message}` : null,
       ]
