@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Hero from '@/components/Hero'
+import GlossMatteSlider from '@/components/GlossMatteSlider'
 import RoadHazardsGrid from '@/components/RoadHazardsGrid'
 import InstallationStandard from '@/components/InstallationStandard'
 import Packages from '@/components/Packages'
@@ -100,6 +101,17 @@ export default function PPFPage() {
               <span className="text-[#9FFE0A]">Matte Finishes</span>
             </h2>
             <div className="w-16 h-0.5 bg-[#9FFE0A]" />
+          </div>
+
+          <div className="mb-10 max-w-4xl mx-auto">
+            <GlossMatteSlider
+              glossSrc="/assets/ppf-finish-gloss.jpg"
+              matteSrc="/assets/ppf-finish-matte.jpg"
+              alt="Chevrolet Corvette C8"
+            />
+            <p className="text-center font-roboto text-[#DADADA]/50 text-xs tracking-widest uppercase mt-3">
+              Drag to compare
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
