@@ -61,7 +61,7 @@ export default function AboutPage() {
       />
 
       {/* Story */}
-      <section className="bg-[#1A292E] py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our story">
+      <section className="bg-[#1A292E] precision-grid py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our story">
         <div className="max-w-4xl mx-auto">
           <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">Our Story</p>
           <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight mb-6">
@@ -132,7 +132,7 @@ export default function AboutPage() {
       </section>
 
       {/* Zero-blade philosophy cross-sell */}
-      <section className="bg-[#1A292E] py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our process">
+      <section className="bg-[#1A292E] precision-grid py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our process">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight mb-4">
             Curious Exactly How

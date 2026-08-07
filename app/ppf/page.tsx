@@ -35,7 +35,7 @@ export default function PPFPage() {
 
       {/* Factory Paint Finish Dilemma / Why HAUT PPF */}
       <section
-        className="bg-[#1A292E]"
+        className="bg-[#1A292E] precision-grid"
         aria-label="Why paint protection film is non-negotiable"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -85,10 +85,10 @@ export default function PPFPage() {
         </div>
       </section>
 
-      {/* Gloss vs. Stealth Matte */}
+      {/* Gloss vs. Satin Matte */}
       <section
         className="bg-[#1A292E] precision-grid"
-        aria-label="Gloss versus stealth matte PPF finishes"
+        aria-label="Gloss versus satin matte PPF finishes"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="mb-14">
@@ -96,17 +96,17 @@ export default function PPFPage() {
               Choose Your Finish
             </p>
             <h2 className="font-kanit font-bold text-white text-4xl lg:text-5xl leading-tight mb-4">
-              Gloss vs. Stealth
+              Gloss vs. Satin
               <br />
-              <span className="text-[#9FFE0A]">Matte Finishes</span>
+              <span className="text-[#9FFE0A]">Choose Your Finish</span>
             </h2>
             <div className="w-16 h-0.5 bg-[#9FFE0A]" />
           </div>
 
           <div className="mb-10 max-w-4xl mx-auto">
             <GlossMatteSlider
-              glossSrc="/assets/ppf-finish-gloss.jpg"
-              matteSrc="/assets/ppf-finish-matte.jpg"
+              glossSrc="/assets/ppf-finish-gloss.webp"
+              matteSrc="/assets/ppf-finish-matte.webp"
               alt="Chevrolet Corvette C8"
             />
             <p className="text-center font-roboto text-[#DADADA]/50 text-xs tracking-widest uppercase mt-3">
@@ -133,7 +133,7 @@ export default function PPFPage() {
                 Satin Transformation
               </p>
               <h3 className="font-kanit font-bold text-white text-2xl mb-4">
-                Stealth Matte PPF
+                Satin Matte PPF
               </h3>
               <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
                 Protects a factory matte or satin finish with the same self-healing film, or transforms

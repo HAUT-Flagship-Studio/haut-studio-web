@@ -167,7 +167,7 @@ export default function OurProcessPage() {
       />
 
       {/* Philosophy intro */}
-      <section className="bg-[#1A292E] py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our zero-blade philosophy">
+      <section className="bg-[#1A292E] precision-grid py-16 md:py-20 px-4 sm:px-6 lg:px-8" aria-label="Our zero-blade philosophy">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">The Zero-Blade Philosophy</p>
           <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight mb-6">

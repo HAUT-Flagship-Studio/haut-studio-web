@@ -29,7 +29,7 @@ export default function Packages({
   return (
     <section
       id="packages"
-      className="bg-[#1A292E] py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+      className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
       aria-label="Service packages"
     >
       <div className="max-w-7xl mx-auto">

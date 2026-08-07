@@ -49,7 +49,7 @@ export default function GlossMatteSlider({ glossSrc, matteSrc, alt }: GlossMatte
       >
         <Image
           src={matteSrc}
-          alt={`${alt} — stealth matte PPF finish`}
+          alt={`${alt} — satin matte PPF finish`}
           fill
           sizes="(min-width: 1024px) 896px, 100vw"
           priority
@@ -97,7 +97,7 @@ export default function GlossMatteSlider({ glossSrc, matteSrc, alt }: GlossMatte
         value={position}
         onChange={(e) => setPosition(Number(e.target.value))}
         className="w-full mt-4 accent-[#9FFE0A]"
-        aria-label="Drag to compare gloss and stealth matte PPF finish"
+        aria-label="Drag to compare gloss and satin matte PPF finish"
       />
     </div>
   )
