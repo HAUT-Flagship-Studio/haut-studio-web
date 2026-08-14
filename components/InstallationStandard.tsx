@@ -40,6 +40,11 @@ export default function InstallationStandard() {
             <span className="text-[#9FFE0A]">Installation Standard</span>
           </h2>
           <div className="w-16 h-0.5 bg-[#9FFE0A]" />
+          <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mt-4 max-w-2xl">
+            We previously served as primary technical contractors for major local Ferrari, Porsche, McLaren,
+            and Lamborghini dealers. Today we work 100% direct-to-owner — the same protocol below, devoted
+            full time to your vehicle without dealership rush or volume compromises.
+          </p>
         </div>
 
         {/* Steps */}
@@ -49,7 +54,7 @@ export default function InstallationStandard() {
               key={s.step}
               className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-6"
             >
-              <span className="font-kanit font-black text-[#9FFE0A]/30 text-4xl block mb-4">
+              <span className="font-kanit font-black text-[#9FFE0A] text-4xl block mb-4">
                 {s.step}
               </span>
               <h3 className="font-kanit font-semibold text-white text-lg mb-2">{s.title}</h3>

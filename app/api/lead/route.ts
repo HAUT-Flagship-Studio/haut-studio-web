@@ -21,27 +21,35 @@ export async function POST(req: NextRequest) {
       ? selectedServices.join(', ')
       : 'Not selected yet'
 
+    const deliveries: { channel: string; ok: boolean; error?: string }[] = []
+
     // ── 1. Forward to GoHighLevel CRM ────────────────────────────────────────
     const ghlWebhookUrl = process.env.GHL_WEBHOOK_URL
     if (ghlWebhookUrl && ghlWebhookUrl !== 'your_ghl_webhook_url_here') {
-      await fetch(ghlWebhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: name?.split(' ')[0] || name || '',
-          lastName: name?.split(' ').slice(1).join(' ') || '',
-          phone,
-          email,
-          source: partial ? 'HAUT Website Quiz (Partial)' : 'HAUT Website Quiz',
-          tags: ['haut-quiz', `vehicle-${vehicle}`, partial ? 'partial-lead' : 'full-lead'],
-          customField: {
-            vehicleType: vehicleLabel || bodyType || 'N/A',
-            coverageLevel: coverageLabel,
-            estimatedPrice: estimatedPrice ? `$${estimatedPrice.toLocaleString()}` : 'N/A',
-            notes: message || '',
-          },
-        }),
-      })
+      try {
+        await fetch(ghlWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: name?.split(' ')[0] || name || '',
+            lastName: name?.split(' ').slice(1).join(' ') || '',
+            phone,
+            email,
+            source: partial ? 'HAUT Website Quiz (Partial)' : 'HAUT Website Quiz',
+            tags: ['haut-quiz', `vehicle-${vehicle}`, partial ? 'partial-lead' : 'full-lead'],
+            customField: {
+              vehicleType: vehicleLabel || bodyType || 'N/A',
+              coverageLevel: coverageLabel,
+              estimatedPrice: estimatedPrice ? `$${estimatedPrice.toLocaleString()}` : 'N/A',
+              notes: message || '',
+            },
+          }),
+        })
+        deliveries.push({ channel: 'ghl', ok: true })
+      } catch (error) {
+        console.error('[/api/lead] GHL delivery failed:', error)
+        deliveries.push({ channel: 'ghl', ok: false, error: String(error) })
+      }
     }
 
     // ── 2. Forward to Telegram ───────────────────────────────────────────────
@@ -53,31 +61,67 @@ export async function POST(req: NextRequest) {
       telegramToken !== 'your_bot_token_here' &&
       telegramChatId !== 'your_chat_id_here'
     ) {
-      const telegramMessage = [
-        partial ? '🟡 *Partial HAUT Lead (Quiz Result)*' : '🚗 *New HAUT Lead*',
-        `👤 Name: ${name || 'Not provided yet'}`,
-        `📞 Phone: ${phone || 'N/A'}`,
-        `📧 Email: ${email || 'Not provided yet'}`,
-        `🚘 Vehicle: ${vehicleLabel || bodyType || 'N/A'}`,
-        `🛡️ Coverage: ${coverageLabel}`,
-        `💰 Estimate: $${estimatedPrice?.toLocaleString() || 'N/A'}`,
-        message ? `📝 Notes: ${message}` : null,
-      ]
-        .filter(Boolean)
-        .join('\n')
+      try {
+        const telegramMessage = [
+          partial ? '🟡 *Partial HAUT Lead (Quiz Result)*' : '🚗 *New HAUT Lead*',
+          `👤 Name: ${name || 'Not provided yet'}`,
+          `📞 Phone: ${phone || 'N/A'}`,
+          `📧 Email: ${email || 'Not provided yet'}`,
+          `🚘 Vehicle: ${vehicleLabel || bodyType || 'N/A'}`,
+          `🛡️ Coverage: ${coverageLabel}`,
+          `💰 Estimate: $${estimatedPrice?.toLocaleString() || 'N/A'}`,
+          message ? `📝 Notes: ${message}` : null,
+        ]
+          .filter(Boolean)
+          .join('\n')
 
-      await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: telegramChatId,
-          text: telegramMessage,
-          parse_mode: 'Markdown',
-        }),
-      })
+        await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: telegramMessage,
+            parse_mode: 'Markdown',
+          }),
+        })
+        deliveries.push({ channel: 'telegram', ok: true })
+      } catch (error) {
+        console.error('[/api/lead] Telegram delivery failed:', error)
+        deliveries.push({ channel: 'telegram', ok: false, error: String(error) })
+      }
     }
 
-    return NextResponse.json({ success: true }, { status: 200 })
+    // ── 3. Append to Google Sheets (via Apps Script Web App) ─────────────────
+    const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+    if (sheetsWebhookUrl && sheetsWebhookUrl !== 'your_apps_script_web_app_url_here') {
+      try {
+        await fetch(sheetsWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            name: name || '',
+            phone: phone || '',
+            email: email || '',
+            vehicle: vehicleLabel || bodyType || '',
+            services: coverageLabel,
+            estimate: estimatedPrice ? `$${estimatedPrice.toLocaleString()}` : '',
+            type: partial ? 'Partial' : 'Full',
+            notes: message || '',
+          }),
+        })
+        deliveries.push({ channel: 'sheets', ok: true })
+      } catch (error) {
+        console.error('[/api/lead] Google Sheets delivery failed:', error)
+        deliveries.push({ channel: 'sheets', ok: false, error: String(error) })
+      }
+    }
+
+    if (deliveries.length > 0 && deliveries.every((d) => !d.ok)) {
+      console.error('[/api/lead] All configured delivery channels failed:', deliveries)
+    }
+
+    return NextResponse.json({ success: true, deliveries }, { status: 200 })
   } catch (error) {
     console.error('[/api/lead] Error:', error)
     return NextResponse.json(

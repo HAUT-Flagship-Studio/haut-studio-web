@@ -24,7 +24,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
   description:
-    "HAUT Flagship Studio in Hackensack, NJ installs paint protection film, ceramic coatings, and window tinting for Bergen County and Northern NJ's exotic and luxury vehicle owners. Self-healing optical TPU, 10-year nationwide manufacturer warranty, installed by certified master installers in a climate-controlled studio.",
+    "HAUT Flagship Studio in Hackensack, NJ installs paint protection film, ceramic coatings, and window tinting for Bergen County and Northern NJ's exotic and luxury vehicle owners. Self-healing optical film, 10-year nationwide manufacturer warranty, installed by certified master installers in a climate-controlled studio.",
   keywords:
     'PPF Hackensack NJ, paint protection film New Jersey, ceramic coating Hackensack, window tinting NJ, self-healing film, certified master installer Bergen County, HAUT Flagship Studio',
   openGraph: {
@@ -34,10 +34,10 @@ export const metadata: Metadata = {
     siteName: 'HAUT Flagship Studio',
     title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
     description:
-      "Self-healing optical TPU paint protection film, ceramic coatings, and window tinting in Hackensack, NJ, backed by a 10-year nationwide manufacturer warranty and installed by Bergen County's certified master installers.",
+      "Self-healing optical paint protection film, ceramic coatings, and window tinting in Hackensack, NJ, backed by a 10-year nationwide manufacturer warranty and installed by Bergen County's certified master installers.",
     images: [
       {
-        url: 'https://placehold.co/1200x630/1A292E/9FFE0A.webp?text=HAUT+Flagship+Studio',
+        url: 'https://hautppfstudio.com/assets/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'HAUT Flagship Studio Hackensack NJ',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: 'HAUT Flagship Studio — PPF & Ceramic Coatings Hackensack NJ',
     description:
       'Self-healing PPF, ceramic coatings, and window tinting installed by certified master installers in Hackensack, NJ.',
-    images: ['https://placehold.co/1200x630/1A292E/9FFE0A.webp?text=HAUT+Flagship+Studio'],
+    images: ['https://hautppfstudio.com/assets/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -69,7 +69,7 @@ const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': ['AutomotiveBusiness', 'LocalBusiness'],
   name: 'HAUT Flagship Studio',
-  image: 'https://placehold.co/800x600/1A292E/9FFE0A.webp?text=HAUT+Flagship+Studio',
+  image: 'https://hautppfstudio.com/assets/og-image.jpg',
   url: 'https://hautppfstudio.com',
   telephone: '+1-201-201-0170',
   address: {
@@ -127,6 +127,7 @@ const faqSchema = {
 }
 
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1019441793680027'
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-GSC600LZS3'
 
 export default function RootLayout({
   children,
@@ -152,6 +153,17 @@ export default function RootLayout({
           {children}
           <Footer />
         </QuizProvider>
+
+        {/* Google Analytics (GA4) */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
 
         {/* Meta Pixel */}
         <Script id="meta-pixel" strategy="afterInteractive">

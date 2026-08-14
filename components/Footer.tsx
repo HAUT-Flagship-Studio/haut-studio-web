@@ -15,9 +15,8 @@ const FOOTER_LINKS = {
     { label: 'Window Tinting', href: '/window-tint' },
   ],
   Resources: [
-    { label: 'Film Specifications', href: '/ppf' },
     { label: 'Blog', href: '/blog' },
-    { label: 'PPF vs Ceramic', href: '/blog' },
+    { label: 'PPF vs Ceramic', href: '/blog/ppf-vs-ceramic-coating-hackensack' },
     { label: 'Client Reviews', href: '/reviews' },
     { label: 'Get a Custom Estimate', href: 'quiz' },
   ],

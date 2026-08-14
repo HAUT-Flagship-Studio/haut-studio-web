@@ -17,7 +17,7 @@ export default function Packages({
   packages,
   eyebrow = 'Pricing & Packages',
   title = DEFAULT_TITLE,
-  note = 'All packages use the same self-healing optical TPU film with a 10-year manufacturer warranty. The difference is surface area — not quality.',
+  note = 'All packages use the same self-healing optical film with a 10-year manufacturer warranty. The difference is surface area — not quality.',
 }: {
   packages: PackageItem[]
   eyebrow?: string
@@ -72,7 +72,7 @@ export default function Packages({
               )}
 
               {/* Package Image */}
-              <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <div className="relative w-full aspect-video overflow-hidden">
                 <Image
                   src={pkg.image}
                   alt={pkg.imageAlt}

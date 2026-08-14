@@ -215,7 +215,7 @@ export default function RoadHazards() {
             className="btn-green px-8 py-4 text-sm tracking-wider rounded-none inline-flex items-center gap-2"
             id="specs-quiz-btn"
           >
-            <span>✦ Find Your Tailored Package (20-Sec Assessment) →</span>
+            <span>✦ Find Your Tailored Package (2-Min Assessment) →</span>
           </button>
         </div>
       </div>

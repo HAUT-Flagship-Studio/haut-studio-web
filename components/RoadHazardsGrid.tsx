@@ -1,16 +1,13 @@
 const HAZARDS = [
   {
-    number: '01',
     title: 'Rock Chips & Debris',
     detail: 'Absorbs high-speed impacts from gravel and road debris, leaving the film to take the hit so your clear coat doesn\'t.',
   },
   {
-    number: '02',
     title: 'Swirls & Wash Scratches',
     detail: 'Self-healing topcoat molecularly fuses back together with ambient heat, erasing fine scratches and swirl marks automatically.',
   },
   {
-    number: '03',
     title: 'UV Fading & Stains',
     detail: 'Blocks harmful UV rays and resists chemical stains from bird droppings, bug splatter, and harsh road salts.',
   },
@@ -41,12 +38,9 @@ export default function RoadHazardsGrid() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {HAZARDS.map((h) => (
             <div
-              key={h.number}
+              key={h.title}
               className="bg-[#0D1216] border border-white/10 p-6 rounded-2xl"
             >
-              <span className="font-kanit font-black text-[#9FFE0A]/30 text-3xl block mb-4">
-                {h.number}
-              </span>
               <h3 className="font-kanit font-semibold text-white text-lg mb-2 leading-snug">{h.title}</h3>
               <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">{h.detail}</p>
             </div>

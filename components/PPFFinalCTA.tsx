@@ -18,7 +18,7 @@ export default function PPFFinalCTA() {
         </h2>
         <p className="font-roboto text-[#DADADA]/70 text-base leading-relaxed mb-8">
           Answer a few quick questions about your vehicle and driving habits — get a tailored
-          coverage recommendation in under 20 seconds.
+          coverage recommendation in about 2 minutes.
         </p>
         <button
           type="button"
@@ -26,7 +26,7 @@ export default function PPFFinalCTA() {
           className="btn-green px-8 py-4 text-sm tracking-wider rounded-none inline-flex items-center gap-2"
           id="ppf-final-cta-quiz"
         >
-          <span>+ Find Your Ideal PPF Package (20-Sec Assessment)</span>
+          <span>+ Find Your Ideal PPF Package (2-Min Assessment)</span>
         </button>
       </div>
     </section>

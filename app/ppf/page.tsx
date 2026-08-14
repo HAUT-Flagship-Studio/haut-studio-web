@@ -4,6 +4,7 @@ import GlossMatteSlider from '@/components/GlossMatteSlider'
 import RoadHazardsGrid from '@/components/RoadHazardsGrid'
 import InstallationStandard from '@/components/InstallationStandard'
 import Packages from '@/components/Packages'
+import VideoTestimonials from '@/components/VideoTestimonials'
 import PPFFaq from '@/components/PPFFaq'
 import PPFFinalCTA from '@/components/PPFFinalCTA'
 import { PPF_PACKAGES } from '@/lib/data'
@@ -31,6 +32,7 @@ export default function PPFPage() {
           </>
         }
         subtitle="Defend your vehicle against rock chips, swirl marks, and road debris with HAUT's proprietary self-healing Paint Protection Film. Digitally cut with zero razor blades on your paint, extended for wrapped edges, and backed by a 10-year manufacturer warranty."
+        trustBadges={['★ 5.0 Google Reviews', '100% HAUT Precision Scan Cut (Zero Blades)', 'Custom Extended-Wrapped Edges', '10-Year Transferable Warranty']}
       />
 
       {/* Factory Paint Finish Dilemma / Why HAUT PPF */}
@@ -73,12 +75,11 @@ export default function PPFPage() {
             </div>
             <div className="bg-[#0D1216] border border-white/10 rounded-2xl p-6 md:p-8">
               <h3 className="font-kanit font-semibold text-white text-lg mb-2 leading-snug">
-                Direct-to-Owner Dedication
+                Passes Every Paint-Depth Inspection
               </h3>
               <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
-                We previously served as primary technical contractors for major local Ferrari, Porsche,
-                McLaren, and Lamborghini dealers. Today, we work 100% Direct-to-Owner — devoting full time to
-                your vehicle without dealership rush or volume compromises.
+                Film sits on top of the clear coat, so a paint-depth gauge still reads factory-original
+                underneath — no repaint flag on a pre-purchase inspection or dealer trade-in appraisal.
               </p>
             </div>
           </div>
@@ -157,6 +158,18 @@ export default function PPFPage() {
             Choose Your
             <br />
             <span className="text-[#9FFE0A]">Coverage Level</span>
+          </>
+        }
+      />
+
+      <VideoTestimonials
+        ids={['alex-perrera-lamborghini']}
+        eyebrow="✦ Is It Worth The Price?"
+        title={
+          <>
+            A Client On Why We
+            <br />
+            <span className="text-[#9FFE0A]">Cost More — And Why It's Worth It.</span>
           </>
         }
       />

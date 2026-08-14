@@ -16,7 +16,7 @@ const DEFAULT_HEADING = (
 
 const DEFAULT_TRUST_BADGES = [
   'Climate-Controlled Studio',
-  '100% Digital Plotter Cut (Zero Blades)',
+  '100% HAUT Precision Scan Cut (Zero Blades)',
   'Custom Extended-Wrapped Edges',
   '10-Year Transferable Warranty',
 ]
@@ -24,7 +24,7 @@ const DEFAULT_TRUST_BADGES = [
 export default function Hero({
   locationBadge = 'Hackensack, NJ • Certified Master Installers',
   heading = DEFAULT_HEADING,
-  subtitle = 'Preserve your irreplaceable factory finish with self-healing optical TPU. Digitally cut with zero razor blades on paint, extended for wrapped edges, and backed by a 10-year manufacturer warranty.',
+  subtitle = 'Preserve your irreplaceable factory finish with self-healing optical film. Digitally cut with zero razor blades on paint, extended for wrapped edges, and backed by a 10-year manufacturer warranty.',
   trustBadges = DEFAULT_TRUST_BADGES,
   backgroundImage = '/assets/hero-car-photo.webp',
 }: {

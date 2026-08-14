@@ -26,7 +26,7 @@ export const BODY_TYPES: { id: VehicleCategory; label: string }[] = [
 
 export const PPF: Record<'bikini' | 'frontEnd' | 'highway' | 'fullBody', ServiceOption> = {
   bikini: { id: 'ppf-bikini', name: 'Bikini PPF', prices: { sedan: 1399, suv: 1469, truck: 1511, exotic: 1539, cybertruck: 1119 } },
-  frontEnd: { id: 'ppf-front-end', name: 'Front End PPF', prices: { sedan: 2499, suv: 2624, truck: 2699, exotic: 2749, cybertruck: 1999 } },
+  frontEnd: { id: 'ppf-front-end', name: 'Front End PPF', prices: { sedan: 2399, suv: 2519, truck: 2591, exotic: 2639, cybertruck: 1919 } },
   highway: { id: 'ppf-highway', name: 'Highway PPF', prices: { sedan: 3199, suv: 3359, truck: 3455, exotic: 3519, cybertruck: 2559 } },
   fullBody: { id: 'ppf-full-body', name: 'Full Body PPF', prices: { sedan: 6499, suv: 6824, truck: 7019, exotic: 7149, cybertruck: 5199 } },
 }
@@ -64,3 +64,11 @@ export const TINT: Record<'twoFront' | 'windshieldOnly' | 'rearHalf' | 'fullCabi
 export const WSPF: Record<'windshieldArmor', ServiceOption> = {
   windshieldArmor: { id: 'wspf-windshield-armor', name: 'Windshield Armor (WSPF)', prices: { sedan: 799, suv: 839, truck: 863, exotic: 879, cybertruck: 999 } },
 }
+
+function cheapestPrice(options: Record<string, ServiceOption>): number {
+  return Math.min(...Object.values(options).flatMap((o) => Object.values(o.prices)))
+}
+
+export const CHEAPEST_PPF_PRICE = cheapestPrice(PPF)
+export const CHEAPEST_CERAMIC_PRICE = cheapestPrice(CERAMIC)
+export const CHEAPEST_TINT_PRICE = cheapestPrice(TINT)

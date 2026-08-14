@@ -3,6 +3,8 @@ import ServicesOverview from '@/components/ServicesOverview'
 import RoadHazards from '@/components/RoadHazards'
 import ProcessBanner from '@/components/ProcessBanner'
 import Reviews from '@/components/Reviews'
+import VideoTestimonials from '@/components/VideoTestimonials'
+import WorkGallery from '@/components/WorkGallery'
 import FAQSection from '@/components/FAQSection'
 import LocationMap from '@/components/LocationMap'
 
@@ -54,6 +56,10 @@ export default function HomePage() {
       />
 
       <Reviews />
+
+      <VideoTestimonials />
+
+      <WorkGallery />
 
       <ServicesOverview />
 

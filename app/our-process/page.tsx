@@ -57,7 +57,7 @@ const CERAMIC_STEPS = [
   {
     step: '03',
     title: 'Dual-Layer 9H Ceramic Base & Topcoat Application',
-    body: 'A base ceramic layer is hand-applied panel by panel and leveled before it flashes, followed by a topcoat layer for depth and durability. The dual-layer application is what pushes the finished shell to a 9H pencil hardness rating.',
+    body: 'A base layer of HAUT Ceramic is hand-applied panel by panel and leveled before it flashes, followed by a topcoat layer for depth and durability. The dual-layer application is what pushes the finished shell to a 9H pencil hardness rating.',
   },
   {
     step: '04',
@@ -128,7 +128,7 @@ function ProcessSection({
               key={s.step}
               className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-6"
             >
-              <span className="font-kanit font-black text-[#9FFE0A]/30 text-4xl block mb-4">{s.step}</span>
+              <span className="font-kanit font-black text-[#9FFE0A] text-4xl block mb-4">{s.step}</span>
               <h3 className="font-kanit font-semibold text-white text-lg mb-2">{s.title}</h3>
               <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">{s.body}</p>
             </div>
@@ -215,7 +215,7 @@ export default function OurProcessPage() {
             <span className="text-[#9FFE0A]">Installation Process</span>
           </>
         }
-        intro="Self-healing optical TPU film, cut with zero-blade HAUT Precision Scan and installed in a climate-controlled Hackensack bay — the process that protects Bergen County's daily drivers and exotics alike from rock chips, swirl marks, and UV fade."
+        intro="Self-healing optical film, cut with zero-blade HAUT Precision Scan and installed in a climate-controlled Hackensack bay — the process that protects Bergen County's daily drivers and exotics alike from rock chips, swirl marks, and UV fade."
         steps={PPF_STEPS}
         ctaLabel="Get PPF Estimate →"
         serviceHref="/ppf"
@@ -232,7 +232,7 @@ export default function OurProcessPage() {
             <span className="text-[#9FFE0A]">Application Process</span>
           </>
         }
-        intro="A dual-layer 9H ceramic shell bonded directly to clear coat or PPF — correction, degreasing, application, and cure, done right so the hydrophobic finish actually lasts years, not months."
+        intro="HAUT Ceramic is a dual-layer 9H shell bonded directly to clear coat or PPF — correction, degreasing, application, and cure, done right so the hydrophobic finish actually lasts years, not months."
         steps={CERAMIC_STEPS}
         ctaLabel="Get Ceramic Estimate →"
         serviceHref="/ceramic"
