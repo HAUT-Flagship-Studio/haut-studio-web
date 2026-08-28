@@ -1,4 +1,5 @@
 import { STUDIO } from '@/lib/data'
+import { PhoneLink, AddressLink } from './TrackedLinks'
 
 export default function LocationMap() {
   // Coordinates (not the address string) are used for the embed query — the free,
@@ -37,17 +38,15 @@ export default function LocationMap() {
               referrerPolicy="no-referrer-when-downgrade"
               title="HAUT Flagship Studio location map"
             />
-            <a
-              href={STUDIO.mapsHref}
-              target="_blank"
-              rel="noopener noreferrer"
+            <AddressLink
+              location="location_map_embed"
               className="absolute inset-0 z-10 flex items-end justify-center bg-[#1A292E]/0 group-hover:bg-[#1A292E]/20 transition-colors duration-200"
               aria-label="Open HAUT Flagship Studio location in Google Maps"
             >
               <span className="mb-4 px-4 py-2 bg-[#1A292E]/90 backdrop-blur border border-[#9FFE0A]/40 text-[#9FFE0A] text-xs font-roboto tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 View on Google Maps →
               </span>
-            </a>
+            </AddressLink>
           </div>
 
           {/* Info card */}
@@ -61,14 +60,12 @@ export default function LocationMap() {
                   </svg>
                   <div>
                     <p className="font-roboto text-white text-sm">{STUDIO.address}</p>
-                    <a
-                      href={STUDIO.mapsHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <AddressLink
+                      location="location_map_directions"
                       className="font-roboto text-[#9FFE0A] text-xs hover:underline"
                     >
                       Get Directions →
-                    </a>
+                    </AddressLink>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -82,12 +79,12 @@ export default function LocationMap() {
                 </div>
               </div>
             </div>
-            <a
-              href={STUDIO.phoneHref}
+            <PhoneLink
+              location="location_map_call_button"
               className="btn-green w-full py-4 text-sm tracking-wider rounded-none text-center mt-8"
             >
               Call {STUDIO.phone}
-            </a>
+            </PhoneLink>
           </div>
         </div>
       </div>

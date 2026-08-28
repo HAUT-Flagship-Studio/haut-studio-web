@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
+import { PhoneLink } from './TrackedLinks'
 
 export default function PageHero({
   eyebrow,
@@ -63,9 +64,9 @@ export default function PageHero({
           >
             {ctaLabel}
           </button>
-          <a href={STUDIO.phoneHref} className="btn-outline px-8 py-4 text-base tracking-wider rounded-none">
+          <PhoneLink location="page_hero" className="btn-outline px-8 py-4 text-base tracking-wider rounded-none">
             Call Now: {STUDIO.phone}
-          </a>
+          </PhoneLink>
         </div>
       </div>
     </section>

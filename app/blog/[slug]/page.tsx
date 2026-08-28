@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BLOG_ARTICLES, STUDIO } from '@/lib/data'
+import { PhoneLink } from '@/components/TrackedLinks'
 
 export async function generateMetadata({
   params,
@@ -105,12 +106,12 @@ export default async function BlogPostPage({
               HAUT Flagship Studio is at {STUDIO.address}. Same-week consultations available.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                href={STUDIO.phoneHref}
+              <PhoneLink
+                location="blog_post_cta"
                 className="btn-green px-6 py-3 text-sm text-center rounded-none"
               >
                 Call {STUDIO.phone}
-              </a>
+              </PhoneLink>
               <Link href="/ppf" className="btn-outline px-6 py-3 text-sm text-center rounded-none">
                 View Packages →
               </Link>

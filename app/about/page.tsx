@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import QuoteButton from '@/components/QuoteButton'
+import { PhoneLink, AddressLink } from '@/components/TrackedLinks'
 import { STUDIO } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -165,14 +166,12 @@ export default function AboutPage() {
               <p>{STUDIO.address}</p>
               <p className="text-[#DADADA]/70">{STUDIO.hours}</p>
             </div>
-            <a
-              href={STUDIO.mapsHref}
-              target="_blank"
-              rel="noopener noreferrer"
+            <AddressLink
+              location="about_page_directions"
               className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start"
             >
               Get Directions →
-            </a>
+            </AddressLink>
           </div>
           <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-center">
             <h3 className="font-kanit font-bold text-white text-2xl mb-3">
@@ -184,9 +183,9 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <QuoteButton label="Get Custom Estimate →" className="btn-green px-6 py-3 text-sm tracking-wider rounded-none" />
-              <a href={STUDIO.phoneHref} className="btn-outline px-6 py-3 text-sm text-center rounded-none">
+              <PhoneLink location="about_page_cta" className="btn-outline px-6 py-3 text-sm text-center rounded-none">
                 Call {STUDIO.phone}
-              </a>
+              </PhoneLink>
             </div>
           </div>
         </div>

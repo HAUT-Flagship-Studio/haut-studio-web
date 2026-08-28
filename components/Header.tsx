@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
+import { PhoneLink, AddressLink } from './TrackedLinks'
 
 const NAV_LINKS = [
   { href: '/ppf', label: 'PPF' },
@@ -91,13 +92,13 @@ export default function Header() {
 
         {/* Right CTAs */}
         <div className="hidden xl:flex items-center gap-x-3 flex-shrink-0">
-          <a
-            href={STUDIO.phoneHref}
+          <PhoneLink
+            location="header_desktop"
             className="btn-green px-5 py-2.5 text-sm rounded-none font-kanit font-700 tracking-wide whitespace-nowrap"
             aria-label="Call HAUT Flagship Studio"
           >
             ☎ {STUDIO.phone}
-          </a>
+          </PhoneLink>
           <button
             onClick={openQuiz}
             className="btn-outline px-5 py-2.5 text-sm rounded-none whitespace-nowrap"
@@ -142,10 +143,8 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <a
-            href={STUDIO.mapsHref}
-            target="_blank"
-            rel="noopener noreferrer"
+          <AddressLink
+            location="header_mobile_menu"
             className="flex items-center gap-1.5 text-[#DADADA] text-xs hover:text-[#9FFE0A] transition-colors pb-1"
             aria-label="Studio location"
           >
@@ -153,13 +152,13 @@ export default function Header() {
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
             <span className="font-roboto">{STUDIO.address}</span>
-          </a>
-          <a
-            href={STUDIO.phoneHref}
+          </AddressLink>
+          <PhoneLink
+            location="header_mobile_menu"
             className="btn-green px-4 py-3 text-sm text-center rounded-none"
           >
             ☎ {STUDIO.phone}
-          </a>
+          </PhoneLink>
           <button
             onClick={() => { setMenuOpen(false); openQuiz() }}
             className="btn-outline px-4 py-3 text-sm rounded-none"

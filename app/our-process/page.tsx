@@ -4,6 +4,7 @@ import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import QuoteButton from '@/components/QuoteButton'
 import { STUDIO } from '@/lib/data'
+import { PhoneLink } from '@/components/TrackedLinks'
 
 export const metadata: Metadata = {
   title: 'Our Process | PPF, Ceramic Coating & Window Tint Installation | HAUT Flagship Studio',
@@ -271,9 +272,9 @@ export default function OurProcessPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <QuoteButton label="Get Custom Estimate →" className="btn-green px-8 py-4 text-sm tracking-wider rounded-none" />
-            <a href={STUDIO.phoneHref} className="btn-outline px-8 py-4 text-sm tracking-wider rounded-none">
+            <PhoneLink location="our_process_cta" className="btn-outline px-8 py-4 text-sm tracking-wider rounded-none">
               Call {STUDIO.phone}
-            </a>
+            </PhoneLink>
           </div>
         </div>
       </section>

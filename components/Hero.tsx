@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
+import { PhoneLink } from './TrackedLinks'
 
 const DEFAULT_HEADING = (
   <>
@@ -94,8 +95,8 @@ export default function Hero({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </button>
-            <a
-              href={STUDIO.phoneHref}
+            <PhoneLink
+              location="hero"
               className="btn-outline px-8 py-4 text-base tracking-wider rounded-none inline-flex items-center justify-center gap-2"
               aria-label="Call HAUT Flagship Studio"
               id="hero-cta-call"
@@ -104,7 +105,7 @@ export default function Hero({
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
               Call Now: {STUDIO.phone}
-            </a>
+            </PhoneLink>
           </div>
 
           {/* Trust badges */}

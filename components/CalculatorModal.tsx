@@ -14,6 +14,7 @@ import {
   type VehicleCategory,
 } from '@/lib/pricing'
 import { STUDIO } from '@/lib/data'
+import { PhoneLink } from './TrackedLinks'
 
 declare global {
   interface Window {
@@ -300,9 +301,9 @@ export default function CalculatorModal({
                   <p className="font-kanit font-black text-[#9FFE0A] text-4xl">${total.toLocaleString()}</p>
                 </div>
               )}
-              <a href={STUDIO.phoneHref} className="btn-green px-6 py-3 text-sm inline-block rounded-none">
+              <PhoneLink location="quote_modal_success" className="btn-green px-6 py-3 text-sm inline-block rounded-none">
                 Call {STUDIO.phone}
-              </a>
+              </PhoneLink>
             </div>
           ) : (
             <>
