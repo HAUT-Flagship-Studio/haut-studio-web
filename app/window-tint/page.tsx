@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import Packages from '@/components/Packages'
 import PricingMatrix from '@/components/PricingMatrix'
@@ -209,6 +210,51 @@ export default function WindowTintPage() {
             <div className="w-16 h-0.5 bg-[#9FFE0A]" />
           </div>
           <PricingMatrix packages={WINDOW_TINT_PACKAGES} features={TINT_FEATURE_MATRIX} />
+        </div>
+      </section>
+
+      {/* Cross-sell */}
+      <section
+        className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+        aria-label="Complete your protection"
+      >
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-10 text-center">
+            <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
+              ✦ Complete the Protection
+            </p>
+            <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight">
+              Tint Blocks the Glass.
+              <br />
+              <span className="text-[#9FFE0A]">Pair It With the Rest.</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-center">
+              <h3 className="font-kanit font-bold text-white text-2xl mb-3">
+                Add Paint Protection Film
+              </h3>
+              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
+                Tint protects the cabin — PPF protects the paint. Self-healing film absorbs rock chips
+                and road debris on the panels that take the most impact.
+              </p>
+              <Link href="/ppf" className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start">
+                View PPF Packages →
+              </Link>
+            </div>
+            <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-center">
+              <h3 className="font-kanit font-bold text-white text-2xl mb-3">
+                Add Ceramic Coating
+              </h3>
+              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
+                A dual-layer 9H sealant that adds hydrophobic gloss and UV protection to your factory
+                paint, cutting wash time down to a rinse.
+              </p>
+              <Link href="/ceramic" className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start">
+                View Ceramic Coating →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "https://hautppfstudio.com/:path+",
+      "permanent": true
+    }
+  ]
+}

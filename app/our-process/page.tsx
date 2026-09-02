@@ -7,7 +7,7 @@ import { STUDIO } from '@/lib/data'
 import { PhoneLink } from '@/components/TrackedLinks'
 
 export const metadata: Metadata = {
-  title: 'Our Process | PPF, Ceramic Coating & Window Tint Installation | HAUT Flagship Studio',
+  title: 'Our Process | PPF, Ceramic Coating & Window Tint Installation in Hackensack, NJ',
   description:
     "See exactly how HAUT Flagship Studio installs paint protection film, ceramic coating, and window tint in Hackensack, NJ — HAUT Precision Scan pattern plotting, climate-controlled dust-free bays, and zero-blade contact on every panel. The full step-by-step process for Bergen County's certified master installers.",
   alternates: {

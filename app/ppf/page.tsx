@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import Hero from '@/components/Hero'
 import GlossMatteSlider from '@/components/GlossMatteSlider'
 import RoadHazardsGrid from '@/components/RoadHazardsGrid'
@@ -10,9 +11,9 @@ import PPFFinalCTA from '@/components/PPFFinalCTA'
 import { PPF_PACKAGES } from '@/lib/data'
 
 export const metadata: Metadata = {
-  title: 'Paint Protection Film (PPF) Packages & Pricing | HAUT Flagship Studio',
+  title: 'Paint Protection Film (PPF) in Hackensack, NJ | Packages & Pricing | HAUT Flagship Studio',
   description:
-    'Self-healing paint protection film with a 10-year manufacturer warranty, cut with HAUT Precision Scan for zero-blade contact. Front End, Highway & Track, and Full Body Armor packages installed by certified master installers in Hackensack, NJ. Compare packages and pricing.',
+    'Paint protection film (PPF) in Hackensack, NJ — self-healing film with a 10-year manufacturer warranty, cut with HAUT Precision Scan for zero-blade contact. Front End, Highway & Track, and Full Body Armor packages installed by certified master installers. Compare packages and pricing.',
   alternates: {
     canonical: 'https://hautppfstudio.com/ppf',
   },
@@ -161,6 +162,51 @@ export default function PPFPage() {
           </>
         }
       />
+
+      {/* Cross-sell */}
+      <section
+        className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
+        aria-label="Complete your protection"
+      >
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-10 text-center">
+            <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
+              ✦ Complete the Protection
+            </p>
+            <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight">
+              PPF Stops Impact.
+              <br />
+              <span className="text-[#9FFE0A]">Pair It With the Rest.</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-center">
+              <h3 className="font-kanit font-bold text-white text-2xl mb-3">
+                Add Ceramic Coating
+              </h3>
+              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
+                PPF absorbs the impact — ceramic coating adds the hydrophobic gloss and UV protection
+                on top, so washes take minutes and the finish stays deeper for years.
+              </p>
+              <Link href="/ceramic" className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start">
+                View Ceramic Coating →
+              </Link>
+            </div>
+            <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 p-8 flex flex-col justify-center">
+              <h3 className="font-kanit font-bold text-white text-2xl mb-3">
+                Add Window Tinting
+              </h3>
+              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
+                Cut from the same HAUT Precision Scan patterns as your PPF — ceramic IR film blocks
+                cabin heat and UV fade at the glass.
+              </p>
+              <Link href="/window-tint" className="btn-outline px-6 py-3 text-sm text-center rounded-none self-start">
+                View Window Tinting →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <VideoTestimonials
         ids={['alex-perrera-lamborghini']}

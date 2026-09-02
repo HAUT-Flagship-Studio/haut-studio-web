@@ -1,53 +1,79 @@
 'use client'
 
+import Link from 'next/link'
+
 const REVIEWS = [
   {
     id: 1,
-    name: 'Marcus T.',
-    vehicle: '2023 BMW M4 Competition',
+    name: 'Andrei K.',
+    vehicle: 'Mercedes-Maybach (x2)',
     rating: 5,
-    text: 'The precision of the cut is something else. Every edge on my M4 was wrapped flush — zero lifting at the door handles, not even near the hood scoop. Three months in and it still looks like it came off a factory line.',
-    date: 'March 2025',
+    text: 'Had both of my Maybachs fully polished and ceramic coated here — the results are absolutely stunning. Best work in the area, just minutes from Manhattan. Professional, detailed, and truly top-notch service!',
+    date: 'September 2025',
   },
   {
     id: 2,
-    name: 'Dmitri K.',
-    vehicle: '2022 Porsche 911 GT3',
+    name: 'Alex A.',
+    vehicle: 'Range Rover',
     rating: 5,
-    text: 'I drove from Brooklyn specifically because of the reputation. Full vehicle wrap on a GT3 is not a job most shops take seriously. HAUT spent two days making sure every panel was perfect. The film is invisible. Genuinely invisible.',
-    date: 'January 2025',
+    text: 'Vadim and his team did a phenomenal job with my new Range Rover when I was looking for a very high quality PPF. Protecting the car and the original gloss black paint and gave it a truly incredible authentic deep Matte/Satin finish look. I was also very impressed with his advanced computerized system which precuts the high end PPF material using a special machine into every single precisely fitting piece — no manual cutting whatsoever, and the final fit was to perfection. No bubbles or uneven spots or anything, really clean job.',
+    date: 'February 2026',
   },
   {
     id: 3,
-    name: 'Sarah M.',
-    vehicle: '2024 Range Rover Sport',
+    name: 'Myth P.',
+    vehicle: 'BMW M5 & X5M',
     rating: 5,
-    text: 'Highway package plus ceramic coating. The water sheeting behavior alone is worth the price of the ceramic. Cleaning my Rover is now a 15-minute rinse — nothing sticks anymore. Absolutely worth it.',
-    date: 'April 2025',
+    text: "I have had the pleasure of using this team for two of my BMWs (M5C and now an X5M). From end to end, I've been impressed with their attention to detail, their responsiveness to my requests, and the overall quality of their work and the materials used. My M5 was fully PPF'd (exterior and interior) and my X5M is PPF'd on the full front end. If for any reason I had issues or small imperfections, the team never hesitated to take me in right away and get it fixed.",
+    date: 'March 2025',
   },
   {
     id: 4,
-    name: 'Anthony R.',
-    vehicle: '2021 Chevrolet Corvette C8',
+    name: 'Saumil P.',
+    vehicle: 'BMW — Full PPF, Tint & Ceramic',
     rating: 5,
-    text: 'They use HAUT’s own precision-scan patterns so the cuts are vehicle-specific — no trimming on the car. The shop is clean, the techs are meticulous, and they gave me a full walkthrough of every panel before I drove off.',
-    date: 'February 2025',
+    text: "This was an absolutely incredible experience. The team here is excellent. Great line of communication, and the work is absolutely flawless. Brought my new car to the shop, and had a full PPF, tints and ceramic coating of the wheels performed. You can tell the level of detail with the work. I'm very happy with how things turned out and I will definitely be referring my friends and family here.",
+    date: 'June 2026',
   },
   {
     id: 5,
-    name: 'Priya S.',
-    vehicle: '2023 Tesla Model S Plaid',
+    name: 'Ignatius A.',
+    vehicle: 'BMW X4',
     rating: 5,
-    text: 'My Model S had two small rock chips on the hood from a month of driving. They repaired those first, then applied the full vehicle PPF. The self-healing film is real — I watched it erase a light scratch in direct sunlight.',
-    date: 'May 2025',
+    text: "I couldn't be happier with the service I received! From start to finish, the team was professional, friendly, and incredibly knowledgeable. I came in to get my car wrapped, and they exceeded my expectations. The quality of their work is outstanding, and the attention to detail is second to none. My car looks absolutely stunning!",
+    date: 'October 2024',
   },
   {
     id: 6,
-    name: 'James L.',
-    vehicle: '2024 Lamborghini Urus S',
+    name: 'Grigory',
+    vehicle: 'Mercedes-AMG CLE53',
     rating: 5,
-    text: 'A Urus has more complex panel geometry than most cars people wrap. The front bumper alone has 12 separate sections. Everything was perfect on delivery. I have used four PPF shops in my life — HAUT is the only one I would come back to.',
-    date: 'June 2025',
+    text: 'He did a great job with the blue matte wrap on my new 2026 Mercedes AMG CLE53! I highly recommend this shop!',
+    date: 'August 2026',
+  },
+  {
+    id: 7,
+    name: 'Gregory D.',
+    vehicle: 'Tesla Cybertruck',
+    rating: 5,
+    text: "I recently had my Cybertruck wrapped and I couldn't be happier with the results! The price was competitive, the quality of the vinyl wrap is top-notch, and the installation was flawless and done on schedule as promised. The color and finish are exactly what I wanted, and the wrap has held up beautifully over the past few months.",
+    date: 'July 2024',
+  },
+  {
+    id: 8,
+    name: 'Philip C.',
+    vehicle: 'Tesla Model Y',
+    rating: 5,
+    text: "Vadim and his crew are top notch. They did an excellent and careful job with the Model Y. Communication from the start was seamless and easy. He didn't try to sell you on anything extra and tells you the truth on what could look the best and give you options. Definitely would recommend.",
+    date: 'January 2024',
+  },
+  {
+    id: 9,
+    name: 'Gianna D.',
+    vehicle: 'Repeat PPF Client',
+    rating: 5,
+    text: "This is our third time using Vadim for PPF, and we've had a great experience every single time. Vadim is professional, reliable, and his attention to detail is amazing. We've never had any issues, and the quality of the work is always top notch. It's hard to trust just anyone with your cars, but we know they're in great hands.",
+    date: 'August 2026',
   },
 ]
 
@@ -132,6 +158,14 @@ export default function Reviews({ limit, showHeader = true }: { limit?: number; 
         <p className="font-roboto text-[#DADADA]/50 text-sm">
           ★ 5.0 · Verified Google Reviews · Hackensack, NJ
         </p>
+        {showHeader && (
+          <Link
+            href="/reviews"
+            className="inline-block mt-3 font-roboto text-[#9FFE0A] text-sm hover:underline"
+          >
+            Read All Client Reviews →
+          </Link>
+        )}
       </div>
     </section>
   )

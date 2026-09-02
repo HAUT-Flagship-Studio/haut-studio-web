@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero
-        locationBadge="HAUT FLAGSHIP STUDIO • HACKENSACK, NJ"
+        locationBadge="HACKENSACK, NJ"
         heading={
           <>
             <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">PPF & Ceramic.</span>
@@ -55,7 +55,7 @@ export default function HomePage() {
         ]}
       />
 
-      <Reviews />
+      <Reviews limit={5} />
 
       <VideoTestimonials />
 
