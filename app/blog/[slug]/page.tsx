@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BLOG_ARTICLES, STUDIO } from '@/lib/data'
+import { BLOG_ARTICLES, SERVICES_OVERVIEW, STUDIO } from '@/lib/data'
 import { PhoneLink } from '@/components/TrackedLinks'
 
 export async function generateMetadata({
@@ -33,6 +33,10 @@ export default async function BlogPostPage({
   const { slug } = await params
   const article = BLOG_ARTICLES.find((a) => a.slug === slug)
   if (!article) notFound()
+
+  // Send readers (and link equity) to the service page this article is about,
+  // rather than pointing every post at PPF packages.
+  const articleService = SERVICES_OVERVIEW.find((s) => s.id === article.service)!
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -112,8 +116,11 @@ export default async function BlogPostPage({
               >
                 Call {STUDIO.phone}
               </PhoneLink>
-              <Link href="/ppf" className="btn-outline px-6 py-3 text-sm text-center rounded-none">
-                View Packages →
+              <Link
+                href={articleService.href}
+                className="btn-outline px-6 py-3 text-sm text-center rounded-none"
+              >
+                View {articleService.name} Packages →
               </Link>
             </div>
           </div>

@@ -5,10 +5,17 @@ import QuoteButton from '@/components/QuoteButton'
 import { PhoneLink, AddressLink } from '@/components/TrackedLinks'
 import { STUDIO } from '@/lib/data'
 
+// This page deliberately does not describe itself as a "PPF, ceramic coating and
+// window tint installer in Hackensack" — that is what /ppf, /ceramic and
+// /window-tint each say, and repeating it here made Google choose between four
+// pages for the same query and sometimes land on this one, 40 positions down.
+// What this page uniquely owns is the facility and the people, so that is what
+// the metadata describes. Service words in the body below link to the page that
+// owns them.
 export const metadata: Metadata = {
-  title: 'About HAUT Flagship Studio | Certified PPF & Ceramic Installers in Hackensack, NJ',
+  title: 'About HAUT Flagship Studio | Inside the Hackensack, NJ Facility',
   description:
-    "HAUT Flagship Studio is Bergen County's dedicated paint protection film, ceramic coating, and window tint installer — climate-controlled, dust-free bays in Hackensack, NJ, certified master installers, and a zero-blade digital precision process on every vehicle.",
+    'Inside HAUT Flagship Studio at 361 NJ-17: sealed positive-pressure install bays with filtered air handling, factory-trained installers certified on HAUT Precision Scan, and patterns plotted from vehicle-specific scan data so no blade meets your paint.',
   alternates: {
     canonical: 'https://hautppfstudio.com/about',
   },
@@ -57,7 +64,7 @@ export default function AboutPage() {
             <span className="text-[#9FFE0A]">Flagship Protection Studio</span>
           </>
         }
-        subtitle="HAUT Flagship Studio is Hackensack, NJ's dedicated paint protection film, ceramic coating, and window tint installer — built around a single idea: precision beats speed. Every vehicle that comes through our doors gets the same climate-controlled, dust-free environment and the same zero-blade HAUT Precision Scan cutting process, whether it's a daily driver or a six-figure exotic."
+        subtitle="A flagship studio is a facility, not a label. Sealed positive-pressure bays with filtered air handling, factory-trained installers, and every pattern plotted from vehicle-specific scan data before anything touches the car. The same environment and the same zero-blade process for every vehicle that comes through our doors, whether it's a daily driver or a six-figure exotic."
         ctaLabel="Get Custom Estimate"
       />
 
@@ -71,9 +78,20 @@ export default function AboutPage() {
           <div className="space-y-4 font-roboto text-[#DADADA] text-base leading-relaxed">
             <p>
               HAUT Flagship Studio opened its doors at 361 NJ-17 in Hackensack with a straightforward premise:
-              Bergen County and Northern NJ vehicle owners deserve a paint protection film, ceramic coating, and
-              window tint installer that treats every panel with the same precision an exotic dealership expects
-              from its own service department.
+              Bergen County and Northern NJ vehicle owners deserve a{' '}
+              <Link href="/ppf" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+                paint protection film
+              </Link>
+              ,{' '}
+              <Link href="/ceramic" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+                ceramic coating
+              </Link>{' '}
+              and{' '}
+              <Link href="/window-tint" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+                window tint
+              </Link>{' '}
+              installer that treats every panel with the same precision an exotic dealership expects from its own
+              service department.
             </p>
             <p>
               That standard is what separates a flagship studio from a mobile installer working out of a van in a
@@ -141,8 +159,20 @@ export default function AboutPage() {
             <span className="text-[#9FFE0A]">We Protect Every Vehicle?</span>
           </h2>
           <p className="font-roboto text-[#DADADA]/70 text-base leading-relaxed mb-8 max-w-2xl mx-auto">
-            See the full step-by-step installation process for paint protection film, ceramic coating, and
-            window tinting — from paint decontamination to final inspection.
+            See the full step-by-step installation process — from paint decontamination to final inspection —
+            or go straight to packages and pricing for{' '}
+            <Link href="/ppf" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+              paint protection film
+            </Link>
+            ,{' '}
+            <Link href="/ceramic" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+              ceramic coating
+            </Link>{' '}
+            and{' '}
+            <Link href="/window-tint" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
+              window tinting
+            </Link>
+            .
           </p>
           <Link
             href="/our-process"

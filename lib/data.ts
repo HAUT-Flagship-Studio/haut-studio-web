@@ -17,9 +17,13 @@ export interface FeatureRow {
   included: boolean[]
 }
 
+export type ServiceId = 'ppf' | 'ceramic' | 'window-tint'
+
 export interface BlogArticle {
   slug: string
   category: string
+  /** The service page this article belongs to, so its CTA points at the page that owns the topic. */
+  service: ServiceId
   title: string
   excerpt: string
   metaDescription: string
@@ -360,6 +364,7 @@ export const FAQ_ITEMS: FAQItem[] = [
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
     slug: 'winter-road-salt-paint-protection-nj',
+    service: 'ppf',
     category: 'Maintenance',
     title: 'Winter Driving in New Jersey: Protecting Your Paint From Road Salt',
     excerpt:
@@ -381,6 +386,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'new-jersey-window-tint-laws-guide',
+    service: 'window-tint',
     category: 'Local Guide',
     title: 'New Jersey Window Tint Laws: What\'s Actually Legal',
     excerpt:
@@ -402,6 +408,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'ceramic-coating-lifespan-maintenance-guide',
+    service: 'ceramic',
     category: 'Maintenance',
     title: 'How Long Does Ceramic Coating Actually Last? A Realistic Maintenance Guide',
     excerpt:
@@ -423,6 +430,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'ppf-vs-ceramic-coating-hackensack',
+    service: 'ppf',
     category: 'Technical Guide',
     title: 'PPF vs. Ceramic Coating: When to Use Which (And When to Use Both)',
     excerpt:
@@ -445,6 +453,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'how-long-does-ppf-last',
+    service: 'ppf',
     category: 'Maintenance',
     title: 'How Long Does Paint Protection Film Last? Realistic Timelines by Usage',
     excerpt:
@@ -466,6 +475,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'ppf-installation-hackensack-nj-guide',
+    service: 'ppf',
     category: 'Local Guide',
     title: 'Getting PPF in Hackensack, NJ: What the Process Actually Looks Like',
     excerpt:
