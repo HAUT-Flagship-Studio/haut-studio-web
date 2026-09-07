@@ -158,3 +158,34 @@ h1, h2, h3, h4, h5 {
   color: var(--haut-slate);
   transform: translateY(-1px);
 }
+
+/* The browser default focus ring is a 1px hairline, which all but disappears
+   against #1A292E. Replace it with the brand green at a weight that survives
+   the dark ground. :focus-visible, so it shows for keyboard and assistive tech
+   without ringing every mouse click. */
+:focus-visible {
+  outline: 3px solid var(--haut-green);
+  outline-offset: 2px;
+}
+
+/* The modal inputs opt out of the outline in favour of a green border; give
+   them the ring back so the keyboard target is never ambiguous. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--haut-green);
+  outline-offset: 0;
+}
+
+/* An element focused only to receive the skip link should not draw a ring. */
+#main-content:focus,
+#main-content:focus-visible {
+  outline: none;
+}
+
+/* The dialog container takes focus on open so the reader announces it; the ring
+   belongs on the controls inside, not on the full-screen overlay. */
+[role='dialog']:focus,
+[role='dialog']:focus-visible {
+  outline: none;
+}

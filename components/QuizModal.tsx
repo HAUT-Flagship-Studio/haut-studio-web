@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type ServiceOption, type VehicleCategory } from '@/lib/pricing'
 import { STUDIO } from '@/lib/data'
+import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
 
 declare global {
@@ -174,11 +175,14 @@ export default function QuizModal({
   onClose: () => void
   onApply: (prefill: CalculatorPrefill) => void
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null)
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState<Answers>(INITIAL_ANSWERS)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [capturePhone, setCapturePhone] = useState('')
   const [captureStatus, setCaptureStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  useDialogA11y(isOpen, dialogRef, onClose)
 
   const recommendations = useMemo(() => buildRecommendations(answers), [answers])
 
@@ -275,6 +279,7 @@ export default function QuizModal({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay"
       role="dialog"
       aria-modal="true"

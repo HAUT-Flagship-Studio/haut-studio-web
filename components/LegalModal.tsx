@@ -1,6 +1,8 @@
 'use client'
 
+import { useRef } from 'react'
 import { STUDIO } from '@/lib/data'
+import { useDialogA11y } from '@/lib/useDialogA11y'
 
 const PRIVACY_SECTIONS = [
   {
@@ -81,6 +83,12 @@ export default function LegalModal({
   type: LegalModalType
   onClose: () => void
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  // Hooks run before the early return below, so the null case cannot change
+  // the hook order between renders.
+  useDialogA11y(type !== null, dialogRef, onClose)
+
   if (!type) return null
 
   const title = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service'
@@ -88,6 +96,7 @@ export default function LegalModal({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay"
       role="dialog"
       aria-modal="true"

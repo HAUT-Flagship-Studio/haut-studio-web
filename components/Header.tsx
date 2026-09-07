@@ -34,6 +34,17 @@ export default function Header() {
     setMenuOpen(false)
   }, [pathname])
 
+  // The open mobile menu covers the page, so Escape has to dismiss it the way
+  // it dismisses the modals.
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
+
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === '/') {
       e.preventDefault()
@@ -111,7 +122,7 @@ export default function Header() {
         {/* Mobile / tablet hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="xl:hidden flex flex-col gap-1.5 p-2 flex-shrink-0"
+          className="xl:hidden flex flex-col items-center justify-center gap-1.5 min-w-[44px] min-h-[44px] flex-shrink-0"
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
         >

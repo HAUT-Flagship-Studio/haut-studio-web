@@ -179,9 +179,20 @@ export default function RootLayout({
         />
       </head>
       <body className="font-roboto antialiased">
+        {/* Pages here run past 10,000px, and the nav ahead of them is the same
+            on every one — a keyboard user should not have to tab through it
+            twice. Hidden until focused. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:bg-[#9FFE0A] focus:text-[#1A292E] focus:px-5 focus:py-3 focus:font-kanit focus:font-semibold focus:tracking-wider"
+        >
+          Skip to content
+        </a>
         <QuizProvider>
           <Header />
-          {children}
+          <div id="main-content" tabIndex={-1}>
+            {children}
+          </div>
           <Footer />
         </QuizProvider>
 

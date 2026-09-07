@@ -14,6 +14,7 @@ import {
   type VehicleCategory,
 } from '@/lib/pricing'
 import { STUDIO } from '@/lib/data'
+import { useDialogA11y } from '@/lib/useDialogA11y'
 import { PhoneLink } from './TrackedLinks'
 
 declare global {
@@ -142,6 +143,9 @@ export default function CalculatorModal({
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useDialogA11y(isOpen, dialogRef, onClose)
 
   useEffect(() => {
     if (!isOpen) return
@@ -243,6 +247,7 @@ export default function CalculatorModal({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay"
       role="dialog"
       aria-modal="true"
