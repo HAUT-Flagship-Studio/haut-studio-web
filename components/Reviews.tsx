@@ -2,80 +2,7 @@
 
 import Link from 'next/link'
 
-const REVIEWS = [
-  {
-    id: 1,
-    name: 'Andrei K.',
-    vehicle: 'Mercedes-Maybach (x2)',
-    rating: 5,
-    text: 'Had both of my Maybachs fully polished and ceramic coated here — the results are absolutely stunning. Best work in the area, just minutes from Manhattan. Professional, detailed, and truly top-notch service!',
-    date: 'September 2025',
-  },
-  {
-    id: 2,
-    name: 'Alex A.',
-    vehicle: 'Range Rover',
-    rating: 5,
-    text: 'Vadim and his team did a phenomenal job with my new Range Rover when I was looking for a very high quality PPF. Protecting the car and the original gloss black paint and gave it a truly incredible authentic deep Matte/Satin finish look. I was also very impressed with his advanced computerized system which precuts the high end PPF material using a special machine into every single precisely fitting piece — no manual cutting whatsoever, and the final fit was to perfection. No bubbles or uneven spots or anything, really clean job.',
-    date: 'February 2026',
-  },
-  {
-    id: 3,
-    name: 'Myth P.',
-    vehicle: 'BMW M5 & X5M',
-    rating: 5,
-    text: "I have had the pleasure of using this team for two of my BMWs (M5C and now an X5M). From end to end, I've been impressed with their attention to detail, their responsiveness to my requests, and the overall quality of their work and the materials used. My M5 was fully PPF'd (exterior and interior) and my X5M is PPF'd on the full front end. If for any reason I had issues or small imperfections, the team never hesitated to take me in right away and get it fixed.",
-    date: 'March 2025',
-  },
-  {
-    id: 4,
-    name: 'Saumil P.',
-    vehicle: 'BMW — Full PPF, Tint & Ceramic',
-    rating: 5,
-    text: "This was an absolutely incredible experience. The team here is excellent. Great line of communication, and the work is absolutely flawless. Brought my new car to the shop, and had a full PPF, tints and ceramic coating of the wheels performed. You can tell the level of detail with the work. I'm very happy with how things turned out and I will definitely be referring my friends and family here.",
-    date: 'June 2026',
-  },
-  {
-    id: 5,
-    name: 'Ignatius A.',
-    vehicle: 'BMW X4',
-    rating: 5,
-    text: "I couldn't be happier with the service I received! From start to finish, the team was professional, friendly, and incredibly knowledgeable. I came in to get my car wrapped, and they exceeded my expectations. The quality of their work is outstanding, and the attention to detail is second to none. My car looks absolutely stunning!",
-    date: 'October 2024',
-  },
-  {
-    id: 6,
-    name: 'Grigory',
-    vehicle: 'Mercedes-AMG CLE53',
-    rating: 5,
-    text: 'He did a great job with the blue matte wrap on my new 2026 Mercedes AMG CLE53! I highly recommend this shop!',
-    date: 'August 2026',
-  },
-  {
-    id: 7,
-    name: 'Gregory D.',
-    vehicle: 'Tesla Cybertruck',
-    rating: 5,
-    text: "I recently had my Cybertruck wrapped and I couldn't be happier with the results! The price was competitive, the quality of the vinyl wrap is top-notch, and the installation was flawless and done on schedule as promised. The color and finish are exactly what I wanted, and the wrap has held up beautifully over the past few months.",
-    date: 'July 2024',
-  },
-  {
-    id: 8,
-    name: 'Philip C.',
-    vehicle: 'Tesla Model Y',
-    rating: 5,
-    text: "Vadim and his crew are top notch. They did an excellent and careful job with the Model Y. Communication from the start was seamless and easy. He didn't try to sell you on anything extra and tells you the truth on what could look the best and give you options. Definitely would recommend.",
-    date: 'January 2024',
-  },
-  {
-    id: 9,
-    name: 'Gianna D.',
-    vehicle: 'Repeat PPF Client',
-    rating: 5,
-    text: "This is our third time using Vadim for PPF, and we've had a great experience every single time. Vadim is professional, reliable, and his attention to detail is amazing. We've never had any issues, and the quality of the work is always top notch. It's hard to trust just anyone with your cars, but we know they're in great hands.",
-    date: 'August 2026',
-  },
-]
+import { CLIENT_REVIEWS } from '@/lib/data'
 
 function StarRating({ count }: { count: number }) {
   return (
@@ -96,7 +23,7 @@ function StarRating({ count }: { count: number }) {
 
 export default function Reviews({ limit, showHeader = true }: { limit?: number; showHeader?: boolean }) {
   // Duplicate reviews for seamless infinite loop
-  const sourceReviews = limit ? REVIEWS.slice(0, limit) : REVIEWS
+  const sourceReviews = limit ? CLIENT_REVIEWS.slice(0, limit) : CLIENT_REVIEWS
   const allReviews = [...sourceReviews, ...sourceReviews]
 
   return (

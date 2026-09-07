@@ -5,7 +5,14 @@ import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { QuizProvider } from '@/components/QuizProvider'
-import { PPF_PACKAGES, CERAMIC_PACKAGE, WINDOW_TINT_PACKAGES, FAQ_ITEMS, STUDIO } from '@/lib/data'
+import {
+  PPF_PACKAGES,
+  CERAMIC_PACKAGE,
+  WINDOW_TINT_PACKAGES,
+  FAQ_ITEMS,
+  STUDIO,
+  CLIENT_REVIEWS,
+} from '@/lib/data'
 
 const kanit = Kanit({
   subsets: ['latin'],
@@ -100,6 +107,30 @@ const localBusinessSchema = {
     },
   ],
   priceRange: '$$$$',
+  // Rating and reviews cover only the client reviews published on this site, so the
+  // count stays verifiable against what a crawler can actually read on /reviews.
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: (
+      CLIENT_REVIEWS.reduce((sum, r) => sum + r.rating, 0) / CLIENT_REVIEWS.length
+    ).toFixed(1),
+    reviewCount: CLIENT_REVIEWS.length,
+    bestRating: 5,
+    worstRating: 1,
+  },
+  review: CLIENT_REVIEWS.map((r) => ({
+    '@type': 'Review',
+    author: { '@type': 'Person', name: r.name },
+    datePublished: r.datePublished,
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: r.rating,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    reviewBody: r.text,
+    itemReviewed: { '@type': 'AutomotiveBusiness', name: 'HAUT Flagship Studio' },
+  })),
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'PPF, Ceramic Coating & Window Tinting Packages',
