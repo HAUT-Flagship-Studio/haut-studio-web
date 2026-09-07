@@ -581,3 +581,72 @@ export const CLIENT_REVIEWS: ClientReview[] = [
     datePublished: '2026-08',
   },
 ]
+
+export const PPF_FAQ_ITEMS: FAQItem[] = [
+  {
+    question: 'Will razor blades touch my paint during installation?',
+    answer:
+      "No. Every panel pattern is 100% digitally cut with HAUT Precision Scan technology before it ever reaches your vehicle. Installers hand-tuck and heat-form each edge on the car — a blade never makes contact with your clear coat.",
+  },
+  {
+    question: 'Can I wash my car normally with PPF installed?',
+    answer:
+      'Yes — hand washing and touchless car washes are completely safe once the film has cured. We recommend avoiding automatic brush washes permanently, since stiff bristles can trap grit against film edges and cause premature lifting.',
+  },
+  {
+    question: 'What happens if a rock damages the film?',
+    answer:
+      'Minor impacts are absorbed by the film and often self-heal with sunlight or heat. If a deeper chip or gouge does get through, only that panel section needs to be replaced — your factory paint underneath stays untouched and fully protected.',
+  },
+  {
+    question: 'Is the 10-year warranty transferable if I sell the car?',
+    answer:
+      'Yes. The manufacturer warranty is fully transferable to the next owner at no cost — a meaningful resale talking point for buyers who care about factory paint condition.',
+  },
+]
+
+export const CERAMIC_FAQ_ITEMS: FAQItem[] = [
+  {
+    question: 'How long does HAUT Ceramic last?',
+    answer:
+      "HAUT Ceramic is a single application that holds its hydrophobic gloss for years, not months — unlike a spray sealant or wax that washes out after a handful of cleanings. Actual lifespan depends on parking conditions and wash habits, which we'll walk through at your consultation.",
+  },
+  {
+    question: 'Do I need paint correction before coating?',
+    answer:
+      "Yes, if your paint has swirl marks, light scratches, or oxidation. HAUT Ceramic bonds directly to whatever is on the surface when it cures, so any defects underneath get sealed in permanently along with the gloss. Every application starts with a multi-stage machine correction to remove them first.",
+  },
+  {
+    question: 'Can I use an automatic car wash after ceramic coating?',
+    answer:
+      'Touchless automatic washes are safe. We recommend avoiding automatic brush washes — the stiff bristles will dull the hydrophobic finish faster than hand washing or a touchless wash with pH-neutral soap.',
+  },
+  {
+    question: 'Can HAUT Ceramic be applied over PPF or a vinyl wrap?',
+    answer:
+      "Yes. HAUT Ceramic bonds to clear coat, paint protection film, and vinyl wrap alike, adding a sacrificial hydrophobic layer on top — it takes the UV and chemical exposure that would otherwise stain or prematurely yellow the film underneath.",
+  },
+]
+
+export const TINT_FAQ_ITEMS: FAQItem[] = [
+  {
+    question: 'What tint darkness (VLT) can I get in New Jersey?',
+    answer:
+      "New Jersey law requires front side windows and the windshield to let in more than 70% of light, so both can only take the lightest legal shade. Rear side windows and the rear windshield can go as dark as 5% VLT. We'll confirm the legal option for each window at your consultation, so what you drive off with is street-legal from day one.",
+  },
+  {
+    question: 'Will ceramic tint interfere with my phone or GPS signal?',
+    answer:
+      'No. HAUT uses ceramic IR film with non-metallic particles, so it blocks heat without interfering with radio, GPS, or phone signal — unlike older dyed or metallic films.',
+  },
+  {
+    question: 'How long before I can roll down my windows?',
+    answer:
+      "Give the adhesive several days to fully cure before rolling a freshly tinted window down — exact timing depends on the film and the weather. We'll walk you through the timeline for your vehicle at pickup.",
+  },
+  {
+    question: 'Can I combine window tint with PPF or ceramic coating?',
+    answer:
+      "Yes. Window tint is applied to the glass, so it doesn't interact with PPF or ceramic coating on the painted panels — most clients combine all three in one visit.",
+  },
+]

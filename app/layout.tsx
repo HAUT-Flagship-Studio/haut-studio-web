@@ -9,7 +9,6 @@ import {
   PPF_PACKAGES,
   CERAMIC_PACKAGE,
   WINDOW_TINT_PACKAGES,
-  FAQ_ITEMS,
   STUDIO,
   CLIENT_REVIEWS,
 } from '@/lib/data'
@@ -144,19 +143,6 @@ const localBusinessSchema = {
   },
 }
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQ_ITEMS.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: item.answer,
-    },
-  })),
-}
-
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1019441793680027'
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-GSC600LZS3'
 
@@ -173,10 +159,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
+        {/* FAQ markup is not here on purpose: it has to match questions visible
+            on the page serving it, so each page emits its own. */}
       </head>
       <body className="font-roboto antialiased">
         {/* Pages here run past 10,000px, and the nav ahead of them is the same

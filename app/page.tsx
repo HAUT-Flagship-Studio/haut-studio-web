@@ -6,11 +6,21 @@ import Reviews from '@/components/Reviews'
 import VideoTestimonials from '@/components/VideoTestimonials'
 import WorkGallery from '@/components/WorkGallery'
 import FAQSection from '@/components/FAQSection'
+import { FAQ_ITEMS } from '@/lib/data'
 import LocationMap from '@/components/LocationMap'
+import { buildFaqSchema } from '@/lib/faqSchema'
 
 export default function HomePage() {
+  // The questions below are the ones this page renders, so the markup
+  // describes what a visitor can actually read.
+  const faqSchema = buildFaqSchema(FAQ_ITEMS)
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Hero
         locationBadge="HACKENSACK, NJ"
         heading={

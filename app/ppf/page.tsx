@@ -8,7 +8,8 @@ import Packages from '@/components/Packages'
 import VideoTestimonials from '@/components/VideoTestimonials'
 import PPFFaq from '@/components/PPFFaq'
 import PPFFinalCTA from '@/components/PPFFinalCTA'
-import { PPF_PACKAGES } from '@/lib/data'
+import { PPF_PACKAGES, PPF_FAQ_ITEMS } from '@/lib/data'
+import { buildFaqSchema } from '@/lib/faqSchema'
 
 export const metadata: Metadata = {
   title: 'Paint Protection Film (PPF) in Hackensack, NJ | Packages & Pricing | HAUT Flagship Studio',
@@ -20,8 +21,16 @@ export const metadata: Metadata = {
 }
 
 export default function PPFPage() {
+  // The questions below are the ones this page renders, so the markup
+  // describes what a visitor can actually read.
+  const faqSchema = buildFaqSchema(PPF_FAQ_ITEMS)
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Hero
         backgroundImage="/assets/ppf-page-cover.webp"
         locationBadge="✦ HAUT PAINT PROTECTION FILM"

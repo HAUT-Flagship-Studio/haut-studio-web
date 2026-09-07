@@ -5,7 +5,8 @@ import Packages from '@/components/Packages'
 import PricingMatrix from '@/components/PricingMatrix'
 import ProcessBanner from '@/components/ProcessBanner'
 import TintFaq from '@/components/TintFaq'
-import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX } from '@/lib/data'
+import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX, TINT_FAQ_ITEMS } from '@/lib/data'
+import { buildFaqSchema } from '@/lib/faqSchema'
 
 export const metadata: Metadata = {
   title: 'Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
@@ -50,8 +51,16 @@ const TINT_SPECS = [
 ]
 
 export default function WindowTintPage() {
+  // The questions below are the ones this page renders, so the markup
+  // describes what a visitor can actually read.
+  const faqSchema = buildFaqSchema(TINT_FAQ_ITEMS)
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <PageHero
         backgroundImage="/assets/service-window-tinting.webp"
         eyebrow="Window Tinting"

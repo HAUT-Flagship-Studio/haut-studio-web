@@ -4,7 +4,8 @@ import PageHero from '@/components/PageHero'
 import QuoteButton from '@/components/QuoteButton'
 import ProcessBanner from '@/components/ProcessBanner'
 import CeramicFaq from '@/components/CeramicFaq'
-import { CERAMIC_PACKAGE } from '@/lib/data'
+import { CERAMIC_PACKAGE, CERAMIC_FAQ_ITEMS } from '@/lib/data'
+import { buildFaqSchema } from '@/lib/faqSchema'
 
 export const metadata: Metadata = {
   title: 'Ceramic Coating in Hackensack, NJ | HAUT Flagship Studio',
@@ -49,8 +50,16 @@ const CERAMIC_SPECS = [
 ]
 
 export default function CeramicPage() {
+  // The questions below are the ones this page renders, so the markup
+  // describes what a visitor can actually read.
+  const faqSchema = buildFaqSchema(CERAMIC_FAQ_ITEMS)
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <PageHero
         backgroundImage="/assets/service-ceramic-coating.webp"
         eyebrow="Ceramic Coating"

@@ -2,28 +2,7 @@
 
 import { useState } from 'react'
 
-const TINT_FAQ_ITEMS = [
-  {
-    question: 'What tint darkness (VLT) can I get in New Jersey?',
-    answer:
-      "New Jersey law requires front side windows and the windshield to let in more than 70% of light, so both can only take the lightest legal shade. Rear side windows and the rear windshield can go as dark as 5% VLT. We'll confirm the legal option for each window at your consultation, so what you drive off with is street-legal from day one.",
-  },
-  {
-    question: 'Will ceramic tint interfere with my phone or GPS signal?',
-    answer:
-      'No. HAUT uses ceramic IR film with non-metallic particles, so it blocks heat without interfering with radio, GPS, or phone signal — unlike older dyed or metallic films.',
-  },
-  {
-    question: 'How long before I can roll down my windows?',
-    answer:
-      "Give the adhesive several days to fully cure before rolling a freshly tinted window down — exact timing depends on the film and the weather. We'll walk you through the timeline for your vehicle at pickup.",
-  },
-  {
-    question: 'Can I combine window tint with PPF or ceramic coating?',
-    answer:
-      "Yes. Window tint is applied to the glass, so it doesn't interact with PPF or ceramic coating on the painted panels — most clients combine all three in one visit.",
-  },
-]
+import { TINT_FAQ_ITEMS } from '@/lib/data'
 
 export default function TintFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)

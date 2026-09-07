@@ -2,28 +2,7 @@
 
 import { useState } from 'react'
 
-const PPF_FAQ_ITEMS = [
-  {
-    question: 'Will razor blades touch my paint during installation?',
-    answer:
-      "No. Every panel pattern is 100% digitally cut with HAUT Precision Scan technology before it ever reaches your vehicle. Installers hand-tuck and heat-form each edge on the car — a blade never makes contact with your clear coat.",
-  },
-  {
-    question: 'Can I wash my car normally with PPF installed?',
-    answer:
-      'Yes — hand washing and touchless car washes are completely safe once the film has cured. We recommend avoiding automatic brush washes permanently, since stiff bristles can trap grit against film edges and cause premature lifting.',
-  },
-  {
-    question: 'What happens if a rock damages the film?',
-    answer:
-      'Minor impacts are absorbed by the film and often self-heal with sunlight or heat. If a deeper chip or gouge does get through, only that panel section needs to be replaced — your factory paint underneath stays untouched and fully protected.',
-  },
-  {
-    question: 'Is the 10-year warranty transferable if I sell the car?',
-    answer:
-      'Yes. The manufacturer warranty is fully transferable to the next owner at no cost — a meaningful resale talking point for buyers who care about factory paint condition.',
-  },
-]
+import { PPF_FAQ_ITEMS } from '@/lib/data'
 
 export default function PPFFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)

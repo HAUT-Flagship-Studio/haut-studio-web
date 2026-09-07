@@ -2,28 +2,7 @@
 
 import { useState } from 'react'
 
-const CERAMIC_FAQ_ITEMS = [
-  {
-    question: 'How long does HAUT Ceramic last?',
-    answer:
-      "HAUT Ceramic is a single application that holds its hydrophobic gloss for years, not months — unlike a spray sealant or wax that washes out after a handful of cleanings. Actual lifespan depends on parking conditions and wash habits, which we'll walk through at your consultation.",
-  },
-  {
-    question: 'Do I need paint correction before coating?',
-    answer:
-      "Yes, if your paint has swirl marks, light scratches, or oxidation. HAUT Ceramic bonds directly to whatever is on the surface when it cures, so any defects underneath get sealed in permanently along with the gloss. Every application starts with a multi-stage machine correction to remove them first.",
-  },
-  {
-    question: 'Can I use an automatic car wash after ceramic coating?',
-    answer:
-      'Touchless automatic washes are safe. We recommend avoiding automatic brush washes — the stiff bristles will dull the hydrophobic finish faster than hand washing or a touchless wash with pH-neutral soap.',
-  },
-  {
-    question: 'Can HAUT Ceramic be applied over PPF or a vinyl wrap?',
-    answer:
-      "Yes. HAUT Ceramic bonds to clear coat, paint protection film, and vinyl wrap alike, adding a sacrificial hydrophobic layer on top — it takes the UV and chemical exposure that would otherwise stain or prematurely yellow the film underneath.",
-  },
-]
+import { CERAMIC_FAQ_ITEMS } from '@/lib/data'
 
 export default function CeramicFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
