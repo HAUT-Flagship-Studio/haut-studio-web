@@ -7,9 +7,11 @@ import { STUDIO } from '@/lib/data'
 import { PhoneLink } from '@/components/TrackedLinks'
 
 export const metadata: Metadata = {
-  title: 'Our Process | PPF, Ceramic Coating & Window Tint Installation in Hackensack, NJ',
+  // Describes the method, not the service menu — the service pages own that.
+  // See scripts/check-seo.mjs, rule metadata-competes-with-service-pages.
+  title: 'Our Process | Step-by-Step Installation at HAUT Flagship Studio',
   description:
-    "See exactly how HAUT Flagship Studio installs paint protection film, ceramic coating, and window tint in Hackensack, NJ — HAUT Precision Scan pattern plotting, climate-controlled dust-free bays, and zero-blade contact on every panel. The full step-by-step process for Bergen County's certified master installers.",
+    'Every step from paint decontamination to final inspection: patterns plotted from vehicle-specific scan data, a sealed positive-pressure bay with filtered air handling, edges hand-tucked and heat-formed, and no blade contact anywhere on the car.',
   alternates: {
     canonical: 'https://hautppfstudio.com/our-process',
   },

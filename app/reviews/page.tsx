@@ -4,9 +4,11 @@ import Reviews from '@/components/Reviews'
 import { STUDIO } from '@/lib/data'
 
 export const metadata: Metadata = {
-  title: '5.0 Star Client Reviews | HAUT Flagship Studio, Hackensack, NJ',
+  // Describes the reviews, not the service menu — the service pages own that.
+  // See scripts/check-seo.mjs, rule metadata-competes-with-service-pages.
+  title: '5.0 Star Client Reviews | HAUT Flagship Studio',
   description:
-    "20+ verified 5-star Google reviews from Bergen County's exotic and luxury vehicle owners — real client experiences with Paint Protection Film, ceramic coating, and window tinting at HAUT Flagship Studio in Hackensack, NJ.",
+    "20 verified five-star Google reviews in the clients' own words — Maybachs, Range Rovers, BMW M cars and Teslas, from owners who came back a second and third time. Read what they said about the work before you book yours.",
   alternates: {
     canonical: 'https://hautppfstudio.com/reviews',
   },
@@ -42,7 +44,7 @@ export default function ReviewsPage() {
                   </svg>
                 ))}
               </div>
-              <span className="font-roboto text-[#DADADA]/60 text-xs mt-0.5">20+ verified Google reviews</span>
+              <span className="font-roboto text-[#DADADA]/60 text-xs mt-0.5">20 verified Google reviews</span>
             </div>
           </div>
           <p className="font-roboto text-[#DADADA]/70 text-sm max-w-xl mx-auto leading-relaxed">
