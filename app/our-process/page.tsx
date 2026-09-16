@@ -165,7 +165,7 @@ export default function OurProcessPage() {
             <span className="text-[#9FFE0A]">Three Zero-Blade Processes.</span>
           </>
         }
-        subtitle="Bergen County and Northern NJ vehicle owners trust HAUT Flagship Studio because every install — paint protection film, ceramic coating, or window tint — follows the same digitally-plotted, zero-blade process inside our climate-controlled, dust-free Hackensack, NJ bays. Here's exactly what happens to your vehicle, step by step."
+        subtitle="Every install follows the same digitally-plotted, zero-blade process inside climate-controlled, dust-free bays — whichever surface is being protected. Here's exactly what happens to your vehicle, step by step."
         ctaLabel="Get Custom Estimate"
       />
 
@@ -268,9 +268,8 @@ export default function OurProcessPage() {
             <span className="text-[#9FFE0A]">on Your Vehicle?</span>
           </h2>
           <p className="font-roboto text-[#DADADA]/70 text-base leading-relaxed mb-8">
-            Schedule a consultation at our Hackensack, NJ studio and get a custom estimate for PPF, ceramic
-            coating, window tint, or any combination — same-week appointments available for Bergen County
-            and Northern NJ.
+            Schedule a consultation at the studio, tell us what you want protected, and we&apos;ll send a
+            custom estimate — same-week appointments available.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <QuoteButton label="Get Custom Estimate →" className="btn-green px-8 py-4 text-sm tracking-wider rounded-none" />

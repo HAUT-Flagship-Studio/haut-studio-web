@@ -27,7 +27,7 @@ export default function ReviewsPage() {
             <span className="text-[#9FFE0A]">Say About the Work</span>
           </>
         }
-        subtitle="Real reviews from Bergen County's exotic and luxury vehicle owners who trusted HAUT Flagship Studio's certified master installers with their paint protection film, ceramic coating, and window tinting installs."
+        subtitle="Real reviews from the exotic and luxury vehicle owners who trusted HAUT Flagship Studio's certified master installers with their cars. Unedited, and published as they were written."
         ctaLabel="Get Custom Estimate"
       />
 

@@ -12,6 +12,14 @@ import { STUDIO } from '@/lib/data'
 // What this page uniquely owns is the facility and the people, so that is what
 // the metadata describes. Service words in the body below link to the page that
 // owns them.
+//
+// Fixing the metadata alone was not enough. Through 2026-09-13 the body still
+// said the service list three times over — "a PPF, ceramic coating and window
+// tint installer" for "Bergen County and Northern NJ" — and Search Console
+// showed this page answering "paint protection film near me" (46 impressions,
+// position 33.5) and "window tinting near me" (56, position 63) while earning
+// zero clicks on any query of its own. The service list now appears once, as
+// links out. See scripts/check-seo.mjs, rule body-competes-with-service-pages.
 export const metadata: Metadata = {
   title: 'About HAUT Flagship Studio | Inside the Hackensack, NJ Facility',
   description:
@@ -78,7 +86,8 @@ export default function AboutPage() {
           <div className="space-y-4 font-roboto text-[#DADADA] text-base leading-relaxed">
             <p>
               HAUT Flagship Studio opened its doors at 361 NJ-17 in Hackensack with a straightforward premise:
-              Bergen County and Northern NJ vehicle owners deserve a{' '}
+              treat every panel with the same precision an exotic dealership expects from its own service
+              department. What we install is covered on the{' '}
               <Link href="/ppf" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
                 paint protection film
               </Link>
@@ -90,8 +99,7 @@ export default function AboutPage() {
               <Link href="/window-tint" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
                 window tint
               </Link>{' '}
-              installer that treats every panel with the same precision an exotic dealership expects from its own
-              service department.
+              pages. This page is about the room it happens in.
             </p>
             <p>
               That standard is what separates a flagship studio from a mobile installer working out of a van in a
@@ -159,20 +167,7 @@ export default function AboutPage() {
             <span className="text-[#9FFE0A]">We Protect Every Vehicle?</span>
           </h2>
           <p className="font-roboto text-[#DADADA]/70 text-base leading-relaxed mb-8 max-w-2xl mx-auto">
-            See the full step-by-step installation process — from paint decontamination to final inspection —
-            or go straight to packages and pricing for{' '}
-            <Link href="/ppf" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
-              paint protection film
-            </Link>
-            ,{' '}
-            <Link href="/ceramic" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
-              ceramic coating
-            </Link>{' '}
-            and{' '}
-            <Link href="/window-tint" className="text-[#9FFE0A] underline underline-offset-4 hover:no-underline">
-              window tinting
-            </Link>
-            .
+            See the full step-by-step installation process — from paint decontamination to final inspection.
           </p>
           <Link
             href="/our-process"
@@ -208,8 +203,8 @@ export default function AboutPage() {
               Schedule Your Consultation
             </h3>
             <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-6">
-              Same-week appointments available for Bergen County and Northern NJ. Tell us about your vehicle
-              and we&apos;ll send a custom estimate for PPF, ceramic coating, window tint, or any combination.
+              Same-week appointments available. Tell us about your vehicle and what you want protected, and
+              we&apos;ll send a custom estimate.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <QuoteButton label="Get Custom Estimate →" className="btn-green px-6 py-3 text-sm tracking-wider rounded-none" />

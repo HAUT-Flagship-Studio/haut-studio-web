@@ -141,6 +141,83 @@ for (const page of STATIC) {
 }
 
 /* ------------------------------------------------------------------ *
+ * 4b. ...and no two pages sell the same thing in their body copy either.
+ *
+ * Rule 4 fixed /about's metadata and the page kept ranking for service
+ * queries anyway, because the body still said it three times over: "a paint
+ * protection film, ceramic coating and window tint installer" for "Bergen
+ * County and Northern NJ". Search Console had /about answering "paint
+ * protection film near me" at position 33.5 and "window tinting near me" at
+ * 63.4, with zero clicks on any query of its own, while /ppf sat at 50.2.
+ *
+ * The test is proximity, not the whole page: /our-process legitimately walks
+ * through all three services, and that is fine as long as no single passage
+ * positions the page as the local provider of the set. Service words split
+ * across <Link> elements still count — that is exactly how the original was
+ * written.
+ * ------------------------------------------------------------------ */
+const LOCAL_WORDS = /hackensack|bergen county|new jersey|northern nj|\bnj\b/i
+
+/**
+ * Prose the visitor can read, in the order they read it: JSX text runs plus the
+ * long string literals that feed component props. Anchor text counts — the
+ * original defect was written with the service names inside <Link> elements,
+ * and Google reads those like any other words.
+ */
+function visibleText(src) {
+  const cleaned = src
+    .replace(/export const metadata[\s\S]*?\n\}/, '')
+    // Comments explain the rule; they are not copy the visitor reads. Without
+    // this, a comment quoting the defect trips the check that forbids it.
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/^\s*\/\/.*$/gm, ' ')
+
+  const found = []
+  // JSX text between tags, e.g. >Bergen County and Northern NJ vehicle owners<
+  for (const m of cleaned.matchAll(/>([^<>{}]+)</g)) {
+    const text = m[1].trim()
+    if (/[a-z]{3}/i.test(text)) found.push([m.index, text])
+  }
+  // Prose held in string literals: subtitle="...", body: '...', label={`...`}
+  // className lists are long strings too, so drop anything whose tokens look
+  // like utility classes rather than words.
+  for (const m of cleaned.matchAll(/(['"`])((?:\\.|(?!\1)[^\\])*)\1/g)) {
+    const text = m[2]
+    if (text.length <= 30 || !/\s/.test(text)) continue
+    const tokens = text.split(/\s+/)
+    const classLike = tokens.filter((t) => /[[\]#:/]|^\d/.test(t)).length
+    if (classLike / tokens.length > 0.3) continue
+    found.push([m.index, text])
+  }
+  return found
+    .sort((a, b) => a[0] - b[0])
+    .map(([, t]) => t)
+    .join(' ')
+    .replace(/&apos;/g, "'")
+    .replace(/\s+/g, ' ')
+}
+
+for (const page of STATIC) {
+  if (SERVICE_ROUTES.has(page.route)) continue
+
+  // One sentence, not a character window: headings like "Ceramic Coating
+  // Application Process" sitting near a paragraph that happens to name the
+  // town are a page's structure, not a sales claim. A single sentence that
+  // names all three services AND the location is the claim.
+  for (const sentence of visibleText(page.src).split(/(?<=[.!?])\s+/)) {
+    const hits = SERVICE_WORDS.filter((re) => re.test(sentence)).length
+    if (hits === SERVICE_WORDS.length && LOCAL_WORDS.test(sentence)) {
+      fail(
+        'body-competes-with-service-pages',
+        `${page.file} has a sentence naming all three services plus the location:\n      "${sentence.trim().slice(0, 200)}"\n    ` +
+          `That is what /, /ppf, /ceramic and /window-tint target. Link to them instead of restating them.`
+      )
+      break
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
  * 5. The sitemap lists routes that exist, and every static route is listed.
  * ------------------------------------------------------------------ */
 const sitemap = read('app/sitemap.ts')
