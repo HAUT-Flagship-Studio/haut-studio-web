@@ -23,6 +23,7 @@ const FOOTER_LINKS = {
   ],
   Company: [
     { label: 'About the Studio', href: '/about' },
+    { label: 'Service Area', href: '/service-area' },
     { label: 'Our Process', href: '/our-process' },
     { label: 'Contact Us', href: '/#contact' },
     { label: 'Privacy Policy', href: 'privacy' },

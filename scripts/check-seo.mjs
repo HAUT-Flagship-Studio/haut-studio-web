@@ -269,6 +269,44 @@ if (/aggregateRating/.test(layout) && !/CLIENT_REVIEWS\.length/.test(layout)) {
   )
 }
 
+/* ------------------------------------------------------------------ *
+ * 8. The service area is published once and derived everywhere.
+ *
+ * The towns exist in three places — the page a visitor reads, the areaServed
+ * a crawler reads, and the /llms.txt an assistant reads. Typed out separately
+ * they drift, and a studio that claims a different radius in each of them is
+ * worse off than one that claims none. lib/serviceArea.ts is generated from
+ * the Census Gazetteer by scripts/build-service-area.mjs; everything else
+ * reads from it.
+ * ------------------------------------------------------------------ */
+const SERVICE_AREA_SOURCE = "@/lib/serviceArea"
+
+if (!existsSync('lib/serviceArea.ts')) {
+  fail('missing-service-area-data', 'lib/serviceArea.ts does not exist. Run scripts/build-service-area.mjs.')
+} else {
+  if (/areaServed/.test(layout) && !layout.includes(SERVICE_AREA_SOURCE)) {
+    fail(
+      'area-served-not-derived',
+      'app/layout.tsx publishes areaServed without importing lib/serviceArea, so the towns a crawler ' +
+        'reads can drift from the ones the site lists.'
+    )
+  }
+  if (!/areaServed/.test(layout)) {
+    fail(
+      'service-area-not-published',
+      'lib/serviceArea.ts exists but app/layout.tsx publishes no areaServed, so the radius is invisible to search.'
+    )
+  }
+  const llmsText = read('app/llms.txt/route.ts') ?? ''
+  if (!llmsText.includes(SERVICE_AREA_SOURCE)) {
+    fail(
+      'llms-txt-missing-service-area',
+      'app/llms.txt/route.ts does not import lib/serviceArea, so an assistant asking which towns this ' +
+        'studio covers has to guess.'
+    )
+  }
+}
+
 /* ------------------------------------------------------------------ */
 
 if (failures.length > 0) {

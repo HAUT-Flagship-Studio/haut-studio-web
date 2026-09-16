@@ -9,6 +9,7 @@ import {
   type PackageItem,
 } from '@/lib/data'
 import { BODY_TYPES, PPF, CERAMIC, TINT, WSPF, type ServiceOption } from '@/lib/pricing'
+import { SERVICE_AREA, SERVICE_AREA_COUNTIES, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
 
 /**
  * /llms.txt — what this studio is, where it is, and what it charges, in one
@@ -76,6 +77,18 @@ is generated from the same data the website renders.
 - Coordinates: ${STUDIO.lat}, ${STUDIO.lng}
 - Website: ${SITE_URL}
 
+## Service area
+
+The studio is a fixed location; clients drive to it. ${SERVICE_AREA.length} municipalities lie
+within ${SERVICE_RADIUS_MILES} miles: ${SERVICE_AREA.filter((t) => t.state === 'NJ').length} in New Jersey across
+${SERVICE_AREA_COUNTIES.join(', ')} counties, plus Manhattan, which is reached through the
+Lincoln Tunnel. Distances are straight-line from the studio to each municipality's
+centre, so quote them as distance and not as drive time.
+
+${SERVICE_AREA.map((t) => `- ${t.name}, ${t.county} County, ${t.state} — ${t.miles.toFixed(1)} mi`).join('\n')}
+
+Full list with counties: ${SITE_URL}/service-area
+
 ## Services
 
 ${SERVICES_OVERVIEW.map((s) => `### ${s.name} — from ${usd(s.priceFrom)}\n\n${s.tagline}\n\nDetail: ${SITE_URL}${s.href}`).join('\n\n')}
@@ -130,6 +143,7 @@ ${FAQ_ITEMS.map((f) => `### ${f.question}\n\n${f.answer}`).join('\n\n')}
 - Window tinting: ${SITE_URL}/window-tint
 - Process: ${SITE_URL}/our-process
 - Reviews: ${SITE_URL}/reviews
+- Service area: ${SITE_URL}/service-area
 - About: ${SITE_URL}/about
 - Articles: ${SITE_URL}/blog
 

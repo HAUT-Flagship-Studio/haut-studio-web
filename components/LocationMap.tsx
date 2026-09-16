@@ -1,4 +1,6 @@
+import Link from 'next/link'
 import { STUDIO } from '@/lib/data'
+import { SERVICE_AREA, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
 import { PhoneLink, AddressLink } from './TrackedLinks'
 
 export default function LocationMap() {
@@ -66,6 +68,11 @@ export default function LocationMap() {
                     >
                       Get Directions →
                     </AddressLink>
+                    <p className="font-roboto text-[#DADADA]/60 text-xs mt-2">
+                      <Link href="/service-area" className="text-[#9FFE0A] hover:underline">
+                        {SERVICE_AREA.length} towns within {SERVICE_RADIUS_MILES} miles →
+                      </Link>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

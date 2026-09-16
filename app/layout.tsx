@@ -12,6 +12,7 @@ import {
   STUDIO,
   CLIENT_REVIEWS,
 } from '@/lib/data'
+import { SERVICE_AREA, STATE_NAMES } from '@/lib/serviceArea'
 
 const kanit = Kanit({
   subsets: ['latin'],
@@ -129,6 +130,17 @@ const localBusinessSchema = {
     },
     reviewBody: r.text,
     itemReviewed: { '@type': 'AutomotiveBusiness', name: 'HAUT Flagship Studio' },
+  })),
+  // Where the clients drive from, named rather than implied. Built from
+  // lib/serviceArea.ts so the markup and the page at /service-area can never
+  // disagree — scripts/check-seo.mjs enforces that it stays derived.
+  areaServed: SERVICE_AREA.map((town) => ({
+    '@type': 'City',
+    name: town.name,
+    containedInPlace: {
+      '@type': 'AdministrativeArea',
+      name: `${town.county} County, ${STATE_NAMES[town.state]}`,
+    },
   })),
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
