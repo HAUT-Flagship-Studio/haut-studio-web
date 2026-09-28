@@ -8,10 +8,16 @@ import TintFaq from '@/components/TintFaq'
 import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX, TINT_FAQ_ITEMS } from '@/lib/data'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
+// "Window Tinting" on its own reads as any glass in any building, and Google
+// took it literally: through September this page collected "home window
+// tinting near me", "residential window tinting near me" and "house window
+// tinting near me" — 421 impressions in 28 days at position 27.6, zero clicks,
+// because none of that intent can be served here. The word "automotive" is the
+// whole fix; the studio tints cars.
 export const metadata: Metadata = {
-  title: 'Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
+  title: 'Automotive Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Ceramic IR window film that blocks heat and UV fade without killing your signal. Front window, full vehicle, and windshield packages from $199, installed by certified master installers in Hackensack, NJ.',
+    'Ceramic IR window film for cars — blocks heat and UV fade without killing your signal. Front window, full vehicle, and windshield packages from $199, installed by certified master installers in Hackensack, NJ. Automotive only; we do not tint homes or storefronts.',
   alternates: {
     canonical: 'https://hautppfstudio.com/window-tint',
   },
@@ -63,7 +69,7 @@ export default function WindowTintPage() {
       />
       <PageHero
         backgroundImage="/assets/service-window-tinting.webp"
-        eyebrow="Window Tinting"
+        eyebrow="Automotive Window Tinting"
         heading={
           <>
             Cabin Heat, UV Fade & Glare.
@@ -71,7 +77,7 @@ export default function WindowTintPage() {
             <span className="text-[#9FFE0A]">Blocked at the Glass.</span>
           </>
         }
-        subtitle="Ceramic IR film blocks the heat and UV exposure that fade interior trim and crack dashboards — cut from the same HAUT Precision Scan patterns as our PPF, installed by Bergen County's certified master installers."
+        subtitle="Ceramic IR film for your car's glass, blocking the heat and UV exposure that fade interior trim and crack dashboards — cut from the same HAUT Precision Scan patterns as our PPF, installed by Bergen County's certified master installers. Vehicles only: we do not tint homes or storefronts."
         ctaLabel="Get Custom Estimate"
       />
 
