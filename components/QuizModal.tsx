@@ -5,6 +5,7 @@ import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type Servic
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
+import { trackLead, trackLeadFailed, LeadError } from '@/lib/analytics'
 
 declare global {
   interface Window {
@@ -267,12 +268,17 @@ export default function QuizModal({
           partial: true,
         }),
       })
-      if (!res.ok) throw new Error('Submission failed')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
+      }
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('trackCustom', 'PartialLead', { value: total, currency: 'USD' })
       }
+      trackLead({ value: total, partial: true })
       setCaptureStatus('sent')
-    } catch {
+    } catch (err) {
+      trackLeadFailed(err instanceof LeadError ? err.reason : 'network', true)
       setCaptureStatus('error')
     }
   }

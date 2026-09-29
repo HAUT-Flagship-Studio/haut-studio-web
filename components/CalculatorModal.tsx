@@ -16,6 +16,7 @@ import {
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import { PhoneLink } from './TrackedLinks'
+import { trackLead, trackLeadFailed, LeadError } from '@/lib/analytics'
 
 declare global {
   interface Window {
@@ -231,12 +232,17 @@ export default function CalculatorModal({
           selectedServices: selectedOptions.map((o) => o.name),
         }),
       })
-      if (!res.ok) throw new Error('Submission failed')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
+      }
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'Lead', { value: total, currency: 'USD' })
       }
+      trackLead({ value: total })
       setSubmitted(true)
-    } catch {
+    } catch (err) {
+      trackLeadFailed(err instanceof LeadError ? err.reason : 'network', false)
       setError(`Something went wrong. Please call us directly at ${STUDIO.phone}.`)
     } finally {
       setSubmitting(false)

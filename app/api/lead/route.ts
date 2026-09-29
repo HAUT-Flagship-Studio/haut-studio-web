@@ -117,8 +117,35 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (deliveries.length > 0 && deliveries.every((d) => !d.ok)) {
+    // A lead is captured when at least one channel took it. Until 2026-09-28
+    // this returned `success: true` with HTTP 200 no matter what — including
+    // when every channel failed, and when none was configured at all. The
+    // visitor got a thank-you screen, the Pixel recorded a Lead, and the
+    // enquiry existed nowhere. Nothing in analytics could show it, because the
+    // only record was a console line in a serverless log nobody reads.
+    //
+    // Now the status says what happened, so the form can tell the visitor to
+    // call instead of thanking them for something that was dropped.
+    const delivered = deliveries.filter((d) => d.ok)
+
+    if (deliveries.length === 0) {
+      console.error('[/api/lead] No delivery channel is configured — lead dropped:', {
+        name,
+        phone,
+        email,
+      })
+      return NextResponse.json(
+        { success: false, error: 'not_configured', deliveries },
+        { status: 503 }
+      )
+    }
+
+    if (delivered.length === 0) {
       console.error('[/api/lead] All configured delivery channels failed:', deliveries)
+      return NextResponse.json(
+        { success: false, error: 'delivery_failed', deliveries },
+        { status: 502 }
+      )
     }
 
     return NextResponse.json({ success: true, deliveries }, { status: 200 })
