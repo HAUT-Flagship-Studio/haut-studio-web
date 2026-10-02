@@ -9,7 +9,7 @@ import {
   type PackageItem,
 } from '@/lib/data'
 import { BODY_TYPES, PPF, CERAMIC, TINT, WSPF, type ServiceOption } from '@/lib/pricing'
-import { SERVICE_AREA, SERVICE_AREA_COUNTIES, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
+import { BEYOND_RADIUS, SERVICE_AREA, SERVICE_AREA_COUNTIES, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
 
 /**
  * /llms.txt — what this studio is, where it is, and what it charges, in one
@@ -86,6 +86,9 @@ Lincoln Tunnel. Distances are straight-line from the studio to each municipality
 centre, so quote them as distance and not as drive time.
 
 ${SERVICE_AREA.map((t) => `- ${t.name}, ${t.county} County, ${t.state} — ${t.miles.toFixed(1)} mi`).join('\n')}
+
+Also served by name, beyond the ${SERVICE_RADIUS_MILES}-mile line:
+${BEYOND_RADIUS.map((t) => `- ${t.name}, ${t.county} County, ${t.state} — ${t.miles.toFixed(1)} mi`).join('\n')}
 
 Full list with counties: ${SITE_URL}/service-area
 

@@ -1,5 +1,5 @@
 import { CHEAPEST_PPF_PRICE, CHEAPEST_CERAMIC_PRICE, CHEAPEST_TINT_PRICE } from './pricing'
-import { SERVICE_AREA } from './serviceArea'
+import { ALL_NAMED_TOWNS } from './serviceArea'
 
 export interface PackageItem {
   id: string
@@ -369,7 +369,7 @@ export const FAQ_ITEMS: FAQItem[] = [
  * fails the build rather than printing nothing.
  */
 function milesTo(name: string): string {
-  const town = SERVICE_AREA.find((t) => t.name === name)
+  const town = ALL_NAMED_TOWNS.find((t) => t.name === name)
   if (!town) throw new Error(`${name} is not in lib/serviceArea.ts`)
   return town.miles.toFixed(1)
 }
@@ -405,17 +405,17 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     slug: 'ppf-ridgewood-ho-ho-kus-glen-rock-wyckoff-route-17',
     service: 'ppf',
     category: 'Local Guide',
-    title: 'PPF on the Route 17 Side: Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell to the Hackensack Studio',
-    excerpt: `Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell all sit inside ten miles of 361 NJ-17, straight down the road the dealerships are on. Why the week a new car is delivered is the week to film it, and what each package covers.`,
-    metaDescription: `Paint protection film for Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff, Oradell and Paramus: distance to the Hackensack studio, why to film a new car before its first week on Route 17, and package pricing.`,
+    title: 'PPF on the Route 17 Side: Ridgewood, Ho-Ho-Kus, Saddle River, Franklin Lakes, Wyckoff and Oradell to the Hackensack Studio',
+    excerpt: `Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell sit inside ten miles of 361 NJ-17, and Saddle River, Upper Saddle River and Franklin Lakes just past the line — all straight down the road the dealerships are on. Why the week a new car is delivered is the week to film it, and what each package covers.`,
+    metaDescription: `Paint protection film for Ridgewood, Ho-Ho-Kus, Saddle River, Upper Saddle River, Franklin Lakes, Wyckoff and Oradell: distance to the Hackensack studio, why to film a new car before its first week on Route 17, and package pricing.`,
     readTime: '6 min read',
     date: 'October 2026',
     image: '/assets/work/Lamborghini-Rivuelto-full-ppf.webp',
     imageAlt: 'Lamborghini Revuelto with full paint protection film at HAUT Flagship Studio, Hackensack NJ',
     content: [
-      `Route 17 is the road these towns already use, and the studio is on it. Straight from 361 NJ-17 to each town centre: Paramus ${milesTo('Paramus')} miles, Oradell ${milesTo('Oradell')}, Glen Rock ${milesTo('Glen Rock')}, Ridgewood ${milesTo('Ridgewood')}, Ho-Ho-Kus ${milesTo('Ho-Ho-Kus')}, Wyckoff ${milesTo('Wyckoff')}. The distances are measured, not rounded — every town within ten miles is on the service area page with its own figure.`,
+      `Route 17 is the road these towns already use, and the studio is on it. Straight from 361 NJ-17 to each town centre: Paramus ${milesTo('Paramus')} miles, Oradell ${milesTo('Oradell')}, Glen Rock ${milesTo('Glen Rock')}, Ridgewood ${milesTo('Ridgewood')}, Ho-Ho-Kus ${milesTo('Ho-Ho-Kus')}, Wyckoff ${milesTo('Wyckoff')}. Just past the ten-mile line and up the same roads: Saddle River ${milesTo('Saddle River')}, Franklin Lakes ${milesTo('Franklin Lakes')} by way of Route 208, Upper Saddle River ${milesTo('Upper Saddle River')}. The distances are measured, not rounded — every town within ten miles is on the service area page with its own figure, and those three are listed there by name.`,
       `Route 17 through Paramus and north is also where most of Bergen County buys its cars, and that sets the timing. A new car leaves the dealership with paint that has never been chipped, and the first commute up 17 behind a landscaping trailer is where that ends. Film applied in the first week goes over paint that needs no correction, so the first step of the job — decontamination and paint correction — is short, and the film is protecting original paint rather than sealing in the first season's damage. The same job on a two-year-old car starts with fixing what two years on Route 17 did.`,
-      `For a daily driver from Ridgewood or Wyckoff, the Front End Protection package at ${ppfPrice('front-end')} covers the panels that take the hits: full bumper, full hood, full fenders, mirrors, headlights. The Highway & Track Package at ${ppfPrice('highway')} adds the rockers, A-pillars, roof edge and rear arches, which matter on a lowered or wide car and on anything that sees the Parkway at speed. Full Body Armor at ${ppfPrice('full-vehicle')} covers every painted panel and is the choice for a car being kept past the lease, or for a matte or satin factory finish that cannot be spot-repaired.`,
+      `For a daily driver from Ridgewood, Saddle River or Franklin Lakes, the Front End Protection package at ${ppfPrice('front-end')} covers the panels that take the hits: full bumper, full hood, full fenders, mirrors, headlights. The Highway & Track Package at ${ppfPrice('highway')} adds the rockers, A-pillars, roof edge and rear arches, which matter on a lowered or wide car and on anything that sees the Parkway at speed. Full Body Armor at ${ppfPrice('full-vehicle')} covers every painted panel and is the choice for a car being kept past the lease, or for a matte or satin factory finish that cannot be spot-repaired.`,
       `Every pattern is cut from the vehicle's own scan data with HAUT Precision Scan before the car is touched, so no blade is used on the paint and the edges are wrapped rather than cut on the panel face. The work happens in a climate-controlled bay, the film cures for 24 to 48 hours before the car leaves, and a full vehicle takes three to five business days. The warranty is ten years from the film's manufacturer, registered to the car.`,
       `Window tint and ceramic coating are done in the same bays, and a new car often has all three done in one visit, which is what the reviews from BMW owners on this site describe. Tint is to New Jersey's limits for a passenger car — the window tint page sets out the film options, and the guide to the state's tint law on this blog explains what is legal on which window.`,
       `Hours are Monday to Friday 9 to 6 and Saturday 9 to 4 at 361 NJ-17, Hackensack — the Lodi end of the road, a mile south of the Route 4 junction.`,

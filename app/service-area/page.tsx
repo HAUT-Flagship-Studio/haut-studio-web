@@ -5,6 +5,7 @@ import QuoteButton from '@/components/QuoteButton'
 import { PhoneLink, AddressLink } from '@/components/TrackedLinks'
 import { STUDIO } from '@/lib/data'
 import {
+  BEYOND_RADIUS,
   SERVICE_AREA,
   SERVICE_AREA_COUNTIES,
   SERVICE_RADIUS_MILES,
@@ -123,6 +124,42 @@ export default function ServiceAreaPage() {
           })}
         </div>
       </section>
+
+      {/* Named beyond the line, apart from the measured list so the radius
+          sentence above stays true. The distances come from the same Gazetteer. */}
+      {BEYOND_RADIUS.length > 0 && (
+        <section
+          className="bg-[#1A292E] precision-grid py-16 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-[#DADADA]/10"
+          aria-label="Named beyond the radius"
+        >
+          <div className="max-w-4xl mx-auto">
+            <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">
+              Beyond the Line, By Name
+            </p>
+            <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight mb-6">
+              {BEYOND_RADIUS.map((t) => t.name).join(', ')}
+            </h2>
+            <p className="font-roboto text-[#DADADA] text-base leading-relaxed mb-8 max-w-2xl">
+              Three towns whose centres fall just outside {SERVICE_RADIUS_MILES} miles and are listed anyway, measured
+              the same way: up Route 17 and Route 208 from the studio, the Saddle River valley and Franklin
+              Lakes are a regular part of the week here.
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-1 max-w-2xl">
+              {BEYOND_RADIUS.map((town) => (
+                <li
+                  key={town.name}
+                  className="flex items-baseline justify-between gap-3 border-b border-[#DADADA]/10 py-2"
+                >
+                  <span className="font-roboto text-[#DADADA] text-sm">{town.name}</span>
+                  <span className="font-roboto text-[#DADADA]/50 text-xs tabular-nums whitespace-nowrap">
+                    {town.miles.toFixed(1)} mi
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* Manhattan gets its own block: one borough is not a county section, and
           the straight-line number is the one number on this page that misleads. */}

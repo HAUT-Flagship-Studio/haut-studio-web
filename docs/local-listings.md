@@ -2,7 +2,7 @@
 
 Всё, что нужно вставить в Google Business Profile, Yelp, Apple, Bing, Facebook
 и Nextdoor. Текст на английском готов к вставке; инструкции — по-русски.
-Данные взяты из `lib/data.ts` на 2026-10-02 — если там меняются цены или
+Данные взяты из `lib/data.ts` и `lib/serviceArea.ts` на 2026-10-02 — если там меняются цены или
 часы, менять и здесь.
 
 **Правило одно: имя, адрес и телефон везде символ в символ.** Google сверяет
@@ -45,7 +45,7 @@ Paint protection film, ceramic coating and window tinting at 361 NJ-17, Hackensa
 Длинное (до 750 символов — Google Business Profile, Facebook):
 
 ```
-HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and inside ten miles of Fort Lee, Tenafly, Ridgewood and Alpine. Every PPF pattern is cut from the vehicle's own scan data with HAUT Precision Scan, so no blade touches the paint and edges are wrapped rather than trimmed on the panel. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 9–6, Saturday 9–4.
+HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. PPF patterns are cut from the car's own scan data with HAUT Precision Scan — no blade on the paint, edges wrapped. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 9–6, Saturday 9–4.
 ```
 
 ## Категории

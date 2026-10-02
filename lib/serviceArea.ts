@@ -120,6 +120,20 @@ export const SERVICE_AREA: ServiceAreaTown[] = [
   { name: 'Wyckoff', state: 'NJ', county: 'Bergen', miles: 10.0 },
 ]
 
+/**
+ * Named at the owner's request although their centres lie beyond the radius.
+ * Measured the same way as everything above and kept apart from it, so the
+ * "within 10 miles" sentence stays true wherever it is printed.
+ */
+export const BEYOND_RADIUS: ServiceAreaTown[] = [
+  { name: 'Saddle River', state: 'NJ', county: 'Bergen', miles: 10.2 },
+  { name: 'Franklin Lakes', state: 'NJ', county: 'Bergen', miles: 11.6 },
+  { name: 'Upper Saddle River', state: 'NJ', county: 'Bergen', miles: 13.0 },
+]
+
+/** Every town the site names, nearest first: the radius plus the named exceptions. */
+export const ALL_NAMED_TOWNS: ServiceAreaTown[] = [...SERVICE_AREA, ...BEYOND_RADIUS]
+
 /** Towns of one state, nearest first. */
 export const townsInState = (state: ServiceAreaTown['state']) =>
   SERVICE_AREA.filter((t) => t.state === state)

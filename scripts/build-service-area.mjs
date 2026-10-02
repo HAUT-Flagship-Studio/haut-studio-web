@@ -76,8 +76,18 @@ async function fetchGazetteer() {
   return inflateRawSync(body).toString('utf8')
 }
 
+/**
+ * Towns the owner asked to be named (2026-10-02) although their centres lie
+ * beyond the radius: the Saddle River valley and Franklin Lakes. They are
+ * measured from the same Gazetteer row as everything else and published as a
+ * separate export, so the "within N miles" sentence stays true and these read
+ * as what they are — named, not inside.
+ */
+const NAMED_BEYOND_RADIUS = new Set(['Saddle River', 'Upper Saddle River', 'Franklin Lakes'])
+
 const text = await fetchGazetteer()
 const towns = []
+const beyond = []
 
 for (const line of text.split('\n').slice(1)) {
   const f = line.split('\t')
@@ -91,7 +101,6 @@ for (const line of text.split('\n').slice(1)) {
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue
 
   const miles = distance(STUDIO.lat, STUDIO.lng, lat, lng)
-  if (miles > RADIUS) continue
 
   const county = COUNTIES[state][f[1].trim().slice(2, 5)]
   if (!county) continue
@@ -101,17 +110,31 @@ for (const line of text.split('\n').slice(1)) {
   let name = f[3].trim().replace(/ (borough|city|town|township|village)$/, '')
   if (name === 'Washington') name = 'Washington Township'
 
-  towns.push({ name, state, county, miles: Number(miles.toFixed(1)) })
+  const row = { name, state, county, miles: Number(miles.toFixed(1)) }
+  if (miles > RADIUS) {
+    if (NAMED_BEYOND_RADIUS.has(name)) beyond.push(row)
+    continue
+  }
+  towns.push(row)
 }
 
-towns.sort((a, b) => a.miles - b.miles || a.name.localeCompare(b.name))
+const byDistance = (a, b) => a.miles - b.miles || a.name.localeCompare(b.name)
+towns.sort(byDistance)
+beyond.sort(byDistance)
+for (const name of NAMED_BEYOND_RADIUS) {
+  if (!beyond.some((t) => t.name === name)) throw new Error(`${name} not found beyond ${RADIUS} miles in the Gazetteer`)
+}
 
-const rows = towns
-  .map(
-    (t) =>
-      `  { name: '${t.name.replace(/'/g, "\\'")}', state: '${t.state}', county: '${t.county}', miles: ${t.miles.toFixed(1)} },`
-  )
-  .join('\n')
+const toRows = (list) =>
+  list
+    .map(
+      (t) =>
+        `  { name: '${t.name.replace(/'/g, "\\'")}', state: '${t.state}', county: '${t.county}', miles: ${t.miles.toFixed(1)} },`
+    )
+    .join('\n')
+const rows = toRows(towns)
+const beyondRows = toRows(beyond)
+const everyTown = [...towns, ...beyond]
 
 const file = `/**
  * Every municipality whose centre lies within ${RADIUS} miles of the studio at
@@ -135,15 +158,15 @@ const file = `/**
  */
 export type ServiceAreaTown = {
   name: string
-  state: ${[...new Set(towns.map((t) => t.state))].sort().map((s) => `'${s}'`).join(' | ')}
-  county: ${[...new Set(towns.map((t) => t.county))].sort().map((c) => `'${c}'`).join(' | ')}
+  state: ${[...new Set(everyTown.map((t) => t.state))].sort().map((s) => `'${s}'`).join(' | ')}
+  county: ${[...new Set(everyTown.map((t) => t.county))].sort().map((c) => `'${c}'`).join(' | ')}
   /** Great-circle miles from the studio to the municipality's centre. */
   miles: number
 }
 
 /** Spelled out, for schema.org and anywhere a two-letter code would read wrong. */
 export const STATE_NAMES: Record<ServiceAreaTown['state'], string> = {
-${[...new Set(towns.map((t) => t.state))]
+${[...new Set(everyTown.map((t) => t.state))]
   .sort()
   .map((s) => `  ${s}: '${{ NJ: 'New Jersey', NY: 'New York' }[s] ?? s}',`)
   .join('\n')}
@@ -154,6 +177,18 @@ export const SERVICE_RADIUS_MILES = ${RADIUS}
 export const SERVICE_AREA: ServiceAreaTown[] = [
 ${rows}
 ]
+
+/**
+ * Named at the owner's request although their centres lie beyond the radius.
+ * Measured the same way as everything above and kept apart from it, so the
+ * "within ${RADIUS} miles" sentence stays true wherever it is printed.
+ */
+export const BEYOND_RADIUS: ServiceAreaTown[] = [
+${beyondRows}
+]
+
+/** Every town the site names, nearest first: the radius plus the named exceptions. */
+export const ALL_NAMED_TOWNS: ServiceAreaTown[] = [...SERVICE_AREA, ...BEYOND_RADIUS]
 
 /** Towns of one state, nearest first. */
 export const townsInState = (state: ServiceAreaTown['state']) =>
@@ -174,4 +209,4 @@ export const SERVICE_AREA_COUNTIES = [...new Set(townsInState('NJ').map((t) => t
 `
 
 writeFileSync('lib/serviceArea.ts', file)
-console.log(`lib/serviceArea.ts — ${towns.length} municipalities within ${RADIUS} miles`)
+console.log(`lib/serviceArea.ts — ${towns.length} municipalities within ${RADIUS} miles, ${beyond.length} named beyond it`)

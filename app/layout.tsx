@@ -12,7 +12,7 @@ import {
   STUDIO,
   CLIENT_REVIEWS,
 } from '@/lib/data'
-import { SERVICE_AREA, STATE_NAMES } from '@/lib/serviceArea'
+import { SERVICE_AREA, STATE_NAMES, ALL_NAMED_TOWNS } from '@/lib/serviceArea'
 
 const kanit = Kanit({
   subsets: ['latin'],
@@ -31,7 +31,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'PPF, Ceramic Coating & Window Tint in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Paint protection film, ceramic coating and window tinting installed at 361 NJ-17 in Hackensack, NJ — a mile from Lodi, under ten from Fort Lee, Tenafly, Ridgewood and Alpine. Self-healing film with a 10-year manufacturer warranty, cut by HAUT Precision Scan with zero blades on paint, fitted by certified master installers in climate-controlled bays.',
+    'Paint protection film, ceramic coating and window tinting installed at 361 NJ-17 in Hackensack, NJ — a mile from Lodi, a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. Self-healing film with a 10-year manufacturer warranty, cut by HAUT Precision Scan with zero blades on paint, fitted by certified master installers in climate-controlled bays.',
   keywords:
     'PPF Hackensack NJ, paint protection film New Jersey, ceramic coating Hackensack, window tinting NJ, self-healing film, certified master installer Bergen County, HAUT Flagship Studio',
   openGraph: {
@@ -146,8 +146,9 @@ const localBusinessSchema = {
   })),
   // Where the clients drive from, named rather than implied. Built from
   // lib/serviceArea.ts so the markup and the page at /service-area can never
-  // disagree — scripts/check-seo.mjs enforces that it stays derived.
-  areaServed: SERVICE_AREA.map((town) => ({
+  // disagree — scripts/check-seo.mjs enforces that it stays derived. The
+  // radius plus the towns named beyond it: a crawler reads one list.
+  areaServed: ALL_NAMED_TOWNS.map((town) => ({
     '@type': 'City',
     name: town.name,
     containedInPlace: {
