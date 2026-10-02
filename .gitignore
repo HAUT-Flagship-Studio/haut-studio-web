@@ -2,3 +2,6 @@
 node_modules
 .env*.local
 .DS_Store
+
+# tsc incremental cache — rewritten by every typecheck, never worth a diff
+*.tsbuildinfo
