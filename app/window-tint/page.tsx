@@ -5,6 +5,7 @@ import Packages from '@/components/Packages'
 import PricingMatrix from '@/components/PricingMatrix'
 import ProcessBanner from '@/components/ProcessBanner'
 import TintFaq from '@/components/TintFaq'
+import DriveFrom from '@/components/DriveFrom'
 import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX, TINT_FAQ_ITEMS } from '@/lib/data'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
@@ -272,6 +273,8 @@ export default function WindowTintPage() {
           </div>
         </div>
       </section>
+
+      <DriveFrom service="automotive window tinting" />
 
       <TintFaq />
 

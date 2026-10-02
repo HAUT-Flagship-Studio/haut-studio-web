@@ -4,6 +4,7 @@ import PageHero from '@/components/PageHero'
 import QuoteButton from '@/components/QuoteButton'
 import ProcessBanner from '@/components/ProcessBanner'
 import CeramicFaq from '@/components/CeramicFaq'
+import DriveFrom from '@/components/DriveFrom'
 import { CERAMIC_PACKAGE, CERAMIC_FAQ_ITEMS } from '@/lib/data'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
@@ -208,6 +209,8 @@ export default function CeramicPage() {
           </div>
         </div>
       </section>
+
+      <DriveFrom service="ceramic coating" />
 
       <CeramicFaq />
 

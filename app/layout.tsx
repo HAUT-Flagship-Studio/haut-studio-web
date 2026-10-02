@@ -29,9 +29,9 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
+  title: 'PPF, Ceramic Coating & Window Tint in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    "HAUT Flagship Studio in Hackensack, NJ installs paint protection film, ceramic coatings, and window tinting for Bergen County and Northern NJ's exotic and luxury vehicle owners. Self-healing optical film, 10-year nationwide manufacturer warranty, installed by certified master installers in a climate-controlled studio.",
+    'Paint protection film, ceramic coating and window tinting installed at 361 NJ-17 in Hackensack, NJ — a mile from Lodi, minutes from Teaneck, Paramus and Fair Lawn. Self-healing film with a 10-year manufacturer warranty, cut by HAUT Precision Scan with zero blades on paint, fitted by certified master installers in climate-controlled bays.',
   keywords:
     'PPF Hackensack NJ, paint protection film New Jersey, ceramic coating Hackensack, window tinting NJ, self-healing film, certified master installer Bergen County, HAUT Flagship Studio',
   openGraph: {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://hautppfstudio.com',
     siteName: 'HAUT Flagship Studio',
-    title: 'HAUT Flagship Studio — PPF, Ceramic Coatings & Window Tinting | Hackensack, NJ',
+    title: 'PPF, Ceramic Coating & Window Tint in Hackensack, NJ | HAUT Flagship Studio',
     description:
       "Self-healing optical paint protection film, ceramic coatings, and window tinting in Hackensack, NJ, backed by a 10-year nationwide manufacturer warranty and installed by Bergen County's certified master installers.",
     images: [
@@ -75,9 +75,22 @@ export const metadata: Metadata = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': ['AutomotiveBusiness', 'LocalBusiness'],
+  // One @id, referenced from haut-usa.com's Organization as its subOrganization.
+  // Two HAUT domains both say "Hackensack"; this pair of pointers is what tells
+  // Google which one is the installer when a local query comes in.
+  '@id': 'https://hautppfstudio.com/#studio',
   name: 'HAUT Flagship Studio',
   image: 'https://hautppfstudio.com/assets/og-image.jpg',
   url: 'https://hautppfstudio.com',
+  hasMap: STUDIO.mapsHref,
+  sameAs: [STUDIO.mapsHref],
+  brand: { '@type': 'Brand', name: 'HAUT' },
+  parentOrganization: {
+    '@type': 'Organization',
+    '@id': 'https://haut-usa.com/#organization',
+    name: 'HAUT Protection Film Inc.',
+    url: 'https://haut-usa.com',
+  },
   telephone: '+1-201-201-0170',
   address: {
     '@type': 'PostalAddress',
