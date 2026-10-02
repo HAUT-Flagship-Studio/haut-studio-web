@@ -1,4 +1,5 @@
 import { CHEAPEST_PPF_PRICE, CHEAPEST_CERAMIC_PRICE, CHEAPEST_TINT_PRICE } from './pricing'
+import { SERVICE_AREA } from './serviceArea'
 
 export interface PackageItem {
   id: string
@@ -361,7 +362,65 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
 ]
 
+/**
+ * Distances and prices quoted inside articles come from the same data the
+ * rest of the site renders, so an article can never name a mile or a dollar
+ * the service pages have moved on from. A town missing from serviceArea.ts
+ * fails the build rather than printing nothing.
+ */
+function milesTo(name: string): string {
+  const town = SERVICE_AREA.find((t) => t.name === name)
+  if (!town) throw new Error(`${name} is not in lib/serviceArea.ts`)
+  return town.miles.toFixed(1)
+}
+function ppfPrice(id: PackageItem['id']): string {
+  const pkg = PPF_PACKAGES.find((p) => p.id === id)
+  if (!pkg) throw new Error(`No PPF package with id ${id}`)
+  return `$${pkg.price.toLocaleString('en-US')}`
+}
+
 export const BLOG_ARTICLES: BlogArticle[] = [
+  {
+    slug: 'ppf-northern-valley-alpine-tenafly-englewood-cliffs-fort-lee',
+    service: 'ppf',
+    category: 'Local Guide',
+    title: 'Paint Protection Film for the Palisades Towns: Alpine, Tenafly, Englewood Cliffs, Cresskill, Closter and Fort Lee',
+    excerpt: `Every town along the Palisades — Alpine, Closter, Demarest, Cresskill, Tenafly, Englewood Cliffs, Fort Lee, Edgewater — lies inside ten miles of the studio at 361 NJ-17. The distance to each, what their cars take on the road down, and which coverage fits.`,
+    metaDescription: `PPF for Alpine, Tenafly, Englewood Cliffs, Cresskill, Closter and Fort Lee: the distance from each town to the Hackensack studio, which coverage fits a Range Rover, G-Class or Porsche, and current package pricing.`,
+    readTime: '7 min read',
+    date: 'October 2026',
+    image: '/assets/work/Porsche-GT3RS-full-ppf.webp',
+    imageAlt: 'Porsche 911 GT3 RS with full-body paint protection film at HAUT Flagship Studio, Hackensack NJ',
+    content: [
+      `The studio is at 361 NJ-17 in Hackensack, and the Palisades towns are closer than most of their residents assume. Measured straight from the studio to each town centre: Fort Lee ${milesTo('Fort Lee')} miles, Edgewater ${milesTo('Edgewater')}, Englewood Cliffs ${milesTo('Englewood Cliffs')}, Tenafly ${milesTo('Tenafly')}, Cresskill ${milesTo('Cresskill')}, Demarest ${milesTo('Demarest')}, Closter ${milesTo('Closter')}, Norwood ${milesTo('Norwood')}, Alpine ${milesTo('Alpine')}. The road is Route 4 west from the bridge to Route 17, or the Palisades Parkway down to the same junction. Manhattan is ${milesTo('Manhattan')} miles through the Lincoln Tunnel, which is why the first review on this site, from the owner of two Maybachs, describes the studio as minutes from the city.`,
+      `What comes down from these towns is the reason the gallery on this site looks the way it does: a Porsche 911 GT3 RS, two Ferrari SF90s, a Lamborghini Revuelto, a Range Rover with a factory gloss-black finish that its owner wanted in satin. They share one problem. A car garaged in Alpine or Tenafly still commutes down 9W and Route 4 behind the same gravel trucks and landscaping trailers as everyone else, and a stone that would be a blemish on a grey Camry is a visible chip in black Porsche paint. The front of the car takes nearly all of it — bumper, the leading edge of the hood, the fenders, the mirrors and the headlights.`,
+      `That is why the Front End Protection package, at ${ppfPrice('front-end')}, is the answer for most daily-driven cars from this side of the county: full bumper, full hood, full fenders, mirrors and lights, in self-healing film. It is not the cheapest way to cover the hood, which is a partial strip with a visible line across the paint; it is the full panel, so there is no line to see.`,
+      `The Highway & Track Package, at ${ppfPrice('highway')}, adds the rocker panels, the A-pillars, the leading edge of the roof and the rear wheel arches. It is the right coverage for a low car — the GT3 RS, a Huracán — and for anything that spends its weekends on the Parkway or at Lime Rock, because the rockers and the rear arches take the tyre spray that the front end never sees.`,
+      `Full Body Armor, at ${ppfPrice('full-vehicle')}, covers every painted panel. It is the usual choice for a car that will be kept, for anything in a factory matte or satin finish that cannot be spot-resprayed, and for the owner who has already paid once for a respray that did not match. On a gloss car, a satin-finish film over the factory paint gives the matte look without the matte paint, which is what the Range Rover in the reviews had done.`,
+      `The process does not change with the postcode. Every panel pattern is cut from the vehicle's own scan data with HAUT Precision Scan, so no blade touches the paint; edges are wrapped rather than trimmed on the face of the panel; the car is decontaminated and corrected before any film goes on; and it stays in a climate-controlled bay for the 24 to 48 hours the film takes to bond. A full car is three to five business days. The film carries a ten-year manufacturer warranty, registered to the vehicle.`,
+      `The studio is open Monday to Friday 9 to 6 and Saturday 9 to 4. Bring the car as it is — the wash and decontamination are part of the job, and a freshly waxed car makes the first step longer, not shorter.`,
+    ],
+  },
+  {
+    slug: 'ppf-ridgewood-ho-ho-kus-glen-rock-wyckoff-route-17',
+    service: 'ppf',
+    category: 'Local Guide',
+    title: 'PPF on the Route 17 Side: Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell to the Hackensack Studio',
+    excerpt: `Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell all sit inside ten miles of 361 NJ-17, straight down the road the dealerships are on. Why the week a new car is delivered is the week to film it, and what each package covers.`,
+    metaDescription: `Paint protection film for Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff, Oradell and Paramus: distance to the Hackensack studio, why to film a new car before its first week on Route 17, and package pricing.`,
+    readTime: '6 min read',
+    date: 'October 2026',
+    image: '/assets/work/Lamborghini-Rivuelto-full-ppf.webp',
+    imageAlt: 'Lamborghini Revuelto with full paint protection film at HAUT Flagship Studio, Hackensack NJ',
+    content: [
+      `Route 17 is the road these towns already use, and the studio is on it. Straight from 361 NJ-17 to each town centre: Paramus ${milesTo('Paramus')} miles, Oradell ${milesTo('Oradell')}, Glen Rock ${milesTo('Glen Rock')}, Ridgewood ${milesTo('Ridgewood')}, Ho-Ho-Kus ${milesTo('Ho-Ho-Kus')}, Wyckoff ${milesTo('Wyckoff')}. The distances are measured, not rounded — every town within ten miles is on the service area page with its own figure.`,
+      `Route 17 through Paramus and north is also where most of Bergen County buys its cars, and that sets the timing. A new car leaves the dealership with paint that has never been chipped, and the first commute up 17 behind a landscaping trailer is where that ends. Film applied in the first week goes over paint that needs no correction, so the first step of the job — decontamination and paint correction — is short, and the film is protecting original paint rather than sealing in the first season's damage. The same job on a two-year-old car starts with fixing what two years on Route 17 did.`,
+      `For a daily driver from Ridgewood or Wyckoff, the Front End Protection package at ${ppfPrice('front-end')} covers the panels that take the hits: full bumper, full hood, full fenders, mirrors, headlights. The Highway & Track Package at ${ppfPrice('highway')} adds the rockers, A-pillars, roof edge and rear arches, which matter on a lowered or wide car and on anything that sees the Parkway at speed. Full Body Armor at ${ppfPrice('full-vehicle')} covers every painted panel and is the choice for a car being kept past the lease, or for a matte or satin factory finish that cannot be spot-repaired.`,
+      `Every pattern is cut from the vehicle's own scan data with HAUT Precision Scan before the car is touched, so no blade is used on the paint and the edges are wrapped rather than cut on the panel face. The work happens in a climate-controlled bay, the film cures for 24 to 48 hours before the car leaves, and a full vehicle takes three to five business days. The warranty is ten years from the film's manufacturer, registered to the car.`,
+      `Window tint and ceramic coating are done in the same bays, and a new car often has all three done in one visit, which is what the reviews from BMW owners on this site describe. Tint is to New Jersey's limits for a passenger car — the window tint page sets out the film options, and the guide to the state's tint law on this blog explains what is legal on which window.`,
+      `Hours are Monday to Friday 9 to 6 and Saturday 9 to 4 at 361 NJ-17, Hackensack — the Lodi end of the road, a mile south of the Route 4 junction.`,
+    ],
+  },
   {
     slug: 'winter-road-salt-paint-protection-nj',
     service: 'ppf',

@@ -31,7 +31,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'PPF, Ceramic Coating & Window Tint in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Paint protection film, ceramic coating and window tinting installed at 361 NJ-17 in Hackensack, NJ — a mile from Lodi, minutes from Teaneck, Paramus and Fair Lawn. Self-healing film with a 10-year manufacturer warranty, cut by HAUT Precision Scan with zero blades on paint, fitted by certified master installers in climate-controlled bays.',
+    'Paint protection film, ceramic coating and window tinting installed at 361 NJ-17 in Hackensack, NJ — a mile from Lodi, under ten from Fort Lee, Tenafly, Ridgewood and Alpine. Self-healing film with a 10-year manufacturer warranty, cut by HAUT Precision Scan with zero blades on paint, fitted by certified master installers in climate-controlled bays.',
   keywords:
     'PPF Hackensack NJ, paint protection film New Jersey, ceramic coating Hackensack, window tinting NJ, self-healing film, certified master installer Bergen County, HAUT Flagship Studio',
   openGraph: {

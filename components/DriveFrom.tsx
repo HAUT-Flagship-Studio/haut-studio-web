@@ -13,11 +13,21 @@ import { SERVICE_AREA, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
  * /service-area; the link at the end is the only place the full list lives.
  */
 const NAMED = ['Lodi', 'Teaneck', 'Garfield', 'Saddle Brook', 'Paramus', 'Fair Lawn']
+/**
+ * The far side of the same radius: the Palisades towns and the Ridgewood side
+ * of Route 17, where the cars in the work gallery are garaged. Listed by name
+ * because nobody searching from Alpine types "Hackensack".
+ */
+const FURTHER = ['Fort Lee', 'Englewood Cliffs', 'Tenafly', 'Ridgewood', 'Closter', 'Alpine']
 
 export default function DriveFrom({ service }: { service: string }) {
   const towns = NAMED.map((name) => SERVICE_AREA.find((t) => t.name === name))
     .filter((t): t is NonNullable<typeof t> => Boolean(t))
     .sort((a, b) => a.miles - b.miles)
+  const further = FURTHER.map((name) => SERVICE_AREA.find((t) => t.name === name))
+    .filter((t): t is NonNullable<typeof t> => Boolean(t))
+    .sort((a, b) => a.miles - b.miles)
+  const manhattan = SERVICE_AREA.find((t) => t.name === 'Manhattan')
 
   return (
     <section
@@ -36,6 +46,13 @@ export default function DriveFrom({ service }: { service: string }) {
               {t.name} ({t.miles.toFixed(1)} mi){i < towns.length - 1 ? ', ' : ''}
             </span>
           ))}
+          . Further out but inside the same {SERVICE_RADIUS_MILES} miles:{' '}
+          {further.map((t, i) => (
+            <span key={t.name}>
+              {t.name} ({t.miles.toFixed(1)} mi){i < further.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+          {manhattan ? ` — and Manhattan at ${manhattan.miles.toFixed(1)} mi through the Lincoln Tunnel` : ''}
           .{' '}
           <Link href="/service-area" className="text-[#9FFE0A] hover:underline">
             See every town within {SERVICE_RADIUS_MILES} miles →
