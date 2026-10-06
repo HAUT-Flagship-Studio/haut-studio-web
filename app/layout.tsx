@@ -169,7 +169,7 @@ const localBusinessSchema = {
   },
 }
 
-const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1019441793680027'
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '2372259143543220'
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-GSC600LZS3'
 
 export default function RootLayout({
