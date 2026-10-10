@@ -10,9 +10,13 @@ type Delivery = { channel: string; ok: boolean; error?: string; ms: number }
 
 /**
  * One channel, checked properly. `fetch` resolves on any HTTP status, so until
- * 2026-10-09 a GoHighLevel 401 or 500 was recorded as delivered — the lead was
- * gone and the visitor saw a thank-you. Now a non-2xx is a failure, and every
- * failure gets one retry before it counts.
+ * 2026-10-09 a channel answering 401 or 500 was recorded as delivered — the
+ * lead was gone and the visitor saw a thank-you. Now a non-2xx is a failure,
+ * and every failure gets one retry before it counts.
+ *
+ * Leads go to Telegram (the people who answer) and Google Sheets (the log).
+ * There is no CRM: a GoHighLevel webhook was scaffolded here, never configured,
+ * and removed on 2026-10-09 — the studio does not use GoHighLevel.
  */
 async function deliver(channel: string, send: () => Promise<Response>): Promise<Delivery> {
   const started = Date.now()
@@ -88,42 +92,7 @@ export async function POST(req: NextRequest) {
 
     const jobs: Promise<Delivery>[] = []
 
-    // ── 1. GoHighLevel CRM ─────────────────────────────────────────────────
-    const ghlWebhookUrl = process.env.GHL_WEBHOOK_URL
-    if (isSet(ghlWebhookUrl, 'your_ghl_webhook_url_here')) {
-      jobs.push(
-        deliver('ghl', () =>
-          post(ghlWebhookUrl, {
-            firstName: firstName || '',
-            lastName,
-            phone,
-            email,
-            source: partial ? 'HAUT Website Quiz (Partial)' : 'HAUT Website Quiz',
-            tags: [
-              'haut-quiz',
-              `vehicle-${bodyType || 'unknown'}`,
-              partial ? 'partial-lead' : 'full-lead',
-              `form-${source}`,
-              fromAd ? `ad-${utm.utm_source || (utm.fbclid ? 'meta' : 'google')}` : 'organic',
-            ],
-            // Top level as well as customField: a GHL inbound-webhook trigger
-            // maps whichever the workflow was built against.
-            lead_source: sourceLabel,
-            ...utm,
-            customField: {
-              vehicleType: vehicle,
-              coverageLevel: coverageLabel,
-              estimatedPrice: priceLabel,
-              notes: message,
-              leadSource: sourceLabel,
-              ...utm,
-            },
-          })
-        )
-      )
-    }
-
-    // ── 2. Telegram ─────────────────────────────────────────────────────────
+    // ── 1. Telegram ─────────────────────────────────────────────────────────
     const telegramToken = process.env.TELEGRAM_BOT_TOKEN
     const telegramChatId = process.env.TELEGRAM_CHAT_ID
     const telegramOn =
@@ -156,7 +125,7 @@ export async function POST(req: NextRequest) {
       jobs.push(deliver('telegram', () => telegram(lines.filter(Boolean).join('\n'))))
     }
 
-    // ── 3. Google Sheets (Apps Script Web App) ──────────────────────────────
+    // ── 2. Google Sheets (Apps Script Web App) ──────────────────────────────
     const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
     if (isSet(sheetsWebhookUrl, 'your_apps_script_web_app_url_here')) {
       jobs.push(

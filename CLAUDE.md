@@ -26,7 +26,7 @@ Source of truth is [lib/data.ts](lib/data.ts) (`STUDIO`, `PPF_PACKAGES`, pricing
 
 - Next.js (App Router) + React + TypeScript + Tailwind CSS
 - Meta Pixel (`NEXT_PUBLIC_META_PIXEL_ID` in `.env.local`) tracking PageView/lead events
-- `/api/lead` forwards form submissions to GoHighLevel CRM + Telegram (see [app/api/lead/route.ts](app/api/lead/route.ts))
+- `/api/lead` delivers form submissions to Telegram + Google Sheets and sends a server-side Lead to Meta's Conversions API (see [app/api/lead/route.ts](app/api/lead/route.ts), [lib/metaCapi.ts](lib/metaCapi.ts)). The studio has no CRM — there is no GoHighLevel.
 - JSON-LD structured data (LocalBusiness/AutomotiveBusiness/FAQPage) lives in [app/layout.tsx](app/layout.tsx) and blog pages
 
 ## Structure
@@ -39,4 +39,3 @@ Source of truth is [lib/data.ts](lib/data.ts) (`STUDIO`, `PPF_PACKAGES`, pricing
 ## Known rough edges
 
 - Several `image:` fields in [lib/data.ts](lib/data.ts) (package cards, blog posts) and the OG image in [app/layout.tsx](app/layout.tsx) still point at `placehold.co` placeholder URLs left over from early scaffolding — these should eventually be swapped for real assets from `public/assets/` now that real photography exists. Don't introduce new external placeholder-service URLs; use a real asset or a plain styled div/inline SVG instead, since external placeholder images can silently fail to load for real visitors.
-- `GHL_WEBHOOK_URL` / Telegram credentials in `.env.local` are unset placeholders — lead capture to those channels isn't live yet.

@@ -88,8 +88,8 @@ const SECTIONS: LegalSection[] = [
     heading: 'Service providers',
     body: (
       <p>
-        Your request is delivered to the people who answer it through our customer-management system (HighLevel), an
-        internal staff notification channel (Telegram) and an internal enquiry log (Google Sheets). The site is hosted
+        Your request is delivered to the people who answer it through an internal staff notification channel
+        (Telegram) and kept in an internal enquiry log (Google Sheets). The site is hosted
         by Vercel. These providers process information on our behalf and only to run those services.
       </p>
     ),

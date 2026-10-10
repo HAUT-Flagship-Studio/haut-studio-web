@@ -24,7 +24,7 @@ app/
   page.tsx           # Home page
   globals.css        # Brand design system
   api/
-    lead/route.ts    # Lead capture API → GHL + Telegram
+    lead/route.ts    # Lead capture API → Telegram + Sheets + Meta CAPI
   blog/
     page.tsx         # Blog index
     [slug]/page.tsx  # Dynamic blog post
@@ -44,9 +44,11 @@ components/
 
 See `.env.local`:
 - `NEXT_PUBLIC_META_PIXEL_ID` — Meta Pixel ID (already set)
-- `GHL_WEBHOOK_URL` — GoHighLevel CRM webhook endpoint
 - `TELEGRAM_BOT_TOKEN` — Telegram bot token for notifications
 - `TELEGRAM_CHAT_ID` — Telegram chat ID for notifications
+- `GOOGLE_SHEETS_WEBHOOK_URL` — Apps Script web app that logs every lead
+- `META_CAPI_TOKEN` — Meta Conversions API token (server-side Lead / PriceViewed); without it the server copy is skipped
+- `META_TEST_EVENT_CODE` — only while checking events in Events Manager → Test Events; while set, server events do not count for ads
 
 ## Brand Colors
 | Name | Hex |
