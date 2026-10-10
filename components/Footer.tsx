@@ -1,11 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useQuiz } from './QuizProvider'
-import LegalModal, { type LegalModalType } from './LegalModal'
 import { STUDIO } from '@/lib/data'
 import { PhoneLink, AddressLink } from './TrackedLinks'
 
@@ -26,15 +24,14 @@ const FOOTER_LINKS = {
     { label: 'Service Area', href: '/service-area' },
     { label: 'Our Process', href: '/our-process' },
     { label: 'Contact Us', href: '/#contact' },
-    { label: 'Privacy Policy', href: 'privacy' },
-    { label: 'Terms of Service', href: 'terms' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
   ],
 }
 
 export default function Footer() {
   const { openQuiz } = useQuiz()
   const pathname = usePathname()
-  const [legalModal, setLegalModal] = useState<LegalModalType>(null)
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === '/') {
@@ -154,14 +151,6 @@ export default function Footer() {
                       >
                         {link.label}
                       </button>
-                    ) : link.href === 'privacy' || link.href === 'terms' ? (
-                      <button
-                        type="button"
-                        onClick={() => setLegalModal(link.href as LegalModalType)}
-                        className="font-roboto text-[#DADADA]/60 hover:text-[#9FFE0A] text-sm transition-colors text-left"
-                      >
-                        {link.label}
-                      </button>
                     ) : (
                       <Link
                         href={link.href}
@@ -189,8 +178,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-
-      <LegalModal type={legalModal} onClose={() => setLegalModal(null)} />
     </footer>
   )
 }

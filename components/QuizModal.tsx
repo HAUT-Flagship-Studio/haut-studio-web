@@ -5,7 +5,9 @@ import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type Servic
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
-import { trackLead, trackLeadFailed, LeadError } from '@/lib/analytics'
+import ConsentNotice from './ConsentNotice'
+import { trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
+import { getAttribution } from '@/lib/attribution'
 
 declare global {
   interface Window {
@@ -188,15 +190,20 @@ export default function QuizModal({
   const recommendations = useMemo(() => buildRecommendations(answers), [answers])
 
   useEffect(() => {
-    if (step === 6) setSelectedIds(recommendations.filter((r) => !r.optional).map((r) => r.id))
+    if (step !== 6) return
+    const preselected = recommendations.filter((r) => !r.optional)
+    setSelectedIds(preselected.map((r) => r.id))
+    // "Your Tailored Package" is on screen with a price: the event the ads optimise for.
+    if (isOpen && answers.bodyType) {
+      trackPriceViewed({
+        source: 'quiz',
+        vehicle: answers.bodyType,
+        packageName: preselected.map((r) => r.name).join(', '),
+        value: preselected.reduce((sum, r) => sum + r.price, 0),
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
-
-  useEffect(() => {
-    if (isOpen && typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'AssessmentStarted')
-    }
-  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -214,7 +221,9 @@ export default function QuizModal({
   const handleNext = () => {
     if (!canAdvance) return
     if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'AssessmentStep', { step: step + 1 })
+      // Started means answered something — opening the modal is not a start.
+      if (step === 1) window.fbq('trackCustom', 'QuizStarted', { vehicle: answers.bodyType })
+      window.fbq('trackCustom', 'QuizStep', { step: step + 1 })
     }
     setStep((s) => Math.min(s + 1, 6))
   }
@@ -256,6 +265,8 @@ export default function QuizModal({
     e.preventDefault()
     if (!capturePhone.trim()) return
     setCaptureStatus('sending')
+    const eventId = leadEventId()
+    const packageName = selectedItems.map((i) => i.name).join(', ')
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
@@ -264,17 +275,22 @@ export default function QuizModal({
           phone: capturePhone,
           vehicleLabel,
           selectedServices: selectedItems.map((i) => i.name),
+          bodyType: answers.bodyType,
           estimatedPrice: total,
           partial: true,
+          source: 'quiz',
+          eventId,
+          eventSourceUrl: window.location.href,
+          attribution: getAttribution(),
         }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
       }
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('trackCustom', 'PartialLead', { value: total, currency: 'USD' })
-      }
+      // A phone number is a real enquiry, so it is a Lead — not a custom
+      // PartialLead that Meta can count but never optimise for.
+      trackLeadPixel({ source: 'quiz', vehicle: answers.bodyType, packageName, value: total }, eventId)
       trackLead({ value: total, partial: true })
       setCaptureStatus('sent')
     } catch (err) {
@@ -573,6 +589,7 @@ export default function QuizModal({
                         Something went wrong — call us directly at {STUDIO.phone}.
                       </p>
                     )}
+                    <ConsentNotice action="tapping Text Me This" />
                   </>
                 )}
               </div>

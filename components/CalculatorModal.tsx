@@ -16,7 +16,9 @@ import {
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import { PhoneLink } from './TrackedLinks'
-import { trackLead, trackLeadFailed, LeadError } from '@/lib/analytics'
+import ConsentNotice from './ConsentNotice'
+import { trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
+import { getAttribution } from '@/lib/attribution'
 
 declare global {
   interface Window {
@@ -171,8 +173,6 @@ export default function CalculatorModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
-  if (!isOpen) return null
-
   const totalSteps = 4
   const isResults = false
   const category = (formData.bodyType || 'sedan') as VehicleCategory
@@ -186,6 +186,18 @@ export default function CalculatorModal({
   )
   const total = selectedOptions.reduce((sum, o) => sum + o.prices[category], 0)
   const comboEligible = selectedOptions.length >= 2
+
+  // The final step is the estimate screen — the price summary sits above the
+  // contact form. Reaching it with something selected is a PriceViewed.
+  const packageName = selectedOptions.map((o) => o.name).join(', ')
+  useEffect(() => {
+    if (isOpen && step === 4 && !submitted && total > 0) {
+      trackPriceViewed({ source: 'calculator', vehicle: category, packageName, value: total })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, step])
+
+  if (!isOpen) return null
 
   const canAdvance = step === 1 ? !!formData.bodyType : true
 
@@ -202,8 +214,9 @@ export default function CalculatorModal({
 
   const handleNext = () => {
     if (!canAdvance) return
+    // QuizStarted belongs to the 2-Min Assessment; the calculator has its own.
     if (step === 1 && typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'QuizStarted', { vehicle: formData.bodyType })
+      window.fbq('trackCustom', 'CalculatorStarted', { vehicle: formData.bodyType })
     }
     setStep((s) => Math.min(s + 1, totalSteps))
   }
@@ -221,6 +234,7 @@ export default function CalculatorModal({
     e.preventDefault()
     setSubmitting(true)
     setError('')
+    const eventId = leadEventId()
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
@@ -230,15 +244,17 @@ export default function CalculatorModal({
           estimatedPrice: total,
           vehicleLabel: formData.vehicleLabel || formData.bodyType,
           selectedServices: selectedOptions.map((o) => o.name),
+          source: 'calculator',
+          eventId,
+          eventSourceUrl: window.location.href,
+          attribution: getAttribution(),
         }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
       }
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'Lead', { value: total, currency: 'USD' })
-      }
+      trackLeadPixel({ source: 'calculator', vehicle: category, packageName, value: total }, eventId)
       trackLead({ value: total })
       setSubmitted(true)
     } catch (err) {
@@ -493,6 +509,7 @@ export default function CalculatorModal({
                     />
                   </div>
                   {error && <p className="text-red-400 font-roboto text-sm">{error}</p>}
+                  <ConsentNotice />
                   <p className="font-roboto text-[#DADADA]/40 text-xs text-center">
                     No spam. No pressure. We reply within 2 hours.
                   </p>

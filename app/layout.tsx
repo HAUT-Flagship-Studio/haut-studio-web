@@ -5,6 +5,7 @@ import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { QuizProvider } from '@/components/QuizProvider'
+import AttributionCapture from '@/components/AttributionCapture'
 import {
   PPF_PACKAGES,
   CERAMIC_PACKAGE,
@@ -70,6 +71,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://hautppfstudio.com',
   },
+  // Meta domain verification: set the value Meta gives in Vercel, no code
+  // change needed. (A DNS TXT record does the same job and survives anything.)
+  ...(process.env.NEXT_PUBLIC_FB_DOMAIN_VERIFICATION && {
+    other: { 'facebook-domain-verification': process.env.NEXT_PUBLIC_FB_DOMAIN_VERIFICATION },
+  }),
 }
 
 const localBusinessSchema = {
@@ -198,6 +204,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <AttributionCapture />
         <QuizProvider>
           <Header />
           <div id="main-content" tabIndex={-1}>
