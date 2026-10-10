@@ -71,11 +71,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://hautppfstudio.com',
   },
-  // Meta domain verification: set the value Meta gives in Vercel, no code
-  // change needed. (A DNS TXT record does the same job and survives anything.)
-  ...(process.env.NEXT_PUBLIC_FB_DOMAIN_VERIFICATION && {
-    other: { 'facebook-domain-verification': process.env.NEXT_PUBLIC_FB_DOMAIN_VERIFICATION },
-  }),
+  // Meta domain verification for business haut.tech. DNS is at Squarespace,
+  // out of reach of this repo, so the tag lives here; removing it un-verifies
+  // the domain and breaks ad event configuration.
+  other: { 'facebook-domain-verification': 'e7d1hbhojqluk5216u0u1d7xn1yp6q' },
 }
 
 const localBusinessSchema = {
