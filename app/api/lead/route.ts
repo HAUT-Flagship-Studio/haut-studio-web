@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse, after } from 'next/server'
-import { sendCapiEvent } from '@/lib/metaCapi'
+import { randomUUID } from 'node:crypto'
+import { browserFromRequest, sendCapiEvent } from '@/lib/metaCapi'
 
 // Three channels with a timeout and one retry each can outlast the default.
 export const maxDuration = 30
@@ -87,6 +88,14 @@ export async function POST(req: NextRequest) {
       ? [utm.utm_source || (utm.fbclid ? 'meta' : 'google'), utm.utm_medium, utm.utm_campaign].filter(Boolean).join(' / ')
       : 'organic / direct'
 
+    // The Pixel cookies of the browser that sent this lead. Meta gets them with
+    // the Lead now, and the sheet keeps them so a Purchase weeks later can be
+    // tied to the same ad click.
+    const browser = browserFromRequest(req, utm.fbclid || undefined, Number(a.fbclid_at) || undefined)
+    // Every row gets an id, including a second lead in one visit that Meta is
+    // not told about — a payment on either row must still be sendable.
+    const leadId = eventId ?? `lead_${randomUUID()}`
+
     const [firstName, ...rest] = name.split(/\s+/)
     const lastName = rest.join(' ')
 
@@ -143,6 +152,10 @@ export async function POST(req: NextRequest) {
             form: sourceLabel,
             channel: channelLabel,
             ...utm,
+            source,
+            fbc: browser.fbc || '',
+            fbp: browser.fbp || '',
+            event_id: leadId,
           })
         )
       )
@@ -185,11 +198,12 @@ export async function POST(req: NextRequest) {
       }
 
       if (eventId) {
-        await sendCapiEvent(req, {
+        await sendCapiEvent({
           eventName: 'Lead',
           eventId,
           eventSourceUrl,
-          user: { email, phone, firstName, lastName, fbclid: utm.fbclid || undefined, fbclidAt: Number(a.fbclid_at) || undefined },
+          user: { email, phone, firstName, lastName },
+          browser,
           customData: {
             content_name: coverageLabel,
             content_category: source,

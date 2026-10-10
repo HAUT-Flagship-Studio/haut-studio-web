@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse, after } from 'next/server'
-import { sendCapiEvent } from '@/lib/metaCapi'
+import { browserFromRequest, sendCapiEvent } from '@/lib/metaCapi'
 
 /**
  * Server copy of browser events that carry no contact details — today only
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
   }
   const eventSourceUrl = typeof body.eventSourceUrl === 'string' ? body.eventSourceUrl.slice(0, 1000) : undefined
 
-  after(() => sendCapiEvent(req, { eventName: 'PriceViewed', eventId, eventSourceUrl, customData }))
+  const browser = browserFromRequest(req)
+  after(() => sendCapiEvent({ eventName: 'PriceViewed', eventId, eventSourceUrl, browser, customData }))
   return new NextResponse(null, { status: 204 })
 }

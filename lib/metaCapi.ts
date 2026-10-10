@@ -44,42 +44,73 @@ export interface CapiUser {
   phone?: string
   firstName?: string
   lastName?: string
-  /** From the visitor's stored fbclid, used when the _fbc cookie is missing. */
-  fbclid?: string
-  fbclidAt?: number
+}
+
+/**
+ * What identifies the browser to Meta: its Pixel cookies, IP and user agent.
+ * Read from the visitor's own request, or — for a Purchase sent days later from
+ * the leads sheet — from the values that request left in the sheet.
+ */
+export interface CapiBrowser {
+  fbp?: string
+  fbc?: string
+  ip?: string
+  ua?: string
+}
+
+/** The visitor's browser context, from the request that carried their lead. */
+export function browserFromRequest(req: NextRequest, fbclid?: string, fbclidAt?: number): CapiBrowser {
+  // Pixel-set cookies travel with the request: same domain.
+  const fbp = req.cookies.get('_fbp')?.value
+  let fbc = req.cookies.get('_fbc')?.value
+  if (!fbc && fbclid) fbc = `fb.1.${fbclidAt ?? Date.now()}.${fbclid}`
+  return {
+    fbp,
+    fbc,
+    ip: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || undefined,
+    ua: req.headers.get('user-agent') || undefined,
+  }
 }
 
 export interface CapiEvent {
-  eventName: 'Lead' | 'PriceViewed'
+  eventName: 'Lead' | 'PriceViewed' | 'Purchase'
   eventId: string
+  /**
+   * `website` for what happened on the site. `physical_store` for a payment at
+   * the studio: Meta accepts website events up to 7 days old, store events up
+   * to 62, and a payment often comes later than a week after the lead.
+   */
+  actionSource?: 'website' | 'physical_store'
+  /** Unix seconds; defaults to now. */
+  eventTime?: number
   eventSourceUrl?: string
   user?: CapiUser
+  browser?: CapiBrowser
   customData?: Record<string, unknown>
 }
 
-export async function sendCapiEvent(req: NextRequest, event: CapiEvent): Promise<void> {
+export interface CapiResult {
+  ok: boolean
+  /** Meta's answer, or why nothing was sent — short enough for a sheet cell. */
+  detail: string
+}
+
+export async function sendCapiEvent(event: CapiEvent): Promise<CapiResult> {
   const token = process.env.META_CAPI_TOKEN
-  if (!token) return
+  if (!token) return { ok: false, detail: 'META_CAPI_TOKEN is not set' }
 
   const u = event.user ?? {}
+  const b = event.browser ?? {}
   const email = normEmail(u.email)
   const phone = normPhone(u.phone)
   const fn = normName(u.firstName)
   const ln = normName(u.lastName)
 
-  // Pixel-set cookies travel with the request: same domain.
-  const fbp = req.cookies.get('_fbp')?.value
-  let fbc = req.cookies.get('_fbc')?.value
-  if (!fbc && u.fbclid) fbc = `fb.1.${u.fbclidAt ?? Date.now()}.${u.fbclid}`
-
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || undefined
-  const ua = req.headers.get('user-agent') || undefined
-
   const user_data: Record<string, unknown> = {
-    client_ip_address: ip,
-    client_user_agent: ua,
-    fbp,
-    fbc,
+    client_ip_address: b.ip,
+    client_user_agent: b.ua,
+    fbp: b.fbp || undefined,
+    fbc: b.fbc || undefined,
     em: email ? [sha256(email)] : undefined,
     ph: phone ? [sha256(phone)] : undefined,
     fn: fn ? [sha256(fn)] : undefined,
@@ -92,10 +123,10 @@ export async function sendCapiEvent(req: NextRequest, event: CapiEvent): Promise
     data: [
       {
         event_name: event.eventName,
-        event_time: Math.floor(Date.now() / 1000),
+        event_time: event.eventTime ?? Math.floor(Date.now() / 1000),
         event_id: event.eventId,
         event_source_url: event.eventSourceUrl,
-        action_source: 'website',
+        action_source: event.actionSource ?? 'website',
         user_data,
         custom_data: event.customData,
       },
@@ -116,11 +147,14 @@ export async function sendCapiEvent(req: NextRequest, event: CapiEvent): Promise
     const text = (await res.text()).slice(0, 500)
     if (!res.ok) {
       console.error(`[capi] ${event.eventName} rejected: ${res.status} ${text}`)
-    } else {
-      // The only proof in the logs that Meta took it: events_received and the trace id.
-      console.log(`[capi] ${event.eventName} ${event.eventId} accepted${process.env.META_TEST_EVENT_CODE ? ' (test)' : ''}: ${text}`)
+      return { ok: false, detail: `Meta ${res.status}: ${text}` }
     }
+    // The only proof in the logs that Meta took it: events_received and the trace id.
+    const test = process.env.META_TEST_EVENT_CODE ? ' (test)' : ''
+    console.log(`[capi] ${event.eventName} ${event.eventId} accepted${test}: ${text}`)
+    return { ok: true, detail: `accepted${test}: ${text}` }
   } catch (error) {
     console.error(`[capi] ${event.eventName} failed:`, error)
+    return { ok: false, detail: String(error) }
   }
 }
