@@ -1,5 +1,5 @@
-import { timingSafeEqual } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
+import { fromLeadsSheet } from '@/lib/sheetAuth'
 import { sendCapiEvent } from '@/lib/metaCapi'
 
 /**
@@ -17,19 +17,10 @@ import { sendCapiEvent } from '@/lib/metaCapi'
 
 const MAX_AGE_DAYS = 62 // Meta's limit for physical_store events
 
-function authorised(req: NextRequest) {
-  const expected = process.env.LEADS_SHEET_SECRET
-  const given = req.headers.get('x-haut-secret')
-  if (!expected || !given) return false
-  const a = Buffer.from(expected)
-  const b = Buffer.from(given)
-  return a.length === b.length && timingSafeEqual(a, b)
-}
-
 const fail = (error: string, status = 400) => NextResponse.json({ ok: false, error }, { status })
 
 export async function POST(req: NextRequest) {
-  if (!authorised(req)) return fail('unauthorised', 401)
+  if (!fromLeadsSheet(req)) return fail('unauthorised', 401)
 
   const body = await req.json().catch(() => null)
   if (!body) return fail('body is not JSON')

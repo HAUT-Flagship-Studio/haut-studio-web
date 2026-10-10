@@ -14,6 +14,12 @@
  *      Purchase to Meta. The result lands in "Sent to Meta". A row with ✓ is
  *      never sent again; a row with an error is retried on the next edit or
  *      from the menu HAUT → Send paid rows to Meta.
+ *   3. checkReminders (every 5 min) and dailyDigest (10:00 ET) — reminders to
+ *      the sales chat in Telegram: a lead still "Новая" after 15 and 60 minutes
+ *      of studio hours, and every morning the clients "Записан" for over 7 days
+ *      with no payment marked, plus leads left "Новая" for over a day. Sent
+ *      through https://hautppfstudio.com/api/notify, so the bot token stays in
+ *      Vercel.
  *
  * One-time setup (Project Settings → Script Properties):
  *   SITE_SECRET = the value of LEADS_SHEET_SECRET in Vercel.
@@ -23,9 +29,18 @@
  */
 
 const SITE_PURCHASE_URL = 'https://hautppfstudio.com/api/purchase'
+const SITE_NOTIFY_URL = 'https://hautppfstudio.com/api/notify'
 const TIMEZONE = 'America/New_York'
 
+// Studio hours, as on the site: Mon–Fri 9–18, Sat 9–16, Sunday closed.
+// Keyed by ISO weekday (1 = Monday).
+const OPEN_HOURS = { 1: [9, 18], 2: [9, 18], 3: [9, 18], 4: [9, 18], 5: [9, 18], 6: [9, 16] }
+const REMIND_AFTER_MIN = [15, 60]
+const BOOKED_STALE_DAYS = 7
+
 const STATUSES = ['Новая', 'Связались', 'Записан', 'Оплатил', 'Отказ']
+const NEW = 'Новая'
+const BOOKED = 'Записан'
 const PAID = 'Оплатил'
 
 // Column numbers (A = 1). A–I are the original layout and must not move.
@@ -79,7 +94,7 @@ function doPost(e) {
       safe(d.estimate), safe(d.type), safe(d.notes),
       safe(d.utm_source), safe(d.utm_medium), safe(d.utm_campaign), safe(d.utm_content), safe(d.fbclid),
       safe(d.source), safe(d.fbc), safe(d.fbp), safe(d.event_id),
-      'Новая', '', '', '',
+      NEW, '', '', '',
     ])
 
     return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON)
@@ -95,7 +110,16 @@ function onPaidEdit(e) {
   if (sheet.getSheetId() !== leadsSheet().getSheetId()) return
   // Only edits that touch Status, Paid amount or Paid date matter.
   if (range.getLastColumn() < COL.status || range.getColumn() > COL.paidDate) return
-  for (let row = Math.max(range.getRow(), 2); row <= range.getLastRow(); row++) sendIfPaid(sheet, row)
+  for (let row = Math.max(range.getRow(), 2); row <= range.getLastRow(); row++) {
+    recordStatus(sheet, row)
+    sendIfPaid(sheet, row)
+  }
+}
+
+/** The lead's id: event_id from the site, or a stable one for rows that predate it. */
+function leadIdOf(v, row) {
+  const ts = new Date(v[COL.timestamp - 1]).getTime()
+  return String(v[COL.eventId - 1] || 'row_' + row + '_' + (isNaN(ts) ? 0 : Math.floor(ts / 1000)))
 }
 
 function sendPaidRows() {
@@ -124,9 +148,7 @@ function sendIfPaid(sheet, row) {
   }
   const paidDate = paid instanceof Date ? Utilities.formatDate(paid, TIMEZONE, 'yyyy-MM-dd') : String(paid)
 
-  // Rows written before event_id existed get a stable id of their own.
-  const ts = new Date(at(COL.timestamp)).getTime()
-  const leadId = String(at(COL.eventId) || 'row_' + row + '_' + (isNaN(ts) ? 0 : Math.floor(ts / 1000)))
+  const leadId = leadIdOf(v, row)
 
   let result
   try {
@@ -157,14 +179,136 @@ function sendIfPaid(sheet, row) {
   sentCell.setValue(result.ok ? '✓ ' + stamp : 'Ошибка ' + stamp + ': ' + String(result.error || result.detail).slice(0, 300))
 }
 
+// ── 3. Reminders to the sales chat ──────────────────────────────────────────
+const state = () => PropertiesService.getDocumentProperties()
+
+/** When each lead's status last changed — the sheet itself does not keep it. */
+function recordStatus(sheet, row) {
+  const v = sheet.getRange(row, 1, 1, COL.sent).getValues()[0]
+  const status = v[COL.status - 1]
+  const key = 'status_' + leadIdOf(v, row)
+  const prev = JSON.parse(state().getProperty(key) || '{}')
+  if (prev.s !== status) state().setProperty(key, JSON.stringify({ s: status, t: Date.now() }))
+}
+
+function isOpen(date) {
+  const parts = Utilities.formatDate(date, TIMEZONE, 'u H').split(' ')
+  const hours = OPEN_HOURS[Number(parts[0])]
+  const hour = Number(parts[1])
+  return !!hours && hour >= hours[0] && hour < hours[1]
+}
+
+/** Minutes the studio was open between two moments, in 5-minute steps. */
+function openMinutesBetween(from, to) {
+  let minutes = 0
+  for (let t = from.getTime(); t < to.getTime(); t += 5 * 60000) if (isOpen(new Date(t))) minutes += 5
+  return minutes
+}
+
+function notify(text) {
+  const secret = PropertiesService.getScriptProperties().getProperty('SITE_SECRET')
+  if (!secret) return false
+  const res = UrlFetchApp.fetch(SITE_NOTIFY_URL, {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'x-haut-secret': secret },
+    muteHttpExceptions: true,
+    payload: JSON.stringify({ text: text }),
+  })
+  if (res.getResponseCode() !== 200) console.error('notify failed: ' + res.getContentText())
+  return res.getResponseCode() === 200
+}
+
+function rowLink(sheet, row) {
+  return sheet.getParent().getUrl() + '#gid=' + sheet.getSheetId() + '&range=A' + row
+}
+
+function describe(v) {
+  const at = (c) => v[c - 1]
+  return [at(COL.name) || 'без имени', at(COL.phone)].filter(String).join(' · ') + '\n' +
+    [at(COL.vehicle), at(COL.services), at(COL.estimate)].filter(String).join(' · ')
+}
+
+/** Every 5 minutes: leads still "Новая" after 15 and 60 minutes of studio hours. */
+function checkReminders() {
+  const now = new Date()
+  if (!isOpen(now)) return
+  const sheet = leadsSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return
+  const values = sheet.getRange(2, 1, last - 1, COL.sent).getValues()
+  const oldest = now.getTime() - 4 * 86400000
+
+  values.forEach(function (v, i) {
+    const row = i + 2
+    if (v[COL.status - 1] !== NEW) return
+    const ts = new Date(v[COL.timestamp - 1])
+    if (isNaN(ts.getTime()) || ts.getTime() < oldest) return
+
+    const key = 'reminded_' + leadIdOf(v, row)
+    const done = Number(state().getProperty(key) || 0)
+    if (done >= REMIND_AFTER_MIN[REMIND_AFTER_MIN.length - 1]) return
+
+    const waited = openMinutesBetween(ts, now)
+    // The highest threshold reached — one message, never a 15-minute ping after the hour one.
+    const due = REMIND_AFTER_MIN.filter((m) => m <= waited && m > done).pop()
+    if (!due) return
+
+    const head = due >= 60 ? '🔴 Заявка без ответа уже час' : '⏰ Заявка ждёт ответа ' + due + ' мин'
+    if (notify(head + '\n' + describe(v) + '\nПоставьте статус: ' + rowLink(sheet, row))) {
+      state().setProperty(key, String(due))
+    }
+  })
+}
+
+/** 10:00 ET, Monday to Saturday: what is stuck. */
+function dailyDigest() {
+  const now = new Date()
+  if (Utilities.formatDate(now, TIMEZONE, 'u') === '7') return
+  const sheet = leadsSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return
+  const values = sheet.getRange(2, 1, last - 1, COL.sent).getValues()
+
+  const booked = []
+  const unanswered = []
+  values.forEach(function (v, i) {
+    const row = i + 2
+    const status = v[COL.status - 1]
+    if (status === BOOKED) {
+      const key = 'status_' + leadIdOf(v, row)
+      let rec = JSON.parse(state().getProperty(key) || '{}')
+      // Booked before reminders existed: start counting from today.
+      if (rec.s !== BOOKED) {
+        rec = { s: BOOKED, t: now.getTime() }
+        state().setProperty(key, JSON.stringify(rec))
+      }
+      const days = Math.floor((now.getTime() - rec.t) / 86400000)
+      if (days >= BOOKED_STALE_DAYS) booked.push('• ' + describe(v).replace('\n', ' — ') + ' (' + days + ' дн.) ' + rowLink(sheet, row))
+    } else if (status === NEW) {
+      const ts = new Date(v[COL.timestamp - 1]).getTime()
+      const age = now.getTime() - ts
+      if (age > 86400000 && age < 14 * 86400000) unanswered.push('• ' + describe(v).replace('\n', ' — ') + ' ' + rowLink(sheet, row))
+    }
+  })
+
+  const parts = []
+  if (booked.length) parts.push('📋 Записаны больше ' + BOOKED_STALE_DAYS + ' дней, оплата не отмечена. Если клиент заплатил — поставьте «Оплатил» и сумму:\n' + booked.join('\n'))
+  if (unanswered.length) parts.push('🔴 Новые заявки без ответа больше суток:\n' + unanswered.join('\n'))
+  if (parts.length) notify(parts.join('\n\n'))
+}
+
 // ── Setup and menu ──────────────────────────────────────────────────────────
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
   ensureLayout(leadsSheet())
+  const handlers = ['onPaidEdit', 'checkReminders', 'dailyDigest']
   ScriptApp.getProjectTriggers()
-    .filter((t) => t.getHandlerFunction() === 'onPaidEdit')
+    .filter((t) => handlers.indexOf(t.getHandlerFunction()) !== -1)
     .forEach((t) => ScriptApp.deleteTrigger(t))
   ScriptApp.newTrigger('onPaidEdit').forSpreadsheet(ss).onEdit().create()
+  ScriptApp.newTrigger('checkReminders').timeBased().everyMinutes(5).create()
+  ScriptApp.newTrigger('dailyDigest').timeBased().everyDays(1).atHour(10).inTimezone(TIMEZONE).create()
   if (!PropertiesService.getScriptProperties().getProperty('SITE_SECRET')) {
     throw new Error('Добавьте SITE_SECRET в Project Settings → Script Properties и запустите setup() ещё раз.')
   }
