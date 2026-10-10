@@ -113,8 +113,12 @@ export async function sendCapiEvent(req: NextRequest, event: CapiEvent): Promise
         signal: AbortSignal.timeout(5000),
       }
     )
+    const text = (await res.text()).slice(0, 500)
     if (!res.ok) {
-      console.error(`[capi] ${event.eventName} rejected: ${res.status} ${(await res.text()).slice(0, 500)}`)
+      console.error(`[capi] ${event.eventName} rejected: ${res.status} ${text}`)
+    } else {
+      // The only proof in the logs that Meta took it: events_received and the trace id.
+      console.log(`[capi] ${event.eventName} ${event.eventId} accepted${process.env.META_TEST_EVENT_CODE ? ' (test)' : ''}: ${text}`)
     }
   } catch (error) {
     console.error(`[capi] ${event.eventName} failed:`, error)
