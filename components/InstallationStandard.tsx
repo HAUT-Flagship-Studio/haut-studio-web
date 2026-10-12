@@ -7,7 +7,7 @@ const PROTOCOL_STEPS = [
   {
     step: '02',
     title: 'HAUT Precision Pattern Modification',
-    body: 'We manually extend every software-generated pattern by 15–20mm beyond the factory template for full wrapped edges — not just panel faces.',
+    body: 'Our patterns are drawn with wrap-arounds wherever an edge is reachable, and we add 0.1 in. on top — enough to tuck the film neatly around the panel edge instead of stopping on its face.',
   },
   {
     step: '03',
@@ -17,7 +17,7 @@ const PROTOCOL_STEPS = [
   {
     step: '04',
     title: 'Edge Tucking & Curing Inspection',
-    body: 'Every edge is tucked behind the panel and heat-sealed, then inspected under raking LED surface lighting before your vehicle leaves the bay.',
+    body: 'Every edge is tucked behind the panel and heat-sealed — no edge-prep adhesion promoter, which bonds film into the clear coat — then inspected under raking LED surface lighting before your vehicle leaves the bay.',
   },
 ]
 

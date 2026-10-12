@@ -720,6 +720,21 @@ export const PPF_FAQ_ITEMS: FAQItem[] = [
       "No. Every panel pattern is 100% digitally cut with HAUT Precision Scan technology before it ever reaches your vehicle. Installers hand-tuck and heat-form each edge on the car — a blade never makes contact with your clear coat.",
   },
   {
+    question: 'Will the film pull paint off when it is removed?',
+    answer:
+      "Not from factory paint — it comes off clean. Paint lifting at removal comes from repainted panels and from edge prep — an adhesion promoter some shops brush on film edges to make them grab harder, which bonds the film into the clear coat. We don't use edge prep. If a panel has been repainted, tell us at the consultation and we'll go through it before any film goes on.",
+  },
+  {
+    question: 'Do you take the bumpers or headlights off to install PPF?',
+    answer:
+      "No. Bumpers, headlights, and trim stay on the car — film is wrapped into the panel gaps by hand, with a finish that matches a disassembled install, without unclipping sensors or disturbing panel alignment. Door handles and emblems are removed only if you ask for it.",
+  },
+  {
+    question: 'What if an edge starts lifting?',
+    answer:
+      "A lifted edge is an installation fault, not normal wear, so it's our responsibility and we fix it at no charge. Edges are wrapped behind the panel and heat-sealed, then inspected under raking LED light before the car leaves.",
+  },
+  {
     question: 'Can I wash my car normally with PPF installed?',
     answer:
       'Yes — hand washing and touchless car washes are completely safe once the film has cured. We recommend avoiding automatic brush washes permanently, since stiff bristles can trap grit against film edges and cause premature lifting.',

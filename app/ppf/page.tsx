@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Hero from '@/components/Hero'
 import GlossMatteSlider from '@/components/GlossMatteSlider'
 import RoadHazardsGrid from '@/components/RoadHazardsGrid'
+import InstallFears from '@/components/InstallFears'
 import InstallationStandard from '@/components/InstallationStandard'
 import Packages from '@/components/Packages'
 import VideoTestimonials from '@/components/VideoTestimonials'
@@ -158,6 +159,8 @@ export default function PPFPage() {
       </section>
 
       <RoadHazardsGrid />
+
+      <InstallFears />
 
       <InstallationStandard />
 

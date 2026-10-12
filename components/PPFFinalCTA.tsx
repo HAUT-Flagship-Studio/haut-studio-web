@@ -28,6 +28,9 @@ export default function PPFFinalCTA() {
         >
           <span>+ Find Your Ideal PPF Package (2-Min Assessment)</span>
         </button>
+        <p className="font-roboto text-[#DADADA]/50 text-xs tracking-widest uppercase mt-6">
+          No blades on paint · No edge prep · No disassembly · Wrapped edges
+        </p>
       </div>
     </section>
   )
