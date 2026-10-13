@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Hero from '@/components/Hero'
 import GlossMatteSlider from '@/components/GlossMatteSlider'
-import RoadHazardsGrid from '@/components/RoadHazardsGrid'
 import InstallFears from '@/components/InstallFears'
 import InstallationStandard from '@/components/InstallationStandard'
 import Packages from '@/components/Packages'
@@ -12,6 +11,25 @@ import PPFFinalCTA from '@/components/PPFFinalCTA'
 import DriveFrom from '@/components/DriveFrom'
 import { PPF_PACKAGES, PPF_FAQ_ITEMS } from '@/lib/data'
 import { buildFaqSchema } from '@/lib/faqSchema'
+
+const PAINT_THREATS = [
+  {
+    title: 'Rock Chips & Debris',
+    detail: "Absorbs high-speed impacts from gravel and road debris, leaving the film to take the hit so your clear coat doesn't.",
+  },
+  {
+    title: 'Swirls & Wash Scratches',
+    detail: 'Self-healing topcoat flows back together with ambient heat, erasing fine scratches and swirl marks.',
+  },
+  {
+    title: 'UV Fading & Stains',
+    detail: 'Blocks UV and resists chemical stains from bird droppings, bug splatter, and road salt.',
+  },
+  {
+    title: 'Passes Paint-Depth Inspection',
+    detail: 'Film sits on top of the clear coat, so a paint-depth gauge still reads factory-original — no repaint flag at a pre-purchase inspection or trade-in.',
+  },
+]
 
 export const metadata: Metadata = {
   title: 'Paint Protection Film (PPF) in Hackensack, NJ | Packages & Pricing | HAUT Flagship Studio',
@@ -47,8 +65,13 @@ export default function PPFPage() {
         trustBadges={['★ 5.0 Google Reviews', '100% HAUT Precision Scan Cut (Zero Blades)', 'Custom Extended-Wrapped Edges', '10-Year Transferable Warranty']}
       />
 
-      {/* Factory Paint Finish Dilemma / Why HAUT PPF */}
+      <InstallFears />
+
+      <InstallationStandard />
+
+      {/* Why PPF: what factory paint is worth, and what the film takes instead of it */}
       <section
+        id="hazards"
         className="bg-[#1A292E] precision-grid"
         aria-label="Why paint protection film is non-negotiable"
       >
@@ -70,30 +93,18 @@ export default function PPFPage() {
             </p>
             <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
               A single repainted panel can measurably reduce resale value and flags the vehicle in a pre-purchase
-              inspection. Paint protection film is an invisible, sacrificial layer of armor between your factory
-              finish and the road — it absorbs the damage so your original paint never has to.
+              inspection. Paint protection film is an invisible, sacrificial layer between your factory finish
+              and the road — it takes the damage so your original paint never has to.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <div className="bg-[#0D1216] border border-white/10 rounded-2xl p-6 md:p-8">
-              <h3 className="font-kanit font-semibold text-white text-lg mb-2 leading-snug">
-                Preserve 100% Market Value
-              </h3>
-              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
-                Prevents minor rock chips and daily wear from requiring body shop repaints, protecting your
-                pristine factory finish and maximizing resale value.
-              </p>
-            </div>
-            <div className="bg-[#0D1216] border border-white/10 rounded-2xl p-6 md:p-8">
-              <h3 className="font-kanit font-semibold text-white text-lg mb-2 leading-snug">
-                Passes Every Paint-Depth Inspection
-              </h3>
-              <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">
-                Film sits on top of the clear coat, so a paint-depth gauge still reads factory-original
-                underneath — no repaint flag on a pre-purchase inspection or dealer trade-in appraisal.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            {PAINT_THREATS.map((t) => (
+              <div key={t.title} className="bg-[#0D1216] border border-white/10 rounded-2xl p-6">
+                <h3 className="font-kanit font-semibold text-white text-lg mb-2 leading-snug">{t.title}</h3>
+                <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed">{t.detail}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -157,12 +168,6 @@ export default function PPFPage() {
           </div>
         </div>
       </section>
-
-      <RoadHazardsGrid />
-
-      <InstallFears />
-
-      <InstallationStandard />
 
       <Packages
         packages={PPF_PACKAGES}
