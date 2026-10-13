@@ -197,6 +197,7 @@ export default function QuizModal({
     if (isOpen && answers.bodyType) {
       trackPriceViewed({
         source: 'quiz',
+        service: 'ppf',
         vehicle: answers.bodyType,
         packageName: preselected.map((r) => r.name).join(', '),
         value: preselected.reduce((sum, r) => sum + r.price, 0),
@@ -290,7 +291,7 @@ export default function QuizModal({
       }
       // A phone number is a real enquiry, so it is a Lead — not a custom
       // PartialLead that Meta can count but never optimise for.
-      trackLeadPixel({ source: 'quiz', vehicle: answers.bodyType, packageName, value: total }, eventId)
+      trackLeadPixel({ source: 'quiz', service: 'ppf', vehicle: answers.bodyType, packageName, value: total }, eventId)
       trackLead({ value: total, partial: true })
       setCaptureStatus('sent')
     } catch (err) {

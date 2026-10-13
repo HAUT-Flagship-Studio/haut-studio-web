@@ -85,6 +85,8 @@ export type QuoteSource = 'calculator' | 'quiz'
 
 export interface QuoteDetails {
   source: QuoteSource
+  /** The service the flow led with — ppf, ceramic or tint — so Meta can count each separately. */
+  service: 'ppf' | 'ceramic' | 'tint'
   /** Body type: sedan, suv, truck, exotic, cybertruck. */
   vehicle: string
   /** The services shown or chosen, joined — Meta's content_name. */
@@ -97,6 +99,7 @@ function quoteParams(d: QuoteDetails) {
     content_name: d.packageName || 'none selected',
     content_category: d.source,
     source: d.source,
+    service: d.service,
     vehicle: d.vehicle,
     value: d.value,
     currency: 'USD',

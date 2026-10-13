@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
     content_name: String(c.content_name ?? '').slice(0, 200),
     content_category: String(c.content_category ?? '').slice(0, 40),
     source: String(c.source ?? '').slice(0, 40),
+    service: ['ppf', 'ceramic', 'tint'].includes(c.service) ? String(c.service) : undefined,
     vehicle: String(c.vehicle ?? '').slice(0, 40),
     value: Number.isFinite(value) && value > 0 && value < 100000 ? value : undefined,
     currency: 'USD',

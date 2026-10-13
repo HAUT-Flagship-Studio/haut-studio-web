@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
-import CalculatorModal, { type CalculatorPrefill } from './CalculatorModal'
+import CalculatorModal, { calculatorServiceFor, type CalculatorPrefill, type CalculatorService } from './CalculatorModal'
 import QuizModal from './QuizModal'
 
 interface QuizContextValue {
@@ -17,9 +17,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorInitialStep, setCalculatorInitialStep] = useState(1)
   const [calculatorPrefill, setCalculatorPrefill] = useState<CalculatorPrefill | null>(null)
+  const [calculatorService, setCalculatorService] = useState<CalculatorService>('ppf')
   const [assessmentOpen, setAssessmentOpen] = useState(false)
 
   const openQuiz = useCallback(() => {
+    // Read at click time: the page decides which service the calculator leads with.
+    setCalculatorService(calculatorServiceFor(window.location.pathname, window.location.search))
     setCalculatorInitialStep(1)
     setCalculatorPrefill(null)
     setCalculatorOpen(true)
@@ -30,6 +33,8 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const closeAssessment = useCallback(() => setAssessmentOpen(false), [])
 
   const applyAssessmentToCalculator = useCallback((prefill: CalculatorPrefill) => {
+    // The assessment recommends PPF coverage, so its hand-off keeps the PPF layout.
+    setCalculatorService('ppf')
     setCalculatorPrefill(prefill)
     setCalculatorInitialStep(3)
     setAssessmentOpen(false)
@@ -44,6 +49,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         onClose={closeQuiz}
         initialStep={calculatorInitialStep}
         prefill={calculatorPrefill}
+        service={calculatorService}
       />
       <QuizModal isOpen={assessmentOpen} onClose={closeAssessment} onApply={applyAssessmentToCalculator} />
     </QuizContext.Provider>

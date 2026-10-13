@@ -30,6 +30,25 @@ type CeramicChoice = keyof typeof CERAMIC
 type TintChoice = 'none' | keyof typeof TINT
 type WSPFChoice = 'none' | keyof typeof WSPF
 
+/**
+ * Which service the calculator leads with. The page the visitor came from
+ * decides it: /ceramic opens on ceramic coating, /window-tint on tint, every
+ * other page on PPF. The other two services move to the add-ons step, so a
+ * ceramic ad never routes its visitor through a PPF step first.
+ */
+export type CalculatorService = 'ppf' | 'ceramic' | 'tint'
+
+const SERVICES: CalculatorService[] = ['ppf', 'ceramic', 'tint']
+
+/** `?service=ceramic` overrides the page; otherwise the path decides. */
+export function calculatorServiceFor(pathname: string, search = ''): CalculatorService {
+  const param = new URLSearchParams(search).get('service')
+  if (param && (SERVICES as string[]).includes(param)) return param as CalculatorService
+  if (pathname.startsWith('/ceramic')) return 'ceramic'
+  if (pathname.startsWith('/window-tint')) return 'tint'
+  return 'ppf'
+}
+
 export interface CalculatorPrefill {
   vehicleLabel: string
   bodyType: VehicleCategory
@@ -66,12 +85,30 @@ const INITIAL_FORM_DATA: FormData = {
   message: '',
 }
 
-const STEPS = [
-  { title: 'What type of vehicle?', subtitle: 'Select the category that best describes your car.' },
-  { title: 'Paint Protection Film', subtitle: 'Choose how much of your vehicle to protect.' },
-  { title: 'Add-on services', subtitle: 'Options include: Ceramic coating, window tint, and windshield protection.' },
-  { title: 'Your contact details', subtitle: 'We will confirm your services' },
-]
+const SERVICE_COPY: Record<CalculatorService, { title: string; subtitle: string; addon: string }> = {
+  ppf: { title: 'Paint Protection Film', subtitle: 'Choose how much of your vehicle to protect.', addon: 'paint protection film' },
+  ceramic: {
+    title: 'Ceramic Coating',
+    subtitle: 'Select any combination — Wheels, Body, and Interior can be added together.',
+    addon: 'ceramic coating',
+  },
+  tint: { title: 'Window Tint', subtitle: 'Choose which windows to tint.', addon: 'window tint' },
+}
+
+// Owner's fact: the body coating price covers a light polish on a new car;
+// swirled or scratched paint needs correction, priced only after inspection.
+const CERAMIC_NOTE =
+  'New car: light polish included. Paint with swirls or scratches: correction quoted after inspection, before work starts.'
+
+function steps(service: CalculatorService) {
+  const addons = SERVICES.filter((s) => s !== service).map((s) => SERVICE_COPY[s].addon)
+  return [
+    { title: 'What type of vehicle?', subtitle: 'Select the category that best describes your car.' },
+    SERVICE_COPY[service],
+    { title: 'Add-on services', subtitle: `Options include: ${addons.join(', ')}, and windshield protection.` },
+    { title: 'Your contact details', subtitle: 'We will confirm your services' },
+  ]
+}
 
 const PPF_ROWS: { id: PPFChoice; label: string; option: ServiceOption | null }[] = [
   { id: 'bikini', label: 'Bikini PPF', option: PPF.bikini },
@@ -134,11 +171,13 @@ export default function CalculatorModal({
   onClose,
   initialStep = 1,
   prefill = null,
+  service = 'ppf',
 }: {
   isOpen: boolean
   onClose: () => void
   initialStep?: number
   prefill?: CalculatorPrefill | null
+  service?: CalculatorService
 }) {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA)
@@ -192,7 +231,7 @@ export default function CalculatorModal({
   const packageName = selectedOptions.map((o) => o.name).join(', ')
   useEffect(() => {
     if (isOpen && step === 4 && !submitted && total > 0) {
-      trackPriceViewed({ source: 'calculator', vehicle: category, packageName, value: total })
+      trackPriceViewed({ source: 'calculator', service, vehicle: category, packageName, value: total })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, step])
@@ -216,7 +255,7 @@ export default function CalculatorModal({
     if (!canAdvance) return
     // QuizStarted belongs to the 2-Min Assessment; the calculator has its own.
     if (step === 1 && typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'CalculatorStarted', { vehicle: formData.bodyType })
+      window.fbq('trackCustom', 'CalculatorStarted', { vehicle: formData.bodyType, service })
     }
     setStep((s) => Math.min(s + 1, totalSteps))
   }
@@ -254,7 +293,7 @@ export default function CalculatorModal({
         const body = await res.json().catch(() => ({}))
         throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
       }
-      trackLeadPixel({ source: 'calculator', vehicle: category, packageName, value: total }, eventId)
+      trackLeadPixel({ source: 'calculator', service, vehicle: category, packageName, value: total }, eventId)
       trackLead({ value: total })
       setSubmitted(true)
     } catch (err) {
@@ -266,6 +305,72 @@ export default function CalculatorModal({
   }
 
   const progressPct = ((step - 1) / (totalSteps - 1)) * 100
+  const STEPS = steps(service)
+
+  // The rows for one service. The lead service gets step 2 to itself; the
+  // other two render as boxed add-on sections on step 3.
+  const serviceRows = (s: CalculatorService) => {
+    if (s === 'ppf') {
+      return (
+        <div className="space-y-2">
+          {PPF_ROWS.map((row) => (
+            <OptionRow
+              key={row.id}
+              id={row.id}
+              label={row.label}
+              option={row.option}
+              category={category}
+              active={formData.ppf === row.id}
+              onSelect={selectPPF}
+            />
+          ))}
+          {category === 'cybertruck' && (
+            <OptionRow
+              id="colorPPF"
+              label={PPF_CYBERTRUCK_COLOR.name}
+              option={PPF_CYBERTRUCK_COLOR}
+              category={category}
+              active={formData.ppf === 'colorPPF'}
+              onSelect={selectPPF}
+            />
+          )}
+        </div>
+      )
+    }
+    if (s === 'ceramic') {
+      return (
+        <div className="space-y-2">
+          {CERAMIC_ROWS.map((row) => (
+            <OptionRow
+              key={row.id}
+              id={row.id}
+              label={row.label}
+              option={row.option}
+              category={category}
+              active={formData.ceramic.includes(row.id)}
+              onSelect={toggleCeramic}
+            />
+          ))}
+          <p className="font-roboto text-[#DADADA]/60 text-xs leading-relaxed pt-1">{CERAMIC_NOTE}</p>
+        </div>
+      )
+    }
+    return (
+      <div className="space-y-2">
+        {TINT_ROWS.map((row) => (
+          <OptionRow
+            key={row.id}
+            id={row.id}
+            label={row.label}
+            option={row.option}
+            category={category}
+            active={formData.tint === row.id}
+            onSelect={selectTint}
+          />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div
@@ -273,7 +378,7 @@ export default function CalculatorModal({
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="PPF Quote Calculator"
+      aria-label="Quote Calculator"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
@@ -353,70 +458,19 @@ export default function CalculatorModal({
                 </div>
               )}
 
-              {/* Step 2 — PPF */}
-              {step === 2 && (
-                <div className="space-y-2">
-                  {PPF_ROWS.map((row) => (
-                    <OptionRow
-                      key={row.id}
-                      id={row.id}
-                      label={row.label}
-                      option={row.option}
-                      category={category}
-                      active={formData.ppf === row.id}
-                      onSelect={selectPPF}
-                    />
-                  ))}
-                  {category === 'cybertruck' && (
-                    <OptionRow
-                      id="colorPPF"
-                      label={PPF_CYBERTRUCK_COLOR.name}
-                      option={PPF_CYBERTRUCK_COLOR}
-                      category={category}
-                      active={formData.ppf === 'colorPPF'}
-                      onSelect={selectPPF}
-                    />
-                  )}
-                </div>
-              )}
+              {/* Step 2 — the lead service for this page */}
+              {step === 2 && serviceRows(service)}
 
-              {/* Step 3 — Add-ons */}
+              {/* Step 3 — Add-ons: the other two services and windshield film */}
               {step === 3 && (
                 <div className="space-y-4">
-                  <div className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
-                    <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-1">Ceramic Coating</p>
-                    <p className="font-roboto text-[#DADADA]/50 text-xs mb-3">Select any combination — Wheels, Body, and Interior can be added together.</p>
-                    <div className="space-y-2">
-                      {CERAMIC_ROWS.map((row) => (
-                        <OptionRow
-                          key={row.id}
-                          id={row.id}
-                          label={row.label}
-                          option={row.option}
-                          category={category}
-                          active={formData.ceramic.includes(row.id)}
-                          onSelect={toggleCeramic}
-                        />
-                      ))}
+                  {SERVICES.filter((s) => s !== service).map((s) => (
+                    <div key={s} className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
+                      <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-1">{SERVICE_COPY[s].title}</p>
+                      <p className="font-roboto text-[#DADADA]/50 text-xs mb-3">{SERVICE_COPY[s].subtitle}</p>
+                      {serviceRows(s)}
                     </div>
-                  </div>
-
-                  <div className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
-                    <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-3">Window Tint</p>
-                    <div className="space-y-2">
-                      {TINT_ROWS.map((row) => (
-                        <OptionRow
-                          key={row.id}
-                          id={row.id}
-                          label={row.label}
-                          option={row.option}
-                          category={category}
-                          active={formData.tint === row.id}
-                          onSelect={selectTint}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  ))}
 
                   <div className="border border-[#DADADA]/10 bg-white/5 p-4 rounded-none">
                     <p className="font-kanit font-semibold text-white text-sm uppercase tracking-wide mb-3">Windshield Protection Film</p>
