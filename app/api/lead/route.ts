@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse, after } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { browserFromRequest, sendCapiEvent } from '@/lib/metaCapi'
+import { TEST_COOKIE, testModeFrom } from '@/lib/attribution'
 
 // Three channels with a timeout and one retry each can outlast the default.
 export const maxDuration = 30
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
     const message = clean(body.message, 2000)
     const partial = !!body.partial
     const source = body.source === 'quiz' ? 'quiz' : 'calculator'
+    const service = ['ppf', 'ceramic', 'tint'].includes(body.service) ? (body.service as string) : ''
     const bodyType = clean(body.bodyType, 40)
     const vehicleLabel = clean(body.vehicleLabel, 120)
     const vehicle = vehicleLabel || bodyType || 'N/A'
@@ -95,6 +97,9 @@ export async function POST(req: NextRequest) {
     // Every row gets an id, including a second lead in one visit that Meta is
     // not told about — a payment on either row must still be sendable.
     const leadId = eventId ?? `lead_${randomUUID()}`
+    // A browser in test mode (?test_event_code= or ?test=1): the row is marked
+    // Test, nobody is messaged, and Meta gets it under Test Events only.
+    const { test } = testModeFrom(req.cookies.get(TEST_COOKIE)?.value)
 
     const [firstName, ...rest] = name.split(/\s+/)
     const lastName = rest.join(' ')
@@ -116,7 +121,7 @@ export async function POST(req: NextRequest) {
         disable_web_page_preview: true,
       })
 
-    if (telegramOn) {
+    if (telegramOn && !test) {
       const lines = [
         partial ? '🟡 Partial HAUT Lead (phone only, from quiz result)' : '🚗 New HAUT Lead',
         `👤 Name: ${name || 'Not provided yet'}`,
@@ -147,12 +152,13 @@ export async function POST(req: NextRequest) {
             vehicle,
             services: coverageLabel,
             estimate: estimatedPrice > 0 ? priceLabel : '',
-            type: partial ? 'Partial' : 'Full',
+            type: test ? 'Test' : partial ? 'Partial' : 'Full',
             notes: message,
             form: sourceLabel,
             channel: channelLabel,
             ...utm,
             source,
+            service,
             fbc: browser.fbc || '',
             fbp: browser.fbp || '',
             event_id: leadId,
@@ -168,7 +174,7 @@ export async function POST(req: NextRequest) {
 
     // Channel names only — the errors can carry webhook responses.
     const summary = deliveries.map(({ channel, ok }) => ({ channel, ok }))
-    const record = { name, phone, email, vehicle, services: coverageLabel, price: priceLabel, source, partial, ...utm }
+    const record = { name, phone, email, vehicle, services: coverageLabel, price: priceLabel, source, partial, test, ...utm }
 
     if (deliveries.length === 0) {
       console.error('[/api/lead] LEAD_LOST no delivery channel is configured:', JSON.stringify(record))
@@ -189,7 +195,7 @@ export async function POST(req: NextRequest) {
     after(async () => {
       // A channel that failed while another took the lead: say so where a
       // person will see it, with the lead attached, so it can be re-entered.
-      if (failed.length && telegramOn && delivered.some((d) => d.channel === 'telegram')) {
+      if (failed.length && telegramOn && !test && delivered.some((d) => d.channel === 'telegram')) {
         await telegram(
           `⚠️ This lead did NOT reach: ${failed.map((d) => d.channel).join(', ')}. ` +
             `Add it by hand: ${name || '—'} · ${phone || '—'} · ${email || '—'}\n` +
@@ -208,7 +214,10 @@ export async function POST(req: NextRequest) {
             content_name: coverageLabel,
             content_category: source,
             source,
+            service: service || undefined,
             vehicle: bodyType || vehicle,
+            vehicle_category: bodyType || undefined,
+            package: coverageLabel,
             value: estimatedPrice > 0 ? estimatedPrice : undefined,
             currency: 'USD',
             lead_type: partial ? 'partial' : 'full',

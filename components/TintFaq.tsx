@@ -9,6 +9,7 @@ export default function TintFaq() {
 
   return (
     <section
+      data-track-section="faq"
       className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Window tint frequently asked questions"
     >

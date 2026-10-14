@@ -4,12 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useQuiz } from './QuizProvider'
-
-declare global {
-  interface Window {
-    fbq?: (...args: unknown[]) => void
-  }
-}
+import { track } from '@/lib/analytics'
 
 const HAZARDS = [
   {
@@ -154,9 +149,7 @@ export default function RoadHazards() {
                     type="button"
                     onClick={() => {
                       setActive(index)
-                      if (typeof window !== 'undefined' && window.fbq) {
-                        window.fbq('trackCustom', 'HazardViewed', { hazard: hazard.title })
-                      }
+                      track('HazardViewed', { hazard: hazard.title })
                     }}
                     className="w-full text-left py-6 flex items-start gap-4 cursor-pointer transition-colors duration-200 hover:bg-white/[0.03] active:bg-white/[0.06]"
                     aria-pressed={isActive}

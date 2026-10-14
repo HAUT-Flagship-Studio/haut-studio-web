@@ -50,6 +50,7 @@ const FEARS: Fear[] = [
 export default function InstallFears() {
   return (
     <section
+      data-track-section="install_fears"
       id="install-fears"
       className="bg-[#1A292E] precision-grid scroll-mt-24"
       aria-label="What owners worry about before a PPF install"

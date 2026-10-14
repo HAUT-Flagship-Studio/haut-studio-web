@@ -23,6 +23,7 @@ export default function PageHero({
 
   return (
     <section
+      data-track-location="hero"
       className="relative precision-grid pt-40 pb-20 md:pt-48 md:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden"
       aria-label="Page introduction"
     >

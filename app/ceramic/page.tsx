@@ -170,6 +170,7 @@ export default function CeramicPage() {
       <section
         className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
         aria-label="Ceramic coating pricing"
+        data-track-section="ppf_ceramic"
       >
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-[#9FFE0A]/40 p-8 flex flex-col">

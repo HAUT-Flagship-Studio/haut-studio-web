@@ -8,7 +8,10 @@
  * What it does:
  *   1. doPost — the site's /api/lead posts every enquiry here; one row each.
  *      A–I are the original nine columns, J–R what the site added on
- *      2026-10-09, S–V are filled in by the studio.
+ *      2026-10-09, S–V are filled in by the studio, W (service: ppf, ceramic
+ *      or tint) was added on 2026-10-14. A test lead (the site in test mode,
+ *      ?test=1 or ?test_event_code=…) arrives with Type "Test" and Status
+ *      "Тест", so no reminder ever goes out about it.
  *   2. onPaidEdit — when Status becomes "Оплатил" and Paid amount is filled,
  *      the row goes to https://hautppfstudio.com/api/purchase, which reports a
  *      Purchase to Meta. The result lands in "Sent to Meta". A row with ✓ is
@@ -38,8 +41,9 @@ const OPEN_HOURS = { 1: [9, 18], 2: [9, 18], 3: [9, 18], 4: [9, 18], 5: [9, 18],
 const REMIND_AFTER_MIN = [15, 60]
 const BOOKED_STALE_DAYS = 7
 
-const STATUSES = ['Новая', 'Связались', 'Записан', 'Оплатил', 'Отказ']
+const STATUSES = ['Новая', 'Связались', 'Записан', 'Оплатил', 'Отказ', 'Тест']
 const NEW = 'Новая'
+const TEST = 'Тест'
 const BOOKED = 'Записан'
 const PAID = 'Оплатил'
 
@@ -48,7 +52,7 @@ const COL = {
   timestamp: 1, name: 2, phone: 3, email: 4, vehicle: 5, services: 6, estimate: 7, type: 8, notes: 9,
   utmSource: 10, utmMedium: 11, utmCampaign: 12, utmContent: 13, fbclid: 14, source: 15,
   fbc: 16, fbp: 17, eventId: 18,
-  status: 19, amount: 20, paidDate: 21, sent: 22,
+  status: 19, amount: 20, paidDate: 21, sent: 22, service: 23,
 }
 const NEW_HEADERS = [
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'fbclid', 'source',
@@ -63,6 +67,8 @@ function leadsSheet() {
 function ensureLayout(sheet) {
   const header = sheet.getRange(1, COL.utmSource, 1, NEW_HEADERS.length)
   if (header.getValues()[0].join('') === '') header.setValues([NEW_HEADERS]).setFontWeight('bold')
+  const serviceHeader = sheet.getRange(1, COL.service)
+  if (serviceHeader.getValue() === '') serviceHeader.setValue('service').setFontWeight('bold')
 
   if (sheet.getMaxRows() < 2) sheet.insertRowAfter(1)
   const rows = sheet.getMaxRows() - 1
@@ -86,7 +92,9 @@ function doPost(e) {
   try {
     const sheet = leadsSheet()
     const d = JSON.parse(e.postData.contents)
-    if (sheet.getRange(1, COL.utmSource).getValue() === '') ensureLayout(sheet)
+    if (sheet.getRange(1, COL.utmSource).getValue() === '' || sheet.getRange(1, COL.service).getValue() === '') {
+      ensureLayout(sheet)
+    }
 
     sheet.appendRow([
       d.timestamp || new Date().toISOString(),
@@ -94,7 +102,8 @@ function doPost(e) {
       safe(d.estimate), safe(d.type), safe(d.notes),
       safe(d.utm_source), safe(d.utm_medium), safe(d.utm_campaign), safe(d.utm_content), safe(d.fbclid),
       safe(d.source), safe(d.fbc), safe(d.fbp), safe(d.event_id),
-      NEW, '', '', '',
+      d.type === 'Test' ? TEST : NEW, '', '', '',
+      safe(d.service),
     ])
 
     return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON)

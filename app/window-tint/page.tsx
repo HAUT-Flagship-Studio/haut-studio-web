@@ -233,6 +233,7 @@ export default function WindowTintPage() {
       <section
         className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
         aria-label="Complete your protection"
+        data-track-section="ppf_ceramic"
       >
         <div className="max-w-5xl mx-auto">
           <div className="mb-10 text-center">

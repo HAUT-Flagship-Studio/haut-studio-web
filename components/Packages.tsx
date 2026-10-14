@@ -28,6 +28,7 @@ export default function Packages({
 
   return (
     <section
+      data-track-section="packages"
       id="packages"
       className="bg-[#1A292E] precision-grid py-20 md:py-28 px-4 sm:px-6 lg:px-8"
       aria-label="Service packages"

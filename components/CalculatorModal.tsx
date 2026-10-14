@@ -15,16 +15,21 @@ import {
 } from '@/lib/pricing'
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
-import { PhoneLink } from './TrackedLinks'
+import { PhoneLink, SmsLink } from './TrackedLinks'
 import ConsentNotice from './ConsentNotice'
-import { trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
+import {
+  serviceOfPage,
+  setQuoteContext,
+  track,
+  trackLead,
+  trackLeadFailed,
+  trackLeadPixel,
+  trackPriceViewed,
+  trackQuoteFormViewed,
+  leadEventId,
+  LeadError,
+} from '@/lib/analytics'
 import { getAttribution } from '@/lib/attribution'
-
-declare global {
-  interface Window {
-    fbq?: (...args: unknown[]) => void
-  }
-}
 
 type CeramicChoice = keyof typeof CERAMIC
 type TintChoice = 'none' | keyof typeof TINT
@@ -42,12 +47,14 @@ const SERVICES: CalculatorService[] = ['ppf', 'ceramic', 'tint']
 
 /** `?service=ceramic` overrides the page; otherwise the path decides. */
 export function calculatorServiceFor(pathname: string, search = ''): CalculatorService {
-  const param = new URLSearchParams(search).get('service')
-  if (param && (SERVICES as string[]).includes(param)) return param as CalculatorService
-  if (pathname.startsWith('/ceramic')) return 'ceramic'
-  if (pathname.startsWith('/window-tint')) return 'tint'
-  return 'ppf'
+  const s = serviceOfPage(pathname, search)
+  return s === 'none' ? 'ppf' : s
 }
+
+// The owner's reply promise, 2026-10-14. The sheet script reminds the sales
+// chat at 15 minutes of studio hours, so the two agree.
+const REPLY_PROMISE = "we'll text you within 15 minutes during business hours"
+
 
 export interface CalculatorPrefill {
   vehicleLabel: string
@@ -186,8 +193,19 @@ export default function CalculatorModal({
   const [error, setError] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const focusedFields = useRef(new Set<string>())
+  const stepRef = useRef(step)
+  stepRef.current = step
+  const submittedRef = useRef(submitted)
+  submittedRef.current = submitted
 
-  useDialogA11y(isOpen, dialogRef, onClose)
+  /** Closed without sending a request: which step they left on. */
+  const handleClose = () => {
+    if (!submittedRef.current) track('CalculatorClosed', { last_step: stepRef.current, service })
+    onClose()
+  }
+
+  useDialogA11y(isOpen, dialogRef, handleClose)
 
   useEffect(() => {
     if (!isOpen) return
@@ -209,6 +227,7 @@ export default function CalculatorModal({
     }
     setSubmitted(false)
     setError('')
+    focusedFields.current = new Set()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
@@ -229,35 +248,79 @@ export default function CalculatorModal({
   // The final step is the estimate screen — the price summary sits above the
   // contact form. Reaching it with something selected is a PriceViewed.
   const packageName = selectedOptions.map((o) => o.name).join(', ')
+  const quote = { source: 'calculator' as const, service, vehicle: category, packageName, value: total }
   useEffect(() => {
-    if (isOpen && step === 4 && !submitted && total > 0) {
-      trackPriceViewed({ source: 'calculator', service, vehicle: category, packageName, value: total })
-    }
+    if (!isOpen || submitted) return
+    track('CalculatorStepViewed', { step, service })
+    if (step === 4) trackQuoteFormViewed(quote)
+    if (step === 4 && total > 0) trackPriceViewed(quote)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, step])
+
+  // A call or text tapped inside the calculator says what the quote was for.
+  useEffect(() => {
+    setQuoteContext(
+      isOpen
+        ? { service, vehicle_category: formData.bodyType || undefined, package: packageName || undefined, value: total || undefined }
+        : null
+    )
+  }, [isOpen, service, formData.bodyType, packageName, total])
 
   if (!isOpen) return null
 
   const canAdvance = step === 1 ? !!formData.bodyType : true
 
   const toggleCeramic = (id: CeramicChoice) => {
+    trackChoice('ceramic', CERAMIC[id], !formData.ceramic.includes(id))
     setFormData((p) => ({
       ...p,
       ceramic: p.ceramic.includes(id) ? p.ceramic.filter((c) => c !== id) : [...p.ceramic, id],
     }))
   }
 
-  const selectPPF = (id: PPFChoice) => setFormData((p) => ({ ...p, ppf: p.ppf === id ? 'none' : id }))
-  const selectTint = (id: TintChoice) => setFormData((p) => ({ ...p, tint: p.tint === id ? 'none' : id }))
-  const selectWSPF = (id: WSPFChoice) => setFormData((p) => ({ ...p, wspf: p.wspf === id ? 'none' : id }))
+  /** One-of-a-kind rows: picking another one undoes the previous choice. */
+  const swap = (s: CalculatorService | 'wspf', prev: ServiceOption | null, next: ServiceOption | null, same: boolean) => {
+    if (prev) trackChoice(s, prev, false)
+    if (!same) trackChoice(s, next, true)
+  }
+  const selectPPF = (id: PPFChoice) => {
+    swap('ppf', resolvePPFOption(formData.ppf), resolvePPFOption(id), formData.ppf === id)
+    setFormData((p) => ({ ...p, ppf: p.ppf === id ? 'none' : id }))
+  }
+  const selectTint = (id: TintChoice) => {
+    swap('tint', tintOption, id !== 'none' ? TINT[id] : null, formData.tint === id)
+    setFormData((p) => ({ ...p, tint: p.tint === id ? 'none' : id }))
+  }
+  const selectWSPF = (id: WSPFChoice) => {
+    swap('wspf', wspfOption, id !== 'none' ? WSPF[id] : null, formData.wspf === id)
+    setFormData((p) => ({ ...p, wspf: p.wspf === id ? 'none' : id }))
+  }
+
+  /**
+   * A choice made or undone. On the lead service's own step it is the
+   * package; anything chosen on the add-ons step is an add-on.
+   */
+  const trackChoice = (s: CalculatorService | 'wspf', option: ServiceOption | null, selected: boolean) => {
+    if (!option) return
+    const value = option.prices[category]
+    if (s === service) {
+      if (selected) track('PackageSelected', { service, package: option.name, value, vehicle_category: category })
+    } else {
+      track(selected ? 'AddonSelected' : 'AddonRemoved', { service, addon: option.name, value, vehicle_category: category })
+    }
+  }
 
   const handleNext = () => {
     if (!canAdvance) return
     // QuizStarted belongs to the 2-Min Assessment; the calculator has its own.
-    if (step === 1 && typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'CalculatorStarted', { vehicle: formData.bodyType, service })
-    }
+    if (step === 1) track('CalculatorStarted', { vehicle: formData.bodyType, vehicle_category: formData.bodyType, service })
     setStep((s) => Math.min(s + 1, totalSteps))
+  }
+
+  /** Straight from the prices to the form; the add-ons stay one Back away. */
+  const handleRequestQuote = () => {
+    track('CTAClick', { cta_id: 'calculator_request_quote', location: 'calculator', service })
+    setStep(4)
   }
 
   const handleBack = () => setStep((s) => Math.max(s - 1, 1))
@@ -280,6 +343,7 @@ export default function CalculatorModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          service,
           estimatedPrice: total,
           vehicleLabel: formData.vehicleLabel || formData.bodyType,
           selectedServices: selectedOptions.map((o) => o.name),
@@ -298,6 +362,7 @@ export default function CalculatorModal({
       setSubmitted(true)
     } catch (err) {
       trackLeadFailed(err instanceof LeadError ? err.reason : 'network', false)
+      track('FormError', { field: 'delivery', service })
       setError(`Something went wrong. Please call us directly at ${STUDIO.phone}.`)
     } finally {
       setSubmitting(false)
@@ -372,6 +437,22 @@ export default function CalculatorModal({
     )
   }
 
+  // Prefilled text for the studio: the package chosen and the car it is for.
+  const vehicleText =
+    formData.vehicleLabel || BODY_TYPES.find((b) => b.id === formData.bodyType)?.label || 'car'
+  const smsBody = `Hi, I'd like a quote for ${packageName || SERVICE_COPY[service].addon} on my ${vehicleText}`
+
+  const contactRow = (location: string) => (
+    <div className="grid grid-cols-2 gap-2">
+      <PhoneLink location={location} className="btn-outline py-2.5 text-sm text-center rounded-none">
+        Call now
+      </PhoneLink>
+      <SmsLink location={location} body={smsBody} className="btn-outline py-2.5 text-sm text-center rounded-none">
+        Text us
+      </SmsLink>
+    </div>
+  )
+
   return (
     <div
       ref={dialogRef}
@@ -379,7 +460,7 @@ export default function CalculatorModal({
       role="dialog"
       aria-modal="true"
       aria-label="Quote Calculator"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div className="card-folded bg-[#1A292E]/90 backdrop-blur border border-slate-800 w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
@@ -402,7 +483,7 @@ export default function CalculatorModal({
             <p className="font-roboto text-[#DADADA]/60 text-sm mt-0.5">{STEPS[step - 1].subtitle}</p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-[#DADADA] hover:text-[#9FFE0A] transition-colors flex-shrink-0"
             aria-label="Close calculator"
           >
@@ -422,10 +503,11 @@ export default function CalculatorModal({
           {submitted ? (
             <div className="text-center py-8">
               <div className="text-[#9FFE0A] text-5xl mb-4">✓</div>
-              <h3 className="font-kanit font-bold text-white text-2xl mb-2">Quote Received!</h3>
+              <h3 className="font-kanit font-bold text-white text-2xl mb-2">
+                Thanks, {REPLY_PROMISE}.
+              </h3>
               <p className="font-roboto text-[#DADADA]/70 text-sm leading-relaxed mb-4">
-                We&apos;ll review your vehicle details and send a precise quote within 2 hours.
-                For immediate assistance, call us directly.
+                Business hours: {STUDIO.hours}. For immediate assistance, call us directly.
               </p>
               {total > 0 && (
                 <div className="bg-[#9FFE0A]/10 border border-[#9FFE0A]/30 p-4 mb-6">
@@ -446,7 +528,10 @@ export default function CalculatorModal({
                     <button
                       key={b.id}
                       type="button"
-                      onClick={() => setFormData((p) => ({ ...p, bodyType: b.id }))}
+                      onClick={() => {
+                        if (formData.bodyType !== b.id) track('VehicleSelected', { vehicle_category: b.id, service })
+                        setFormData((p) => ({ ...p, bodyType: b.id }))
+                      }}
                       className={`p-4 border text-left transition-all duration-200 rounded-none ${
                         formData.bodyType === b.id ? 'border-[#9FFE0A] bg-[#9FFE0A]/10' : 'border-[#DADADA]/20 hover:border-[#9FFE0A]/40'
                       }`}
@@ -459,7 +544,12 @@ export default function CalculatorModal({
               )}
 
               {/* Step 2 — the lead service for this page */}
-              {step === 2 && serviceRows(service)}
+              {step === 2 && (
+                <div className="space-y-5">
+                  {serviceRows(service)}
+                  {contactRow('calculator_prices')}
+                </div>
+              )}
 
               {/* Step 3 — Add-ons: the other two services and windshield film */}
               {step === 3 && (
@@ -500,7 +590,21 @@ export default function CalculatorModal({
 
               {/* Step 4 — Contact Form */}
               {step === 4 && (
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                <form
+                  ref={formRef}
+                  onSubmit={handleSubmit}
+                  onFocus={(e) => {
+                    const name = (e.target as unknown as HTMLInputElement).name
+                    const field = name === 'message' ? 'notes' : name
+                    if (!field || focusedFields.current.has(field)) return
+                    focusedFields.current.add(field)
+                    track('FormFieldFocus', { field, service })
+                  }}
+                  onInvalidCapture={(e) => {
+                    track('FormError', { field: (e.target as HTMLInputElement).name || 'unknown', service })
+                  }}
+                  className="space-y-4"
+                >
                   {selectedOptions.length > 0 && (
                     <div className="space-y-2 mb-4">
                       {selectedOptions.map((o) => (
@@ -532,7 +636,7 @@ export default function CalculatorModal({
                   {[
                     { name: 'name', label: 'Full Name', type: 'text', placeholder: 'John Smith', required: true },
                     { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+1 (201) 555-0100', required: true },
-                    { name: 'email', label: 'Email Address', type: 'email', placeholder: 'john@email.com', required: true },
+                    { name: 'email', label: 'Email Address (optional)', type: 'email', placeholder: 'john@email.com', required: false },
                   ].map((field) => (
                     <div key={field.name}>
                       <label className="block font-roboto text-[#DADADA] text-xs tracking-wide uppercase mb-1.5">
@@ -565,8 +669,9 @@ export default function CalculatorModal({
                   {error && <p className="text-red-400 font-roboto text-sm">{error}</p>}
                   <ConsentNotice />
                   <p className="font-roboto text-[#DADADA]/40 text-xs text-center">
-                    No spam. No pressure. We reply within 2 hours.
+                    No spam. No pressure. We text back within 15 minutes during business hours.
                   </p>
+                  {contactRow('calculator_form')}
                 </form>
               )}
             </>
@@ -575,7 +680,8 @@ export default function CalculatorModal({
 
         {/* Fixed bottom nav bar — always visible, never clipped */}
         {!submitted && (
-          <div className="p-4 bg-[#111] border-t border-white/10 flex justify-between items-center z-10 flex-shrink-0 gap-3">
+          <div className="p-4 bg-[#111] border-t border-white/10 z-10 flex-shrink-0 space-y-2">
+          <div className="flex justify-between items-center gap-3">
             {step > 1 ? (
               <button
                 type="button"
@@ -609,6 +715,17 @@ export default function CalculatorModal({
                 {submitting ? 'Sending...' : 'Submit My Request →'}
               </button>
             )}
+          </div>
+          {step === 2 && (
+            <button
+              type="button"
+              onClick={handleRequestQuote}
+              className="btn-outline w-full py-3 text-sm tracking-wider rounded-none"
+              id="quiz-request-quote"
+            >
+              Request my quote
+            </button>
+          )}
           </div>
         )}
       </div>

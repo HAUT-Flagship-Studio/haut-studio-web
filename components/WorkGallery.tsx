@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WORK_GALLERY } from '@/lib/data'
+import { track } from '@/lib/analytics'
 
 export default function WorkGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -24,6 +25,7 @@ export default function WorkGallery() {
 
   return (
     <section
+      data-track-section="gallery"
       id="gallery"
       className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Completed vehicle gallery"
@@ -44,7 +46,10 @@ export default function WorkGallery() {
           {WORK_GALLERY.map((item, i) => (
             <button
               key={item.id}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => {
+                setActiveIndex(i)
+                track('GalleryOpen', { image_id: item.id, vehicle: item.vehicle })
+              }}
               className="card-folded group relative aspect-square overflow-hidden border border-slate-800 hover:border-[#9FFE0A]/40 transition-all duration-300"
               aria-label={`View ${item.vehicle} — ${item.service}`}
             >

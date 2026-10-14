@@ -20,6 +20,7 @@ function VideoCard({ item }: { item: VideoTestimonialItem }) {
     >
       <video
         ref={videoRef}
+        data-video-id={item.id}
         src={item.video}
         poster={item.poster}
         controls={playing}
@@ -72,6 +73,7 @@ export default function VideoTestimonials({
 
   return (
     <section
+      data-track-section="video_reviews"
       className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Video testimonials"
     >

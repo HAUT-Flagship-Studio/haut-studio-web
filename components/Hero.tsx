@@ -39,6 +39,7 @@ export default function Hero({
 
   return (
     <section
+      data-track-location="hero"
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1A292E]"
       aria-label="Hero section"

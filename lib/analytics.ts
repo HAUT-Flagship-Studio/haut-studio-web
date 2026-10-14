@@ -1,3 +1,5 @@
+import { getAttribution } from './attribution'
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void
@@ -5,22 +7,162 @@ declare global {
   }
 }
 
+// ── Page context ────────────────────────────────────────────────────────────
+
+export type Service = 'ppf' | 'ceramic' | 'tint'
+const SERVICES: Service[] = ['ppf', 'ceramic', 'tint']
+
 /**
- * A tap on the phone number. Sent to Meta as the standard `Contact` event —
- * a custom `PhoneClick` could be counted but never optimised for, and for a
- * studio a call is as good as a form.
+ * The service a page is about: /ceramic → ceramic, /window-tint → tint,
+ * /ppf → ppf. `?service=` overrides the path, which is how an ad link opens
+ * the calculator on a given service from any page.
  */
-export function trackPhoneClick(location: string) {
-  if (typeof window === 'undefined') return
-  window.gtag?.('event', 'phone_click', { link_location: location })
-  window.fbq?.('track', 'Contact', { content_name: 'phone', location }, { eventID: newEventId() })
+export function serviceOfPage(pathname: string, search = ''): Service | 'none' {
+  const param = new URLSearchParams(search).get('service')
+  if (param && (SERVICES as string[]).includes(param)) return param as Service
+  if (pathname.startsWith('/ceramic')) return 'ceramic'
+  if (pathname.startsWith('/window-tint')) return 'tint'
+  if (pathname.startsWith('/ppf')) return 'ppf'
+  return 'none'
 }
 
-export function trackAddressClick(location: string) {
-  if (typeof window === 'undefined') return
-  window.gtag?.('event', 'address_click', { link_location: location })
-  window.fbq?.('trackCustom', 'AddressClick', { location })
+export type PageType = 'home' | 'ppf' | 'ceramic' | 'tint' | 'process' | 'location' | 'other'
+
+export function pageTypeOf(pathname: string): PageType {
+  if (pathname === '/') return 'home'
+  if (pathname.startsWith('/ppf')) return 'ppf'
+  if (pathname.startsWith('/ceramic')) return 'ceramic'
+  if (pathname.startsWith('/window-tint')) return 'tint'
+  if (pathname.startsWith('/our-process')) return 'process'
+  if (pathname.startsWith('/service-area')) return 'location'
+  return 'other'
 }
+
+/** What every event carries: where it happened and which ad brought the visitor. */
+function pageParams() {
+  const { pathname, search } = window.location
+  const a = getAttribution()
+  return {
+    page_type: pageTypeOf(pathname),
+    service: serviceOfPage(pathname, search),
+    page_path: pathname,
+    utm_source: a.utm_source,
+    utm_medium: a.utm_medium,
+    utm_campaign: a.utm_campaign,
+    utm_content: a.utm_content,
+  }
+}
+
+/**
+ * While the calculator is open, what the visitor has chosen so far. A phone
+ * or text tap from inside it then says which quote it was about.
+ */
+let quoteContext: Record<string, unknown> | null = null
+export function setQuoteContext(ctx: Record<string, unknown> | null) {
+  quoteContext = ctx
+}
+
+// ── Sending ─────────────────────────────────────────────────────────────────
+
+/** No empty values, nothing long: Meta's parameters are for counting, not storage. */
+function compact(params: Record<string, unknown>) {
+  const out: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(params)) {
+    if (v === undefined || v === null || v === '') continue
+    out[k] = typeof v === 'string' ? v.slice(0, 200) : v
+  }
+  if (typeof out.value === 'number') out.currency = 'USD'
+  return out
+}
+
+type ServerEvent = { eventName: string; eventId: string; eventSourceUrl: string; customData: Record<string, unknown> }
+let serverQueue: ServerEvent[] = []
+let flushTimer: ReturnType<typeof setTimeout> | undefined
+
+/**
+ * Server copies leave in batches, a moment after the browser event, so a
+ * page view and the view-content beside it share one request. keepalive lets
+ * the last batch finish when the visitor leaves.
+ */
+export function flushServerEvents() {
+  clearTimeout(flushTimer)
+  if (serverQueue.length === 0) return
+  const events = serverQueue
+  serverQueue = []
+  fetch('/api/meta-event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    keepalive: true,
+    body: JSON.stringify({ events }),
+  }).catch(() => {})
+}
+
+function queueServerEvent(event: ServerEvent) {
+  serverQueue.push(event)
+  clearTimeout(flushTimer)
+  flushTimer = setTimeout(flushServerEvents, 300)
+}
+
+const firedThisPage = new Set<string>()
+
+/** A new page (client-side navigation included): one-off events may fire again. */
+export function resetPageOnce() {
+  firedThisPage.clear()
+}
+
+export interface TrackOptions {
+  /** A standard Meta event (PageView, Lead, Contact…) rather than a custom one. */
+  standard?: boolean
+  /** Also send a Conversions API copy with the same event_id. */
+  capi?: boolean
+  /** Fire at most once per page under this key. */
+  once?: string
+  /** An id already used elsewhere — the Lead's, which the server sends itself. */
+  eventId?: string
+}
+
+/**
+ * One Meta Pixel event, with the page context added and an event_id, and —
+ * for the key events — its server twin. Never carries a name, phone or email:
+ * those reach Meta only hashed, inside the Lead's Conversions API copy.
+ */
+export function track(name: string, params: Record<string, unknown> = {}, opts: TrackOptions = {}) {
+  if (typeof window === 'undefined') return undefined
+  if (opts.once !== undefined) {
+    const key = `${name}:${opts.once}`
+    if (firedThisPage.has(key)) return undefined
+    firedThisPage.add(key)
+  }
+  const eventId = opts.eventId ?? newEventId()
+  const data = compact({ ...pageParams(), ...params })
+  window.fbq?.(opts.standard ? 'track' : 'trackCustom', name, data, { eventID: eventId })
+  if (opts.capi) queueServerEvent({ eventName: name, eventId, eventSourceUrl: window.location.href, customData: data })
+  return eventId
+}
+
+// ── Contacts ────────────────────────────────────────────────────────────────
+
+const CONTACT_EVENT = { phone: 'PhoneClick', sms: 'SmsClick', email: 'EmailClick' } as const
+
+/**
+ * A tap on the phone number, a text link or an email address: the specific
+ * event, plus Meta's standard `Contact` — the one ads can optimise for, and
+ * the name phone taps have used since 2026-10-09.
+ */
+export function trackContact(kind: keyof typeof CONTACT_EVENT, location: string) {
+  if (typeof window === 'undefined') return
+  const params = { location, contact_method: kind, ...(quoteContext ?? {}) }
+  window.gtag?.('event', `${kind}_click`, { link_location: location })
+  track(CONTACT_EVENT[kind], params, { capi: true })
+  track('Contact', { content_name: kind, ...params }, { standard: true, capi: true })
+}
+
+export function trackAddressClick(location: string, directions = false) {
+  if (typeof window === 'undefined') return
+  window.gtag?.('event', directions ? 'directions_click' : 'address_click', { link_location: location })
+  track(directions ? 'DirectionsClick' : 'AddressClick', { location })
+}
+
 
 /**
  * The quote form's outcome, to GA4 as well as the Pixel.
@@ -86,7 +228,7 @@ export type QuoteSource = 'calculator' | 'quiz'
 export interface QuoteDetails {
   source: QuoteSource
   /** The service the flow led with — ppf, ceramic or tint — so Meta can count each separately. */
-  service: 'ppf' | 'ceramic' | 'tint'
+  service: Service
   /** Body type: sedan, suv, truck, exotic, cybertruck. */
   vehicle: string
   /** The services shown or chosen, joined — Meta's content_name. */
@@ -94,13 +236,16 @@ export interface QuoteDetails {
   value: number
 }
 
-function quoteParams(d: QuoteDetails) {
+/** `vehicle` and `content_name` are the names used since 2026-10-09; the other two, the spec's of 2026-10-14. */
+export function quoteParams(d: QuoteDetails) {
   return {
     content_name: d.packageName || 'none selected',
     content_category: d.source,
     source: d.source,
     service: d.service,
     vehicle: d.vehicle,
+    vehicle_category: d.vehicle,
+    package: d.packageName || 'none selected',
     value: d.value,
     currency: 'USD',
   }
@@ -130,23 +275,13 @@ export function trackPriceViewed(d: QuoteDetails) {
   }
   priceViewedThisLoad = true
 
-  const eventId = newEventId()
-  const params = quoteParams(d)
-  window.fbq?.('trackCustom', 'PriceViewed', params, { eventID: eventId })
+  track('PriceViewed', quoteParams(d), { capi: true })
   window.gtag?.('event', 'price_viewed', { source: d.source, value: d.value, currency: 'USD' })
+}
 
-  // The server twin. keepalive lets it finish if the visitor closes the tab.
-  fetch('/api/meta-event', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    keepalive: true,
-    body: JSON.stringify({
-      eventName: 'PriceViewed',
-      eventId,
-      eventSourceUrl: window.location.href,
-      customData: params,
-    }),
-  }).catch(() => {})
+/** The calculator's contact step came on screen. Once per page; a server copy too. */
+export function trackQuoteFormViewed(d: QuoteDetails) {
+  track('QuoteFormViewed', quoteParams(d), { capi: true, once: 'form' })
 }
 
 const LEAD_KEY = 'haut_lead_counted'
@@ -186,5 +321,5 @@ export function trackLeadPixel(d: QuoteDetails, eventId: string | undefined) {
   } catch {
     // Storage blocked — once per page load instead.
   }
-  window.fbq?.('track', 'Lead', quoteParams(d), { eventID: eventId })
+  track('Lead', quoteParams(d), { standard: true, eventId })
 }

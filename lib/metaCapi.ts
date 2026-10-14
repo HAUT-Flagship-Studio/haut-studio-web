@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import type { NextRequest } from 'next/server'
+import { ATTRIBUTION_COOKIE, parseAttribution, TEST_COOKIE, testModeFrom } from './attribution'
 
 /**
  * Meta Conversions API — the server-side copy of a Pixel event.
@@ -15,6 +16,8 @@ import type { NextRequest } from 'next/server'
  *
  * Env: META_CAPI_TOKEN (required to send), META_TEST_EVENT_CODE (only while
  * testing in Events Manager → Test Events; remove it after), META_GRAPH_VERSION.
+ * A browser in test mode (lib/attribution.ts, `?test_event_code=`) sends its
+ * own events to Test Events without the env variable.
  */
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '2372259143543220'
@@ -56,6 +59,10 @@ export interface CapiBrowser {
   fbc?: string
   ip?: string
   ua?: string
+  /** The site's anonymous visitor id (cookie haut_eid), the Pixel's external_id. */
+  externalId?: string
+  /** Set while the browser is in test mode: its events go to Test Events only. */
+  testEventCode?: string
 }
 
 /** The visitor's browser context, from the request that carried their lead. */
@@ -63,8 +70,17 @@ export function browserFromRequest(req: NextRequest, fbclid?: string, fbclidAt?:
   // Pixel-set cookies travel with the request: same domain.
   const fbp = req.cookies.get('_fbp')?.value
   let fbc = req.cookies.get('_fbc')?.value
+  if (!fbclid) {
+    // The ad click this browser came from, kept by the site for 90 days.
+    const a = parseAttribution(req.cookies.get(ATTRIBUTION_COOKIE)?.value)
+    fbclid = a.fbclid
+    fbclidAt = a.fbclid_at
+  }
   if (!fbc && fbclid) fbc = `fb.1.${fbclidAt ?? Date.now()}.${fbclid}`
+  const externalId = req.cookies.get('haut_eid')?.value
   return {
+    externalId: externalId && /^[\w-]{8,64}$/.test(externalId) ? externalId : undefined,
+    testEventCode: testModeFrom(req.cookies.get(TEST_COOKIE)?.value).testEventCode,
     fbp,
     fbc,
     ip: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || undefined,
@@ -73,7 +89,7 @@ export function browserFromRequest(req: NextRequest, fbclid?: string, fbclidAt?:
 }
 
 export interface CapiEvent {
-  eventName: 'Lead' | 'PriceViewed' | 'Purchase'
+  eventName: string
   eventId: string
   /**
    * `website` for what happened on the site. `physical_store` for a payment at
@@ -95,10 +111,7 @@ export interface CapiResult {
   detail: string
 }
 
-export async function sendCapiEvent(event: CapiEvent): Promise<CapiResult> {
-  const token = process.env.META_CAPI_TOKEN
-  if (!token) return { ok: false, detail: 'META_CAPI_TOKEN is not set' }
-
+function toMeta(event: CapiEvent) {
   const u = event.user ?? {}
   const b = event.browser ?? {}
   const email = normEmail(u.email)
@@ -115,24 +128,37 @@ export async function sendCapiEvent(event: CapiEvent): Promise<CapiResult> {
     ph: phone ? [sha256(phone)] : undefined,
     fn: fn ? [sha256(fn)] : undefined,
     ln: ln ? [sha256(ln)] : undefined,
+    // The Pixel hashes the same raw id it was given at init, so the two match.
+    external_id: b.externalId ? [sha256(b.externalId)] : undefined,
     // Leads only ever come through the US site of a NJ studio.
     country: [sha256('us')],
   }
 
-  const body: Record<string, unknown> = {
-    data: [
-      {
-        event_name: event.eventName,
-        event_time: event.eventTime ?? Math.floor(Date.now() / 1000),
-        event_id: event.eventId,
-        event_source_url: event.eventSourceUrl,
-        action_source: event.actionSource ?? 'website',
-        user_data,
-        custom_data: event.customData,
-      },
-    ],
+  return {
+    event_name: event.eventName,
+    event_time: event.eventTime ?? Math.floor(Date.now() / 1000),
+    event_id: event.eventId,
+    event_source_url: event.eventSourceUrl,
+    action_source: event.actionSource ?? 'website',
+    user_data,
+    custom_data: event.customData,
   }
-  if (process.env.META_TEST_EVENT_CODE) body.test_event_code = process.env.META_TEST_EVENT_CODE
+}
+
+export async function sendCapiEvent(event: CapiEvent): Promise<CapiResult> {
+  return sendCapiEvents([event])
+}
+
+/** Several events in one request — Meta takes up to 1,000. All from one browser, so one test code. */
+export async function sendCapiEvents(events: CapiEvent[]): Promise<CapiResult> {
+  const token = process.env.META_CAPI_TOKEN
+  if (!token) return { ok: false, detail: 'META_CAPI_TOKEN is not set' }
+  if (events.length === 0) return { ok: true, detail: 'nothing to send' }
+
+  const testCode = events[0].browser?.testEventCode || process.env.META_TEST_EVENT_CODE
+  const body: Record<string, unknown> = { data: events.map(toMeta) }
+  if (testCode) body.test_event_code = testCode
+  const names = events.map((e) => `${e.eventName} ${e.eventId}`).join(', ')
 
   try {
     const res = await fetch(
@@ -146,15 +172,15 @@ export async function sendCapiEvent(event: CapiEvent): Promise<CapiResult> {
     )
     const text = (await res.text()).slice(0, 500)
     if (!res.ok) {
-      console.error(`[capi] ${event.eventName} rejected: ${res.status} ${text}`)
+      console.error(`[capi] ${names} rejected: ${res.status} ${text}`)
       return { ok: false, detail: `Meta ${res.status}: ${text}` }
     }
     // The only proof in the logs that Meta took it: events_received and the trace id.
-    const test = process.env.META_TEST_EVENT_CODE ? ' (test)' : ''
-    console.log(`[capi] ${event.eventName} ${event.eventId} accepted${test}: ${text}`)
+    const test = testCode ? ' (test)' : ''
+    console.log(`[capi] ${names} accepted${test}: ${text}`)
     return { ok: true, detail: `accepted${test}: ${text}` }
   } catch (error) {
-    console.error(`[capi] ${event.eventName} failed:`, error)
+    console.error(`[capi] ${names} failed:`, error)
     return { ok: false, detail: String(error) }
   }
 }

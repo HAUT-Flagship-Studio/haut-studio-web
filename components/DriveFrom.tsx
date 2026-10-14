@@ -42,6 +42,7 @@ export default function DriveFrom({ service }: { service: string }) {
 
   return (
     <section
+      data-track-section="towns"
       className="bg-[#1A292E] py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800"
       aria-label="Where clients drive from"
     >

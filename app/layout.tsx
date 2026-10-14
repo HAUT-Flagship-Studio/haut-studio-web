@@ -5,7 +5,7 @@ import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { QuizProvider } from '@/components/QuizProvider'
-import AttributionCapture from '@/components/AttributionCapture'
+import SiteTracking from '@/components/SiteTracking'
 import {
   PPF_PACKAGES,
   CERAMIC_PACKAGE,
@@ -203,7 +203,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <AttributionCapture />
+        <SiteTracking />
         <QuizProvider>
           <Header />
           <div id="main-content" tabIndex={-1}>
@@ -223,8 +223,14 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Meta Pixel */}
-        <Script id="meta-pixel" strategy="afterInteractive">
+        {/* Meta Pixel. Loaded before hydration so components can queue events
+            from their first effect; fbevents.js itself still loads async.
+            PageView is not fired here: components/SiteTracking.tsx sends it on
+            every page, client-side navigations included, with an event_id and
+            a Conversions API twin — hence disablePushState, which stops the
+            Pixel counting those navigations a second time. external_id is the
+            visitor's anonymous first-party id, the same one the server sends. */}
+        <Script id="meta-pixel" strategy="beforeInteractive">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -234,8 +240,14 @@ export default function RootLayout({
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${META_PIXEL_ID}');
-            fbq('track', 'PageView');
+            var eid;
+            try {
+              var m = document.cookie.match(/(?:^|; )haut_eid=([\\w-]{8,64})/);
+              eid = m ? m[1] : (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+              document.cookie = 'haut_eid=' + eid + ';path=/;max-age=31536000;samesite=lax' + (location.protocol === 'https:' ? ';secure' : '');
+            } catch (err) {}
+            fbq.disablePushState = true;
+            fbq('init', '${META_PIXEL_ID}', eid ? { external_id: eid } : {});
           `}
         </Script>
         <noscript>

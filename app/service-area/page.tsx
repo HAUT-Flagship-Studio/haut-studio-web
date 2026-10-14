@@ -89,7 +89,7 @@ export default function ServiceAreaPage() {
       </section>
 
       {/* The list */}
-      <section className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8" aria-label="Towns served">
+      <section data-track-section="towns" className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8" aria-label="Towns served">
         <div className="max-w-7xl mx-auto space-y-14">
           {SERVICE_AREA_COUNTIES.map((county) => {
             const towns = townsInCounty(county)

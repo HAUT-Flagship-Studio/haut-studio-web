@@ -22,6 +22,7 @@ export default function ProcessBanner({
 }) {
   return (
     <section
+      data-track-section="install_process"
       className="bg-[#1A292E] precision-grid py-16 md:py-24 px-4 sm:px-6 lg:px-8"
       aria-label="Our process preview"
     >

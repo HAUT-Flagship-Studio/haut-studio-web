@@ -11,7 +11,7 @@ export default function QuoteButton({
 }) {
   const { openQuiz } = useQuiz()
   return (
-    <button onClick={openQuiz} className={className}>
+    <button onClick={openQuiz} className={className} data-cta="get_estimate">
       {label}
     </button>
   )

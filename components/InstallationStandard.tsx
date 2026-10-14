@@ -24,6 +24,7 @@ const PROTOCOL_STEPS = [
 export default function InstallationStandard() {
   return (
     <section
+      data-track-section="install_process"
       id="process"
       className="bg-[#1A292E] precision-grid scroll-mt-24"
       aria-label="The HAUT installation standard"

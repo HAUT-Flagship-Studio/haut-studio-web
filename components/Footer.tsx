@@ -147,6 +147,7 @@ export default function Footer() {
                       <button
                         type="button"
                         onClick={openQuiz}
+                        data-cta="footer_link_estimate"
                         className="font-roboto text-[#DADADA]/60 hover:text-[#9FFE0A] text-sm transition-colors text-left"
                       >
                         {link.label}

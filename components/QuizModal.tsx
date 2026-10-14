@@ -6,7 +6,7 @@ import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
 import ConsentNotice from './ConsentNotice'
-import { trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
+import { track, trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
 import { getAttribution } from '@/lib/attribution'
 
 declare global {
@@ -221,11 +221,9 @@ export default function QuizModal({
 
   const handleNext = () => {
     if (!canAdvance) return
-    if (typeof window !== 'undefined' && window.fbq) {
-      // Started means answered something — opening the modal is not a start.
-      if (step === 1) window.fbq('trackCustom', 'QuizStarted', { vehicle: answers.bodyType })
-      window.fbq('trackCustom', 'QuizStep', { step: step + 1 })
-    }
+    // Started means answered something — opening the modal is not a start.
+    if (step === 1) track('QuizStarted', { vehicle: answers.bodyType, vehicle_category: answers.bodyType })
+    track('QuizStep', { step: step + 1 })
     setStep((s) => Math.min(s + 1, 6))
   }
 

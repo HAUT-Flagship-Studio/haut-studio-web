@@ -28,6 +28,7 @@ export default function Reviews({ limit, showHeader = true }: { limit?: number; 
 
   return (
     <section
+      data-track-section="reviews"
       id="reviews"
       className="bg-[#1A292E] precision-grid py-16 md:py-24 overflow-hidden"
       aria-label="Customer reviews"
