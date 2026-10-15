@@ -1,4 +1,4 @@
-import { getAttribution } from './attribution'
+import { getAttribution, isQuietTest } from './attribution'
 
 declare global {
   interface Window {
@@ -135,6 +135,10 @@ export function track(name: string, params: Record<string, unknown> = {}, opts: 
   }
   const eventId = opts.eventId ?? newEventId()
   const data = compact({ ...pageParams(), ...params })
+  if (isQuietTest()) {
+    console.info('[test] not sent to Meta:', name, data)
+    return eventId
+  }
   window.fbq?.(opts.standard ? 'track' : 'trackCustom', name, data, { eventID: eventId })
   if (opts.capi) queueServerEvent({ eventName: name, eventId, eventSourceUrl: window.location.href, customData: data })
   return eventId

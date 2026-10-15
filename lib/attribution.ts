@@ -113,9 +113,10 @@ export function getAttribution(): Attribution {
  * Test mode, for checking the funnel without bothering the studio.
  *
  * Open any page with `?test_event_code=TEST12345` (the code from Events
- * Manager → Test Events) or `?test=1`. For the rest of that browser session:
- * server events go to Meta's Test Events tab instead of the statistics, and a
+ * Manager → Test Events) or `?test=1`. For the rest of that browser session a
  * quote form lands in the leads sheet marked Test, with no Telegram message.
+ * With a code, server events go to Meta's Test Events tab instead of the
+ * statistics; with `?test=1`, no event goes to Meta at all, browser or server.
  * Closing the browser ends it; `?test=0` ends it sooner.
  */
 const TEST_KEY = 'haut_test'
@@ -133,10 +134,20 @@ function captureTestMode(url: URL) {
   }
 }
 
-/** The cookie's value as the server sees it: a Test Events code, '1', or nothing. */
-export function testModeFrom(value: string | undefined): { test: boolean; testEventCode?: string } {
-  if (!value) return { test: false }
-  return { test: true, testEventCode: TEST_CODE.test(value) ? value : undefined }
+/**
+ * The cookie's value as the server sees it: a Test Events code, '1', or
+ * nothing. `quiet` is ?test=1 — no code, so nothing may reach Meta at all:
+ * a test Lead in the live statistics would teach the ads a fake conversion.
+ */
+export function testModeFrom(value: string | undefined): { test: boolean; testEventCode?: string; quiet: boolean } {
+  if (!value) return { test: false, quiet: false }
+  const testEventCode = TEST_CODE.test(value) ? value : undefined
+  return { test: true, testEventCode, quiet: !testEventCode }
+}
+
+/** In the browser: is this session a quiet test (?test=1)? */
+export function isQuietTest() {
+  return testModeFrom(readCookie(TEST_KEY)).quiet
 }
 
 export const TEST_COOKIE = TEST_KEY

@@ -63,6 +63,8 @@ export interface CapiBrowser {
   externalId?: string
   /** Set while the browser is in test mode: its events go to Test Events only. */
   testEventCode?: string
+  /** A test session without a code (?test=1): nothing is sent. */
+  quiet?: boolean
 }
 
 /** The visitor's browser context, from the request that carried their lead. */
@@ -78,9 +80,11 @@ export function browserFromRequest(req: NextRequest, fbclid?: string, fbclidAt?:
   }
   if (!fbc && fbclid) fbc = `fb.1.${fbclidAt ?? Date.now()}.${fbclid}`
   const externalId = req.cookies.get('haut_eid')?.value
+  const test = testModeFrom(req.cookies.get(TEST_COOKIE)?.value)
   return {
     externalId: externalId && /^[\w-]{8,64}$/.test(externalId) ? externalId : undefined,
-    testEventCode: testModeFrom(req.cookies.get(TEST_COOKIE)?.value).testEventCode,
+    testEventCode: test.testEventCode,
+    quiet: test.quiet,
     fbp,
     fbc,
     ip: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || undefined,
@@ -154,6 +158,7 @@ export async function sendCapiEvents(events: CapiEvent[]): Promise<CapiResult> {
   const token = process.env.META_CAPI_TOKEN
   if (!token) return { ok: false, detail: 'META_CAPI_TOKEN is not set' }
   if (events.length === 0) return { ok: true, detail: 'nothing to send' }
+  if (events[0].browser?.quiet) return { ok: true, detail: 'test session (?test=1): not sent' }
 
   const testCode = events[0].browser?.testEventCode || process.env.META_TEST_EVENT_CODE
   const body: Record<string, unknown> = { data: events.map(toMeta) }
