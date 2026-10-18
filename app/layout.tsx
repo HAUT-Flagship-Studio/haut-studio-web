@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { QuizProvider } from '@/components/QuizProvider'
 import SiteTracking from '@/components/SiteTracking'
+import Clarity from '@/components/Clarity'
 import {
   PPF_PACKAGES,
   CERAMIC_PACKAGE,
@@ -204,6 +205,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteTracking />
+        <Clarity />
         <QuizProvider>
           <Header />
           <div id="main-content" tabIndex={-1}>

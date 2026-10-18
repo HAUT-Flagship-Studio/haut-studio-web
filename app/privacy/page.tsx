@@ -5,14 +5,14 @@ import { STUDIO } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Privacy Policy | HAUT Flagship Studio',
   description:
-    'What HAUT Flagship Studio collects when you request an estimate, how the Meta Pixel and Google Analytics are used, what is shared with advertising platforms, and how to stop calls, texts and email.',
+    'What HAUT Flagship Studio collects when you request an estimate, how the Meta Pixel, Google Analytics and Microsoft Clarity are used, what is shared with advertising platforms, and how to stop calls, texts and email.',
   alternates: {
     canonical: 'https://hautppfstudio.com/privacy',
   },
 }
 
 // Written to match what the code actually does — app/api/lead/route.ts,
-// app/api/meta-event/route.ts and lib/metaCapi.ts. If either changes what it
+// app/api/meta-event/route.ts, lib/metaCapi.ts and components/Clarity.tsx. If any of them changes what it
 // sends or to whom, this page changes with it.
 const SECTIONS: LegalSection[] = [
   {
@@ -43,7 +43,7 @@ const SECTIONS: LegalSection[] = [
     ),
   },
   {
-    heading: 'Cookies, the Meta Pixel and Google Analytics',
+    heading: 'Cookies, the Meta Pixel, Google Analytics and Microsoft Clarity',
     body: (
       <>
         <p>
@@ -59,6 +59,18 @@ const SECTIONS: LegalSection[] = [
           , and Meta lets you control ad personalisation at{' '}
           <a href="https://www.facebook.com/adpreferences" target="_blank" rel="noopener noreferrer">
             facebook.com/adpreferences
+          </a>
+          .
+        </p>
+        <p>
+          <strong>Microsoft Clarity.</strong> To see where the site is hard to use, we record how visitors move through
+          its pages — scrolling, taps and clicks, and which page they leave from — with Microsoft Clarity, which sets
+          its own cookies (<code>_clck</code>, <code>_clsk</code>). The fields where you type your name, phone number,
+          email or notes are hidden from these recordings, so what you enter there is never captured. Microsoft keeps
+          the recordings for up to 30 days, and heatmaps built from them for up to 13 months; we use them only to
+          improve this site. Microsoft&apos;s privacy statement is at{' '}
+          <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener noreferrer">
+            privacy.microsoft.com
           </a>
           .
         </p>
@@ -172,7 +184,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="October 9, 2026"
+      updated="October 18, 2026"
       intro={
         <p>
           This policy explains what {STUDIO.name} ({STUDIO.address}) collects through this website, why, who it is

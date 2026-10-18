@@ -4,6 +4,7 @@ declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void
     fbq?: (...args: unknown[]) => void
+    clarity?: ((...args: unknown[]) => void) & { q?: unknown[] }
   }
 }
 
@@ -135,6 +136,9 @@ export function track(name: string, params: Record<string, unknown> = {}, opts: 
   }
   const eventId = opts.eventId ?? newEventId()
   const data = compact({ ...pageParams(), ...params })
+  mirrorToGa(name, data)
+  // A Clarity event marks the recording, so "saw a price, sent nothing" is a filter.
+  window.clarity?.('event', name)
   if (isQuietTest()) {
     console.info('[test] not sent to Meta:', name, data)
     return eventId
@@ -142,6 +146,45 @@ export function track(name: string, params: Record<string, unknown> = {}, opts: 
   window.fbq?.(opts.standard ? 'track' : 'trackCustom', name, data, { eventID: eventId })
   if (opts.capi) queueServerEvent({ eventName: name, eventId, eventSourceUrl: window.location.href, customData: data })
   return eventId
+}
+
+/**
+ * Already in GA4 under their own names (GA's automatic page_view, the
+ * explicit *_click / price_viewed / generate_lead calls), or Meta-only by nature.
+ */
+const NOT_MIRRORED = new Set([
+  'PageView', 'ViewContent', 'Contact', 'PhoneClick', 'SmsClick', 'EmailClick',
+  'AddressClick', 'DirectionsClick', 'PriceViewed', 'Lead',
+])
+
+/** GA4 keeps the attribution itself; the utm copies would only use up dimensions. */
+const GA_DROPPED_PARAMS = new Set(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'page_path', 'content_name', 'content_category'])
+
+/**
+ * The behaviour events, to GA4 as well — until 2026-10-18 scrolling, sections,
+ * quiz and calculator steps reached Meta only, which shows totals and nothing
+ * per page. Names become GA's snake_case; the numbered families
+ * (ScrollDepth50, Engaged30s, VideoProgress25) become one event with a number.
+ * Every parameter sent here needs a custom dimension in the property, or GA4
+ * drops it — the list of record is ga-create-dims.js in ~/.ga-credentials.
+ */
+function mirrorToGa(name: string, data: Record<string, unknown>) {
+  if (!window.gtag || NOT_MIRRORED.has(name)) return
+  const params: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(data)) {
+    if (!GA_DROPPED_PARAMS.has(k)) params[k] = typeof v === 'string' ? v.slice(0, 100) : v
+  }
+  let gaName = name
+  const numbered = name.match(/^(ScrollDepth|Engaged|VideoProgress)(\d+)s?$/)
+  if (numbered) {
+    gaName = numbered[1]
+    params[numbered[1] === 'Engaged' ? 'seconds' : 'percent'] = Number(numbered[2])
+  }
+  gaName = gaName
+    .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+    .toLowerCase()
+  window.gtag('event', gaName, params)
 }
 
 // ── Contacts ────────────────────────────────────────────────────────────────

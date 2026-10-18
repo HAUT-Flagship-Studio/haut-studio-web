@@ -592,6 +592,7 @@ export default function CalculatorModal({
               {step === 4 && (
                 <form
                   ref={formRef}
+                  data-clarity-mask="true"
                   onSubmit={handleSubmit}
                   onFocus={(e) => {
                     const name = (e.target as unknown as HTMLInputElement).name

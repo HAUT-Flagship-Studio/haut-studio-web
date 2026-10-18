@@ -566,7 +566,7 @@ export default function QuizModal({
                     <p className="font-roboto text-[#DADADA]/70 text-xs">
                       Not ready to finish the estimator? Leave your number and we&apos;ll text you this exact estimate.
                     </p>
-                    <form onSubmit={handleSendEstimate} className="flex flex-col sm:flex-row gap-2">
+                    <form onSubmit={handleSendEstimate} data-clarity-mask="true" className="flex flex-col sm:flex-row gap-2">
                       <input
                         type="tel"
                         required
