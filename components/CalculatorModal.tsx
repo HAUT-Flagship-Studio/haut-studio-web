@@ -137,6 +137,17 @@ const TINT_ROWS: { id: TintChoice; label: string; option: ServiceOption | null }
   { id: 'fullCabin', label: 'Full Cabin', option: TINT.fullCabin },
 ]
 
+const LEAD_ROWS: Record<CalculatorService, { option: ServiceOption | null }[]> = {
+  ppf: PPF_ROWS,
+  ceramic: CERAMIC_ROWS,
+  tint: TINT_ROWS,
+}
+
+/** The lowest price step 2 shows for this car — the "from $…" a visitor sees first. */
+function fromPrice(service: CalculatorService, category: VehicleCategory): number {
+  return Math.min(...LEAD_ROWS[service].flatMap((r) => (r.option ? [r.option.prices[category]] : [])))
+}
+
 const WSPF_ROWS: { id: WSPFChoice; label: string; option: ServiceOption | null }[] = [
   { id: 'windshieldArmor', label: 'Windshield Armor', option: WSPF.windshieldArmor },
 ]
@@ -245,15 +256,18 @@ export default function CalculatorModal({
   const total = selectedOptions.reduce((sum, o) => sum + o.prices[category], 0)
   const comboEligible = selectedOptions.length >= 2
 
-  // The final step is the estimate screen — the price summary sits above the
-  // contact form. Reaching it with something selected is a PriceViewed.
+  // Step 2 is where the prices first come on screen, so that is the
+  // PriceViewed — the event the ads optimise for (marketers, 2026-10-18; it
+  // was the form step before). Nothing is chosen yet there, so its value is
+  // the lowest price shown. A calculator opened past step 2 counts on arrival.
+  // The form step keeps its own QuoteFormViewed.
   const packageName = selectedOptions.map((o) => o.name).join(', ')
   const quote = { source: 'calculator' as const, service, vehicle: category, packageName, value: total }
   useEffect(() => {
     if (!isOpen || submitted) return
     track('CalculatorStepViewed', { step, service })
     if (step === 4) trackQuoteFormViewed(quote)
-    if (step === 4 && total > 0) trackPriceViewed(quote)
+    if (step >= 2) trackPriceViewed({ ...quote, value: total > 0 ? total : fromPrice(service, category) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, step])
 
