@@ -35,9 +35,9 @@ const SITE_PURCHASE_URL = 'https://hautppfstudio.com/api/purchase'
 const SITE_NOTIFY_URL = 'https://hautppfstudio.com/api/notify'
 const TIMEZONE = 'America/New_York'
 
-// Studio hours, as on the site: Mon–Fri 9–18, Sat 9–16, Sunday closed.
+// Studio hours, as on the site: Mon–Fri 10–19, weekends closed.
 // Keyed by ISO weekday (1 = Monday).
-const OPEN_HOURS = { 1: [9, 18], 2: [9, 18], 3: [9, 18], 4: [9, 18], 5: [9, 18], 6: [9, 16] }
+const OPEN_HOURS = { 1: [10, 19], 2: [10, 19], 3: [10, 19], 4: [10, 19], 5: [10, 19] }
 const REMIND_AFTER_MIN = [15, 60]
 const BOOKED_STALE_DAYS = 7
 

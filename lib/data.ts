@@ -78,7 +78,7 @@ export const STUDIO = {
   phoneHref: 'tel:+12012010170',
   address: '361 NJ-17, Hackensack, NJ 07601',
   mapsHref: 'https://maps.app.goo.gl/XTmE5NDHpzPsf16Y7',
-  hours: 'Mon–Fri 9AM–6PM · Sat 9AM–4PM',
+  hours: 'Mon–Fri 10AM–7PM',
   // Exact coordinates from the verified Google Business Profile listing (resolved
   // from mapsHref) — precise pin location, independent of free-embed geocoding.
   lat: 40.8773629,
@@ -398,7 +398,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       `The Highway & Track Package, at ${ppfPrice('highway')}, adds the rocker panels, the A-pillars, the leading edge of the roof and the rear wheel arches. It is the right coverage for a low car — the GT3 RS, a Huracán — and for anything that spends its weekends on the Parkway or at Lime Rock, because the rockers and the rear arches take the tyre spray that the front end never sees.`,
       `Full Body Armor, at ${ppfPrice('full-vehicle')}, covers every painted panel. It is the usual choice for a car that will be kept, for anything in a factory matte or satin finish that cannot be spot-resprayed, and for the owner who has already paid once for a respray that did not match. On a gloss car, a satin-finish film over the factory paint gives the matte look without the matte paint, which is what the Range Rover in the reviews had done.`,
       `The process does not change with the postcode. Every panel pattern is cut from the vehicle's own scan data with HAUT Precision Scan, so no blade touches the paint; edges are wrapped rather than trimmed on the face of the panel; the car is decontaminated and corrected before any film goes on; and it stays in a climate-controlled bay for the 24 to 48 hours the film takes to bond. A full car is three to five business days. The film carries a ten-year manufacturer warranty, registered to the vehicle.`,
-      `The studio is open Monday to Friday 9 to 6 and Saturday 9 to 4. Bring the car as it is — the wash and decontamination are part of the job, and a freshly waxed car makes the first step longer, not shorter.`,
+      `The studio is open Monday to Friday, 10 to 7. Bring the car as it is — the wash and decontamination are part of the job, and a freshly waxed car makes the first step longer, not shorter.`,
     ],
   },
   {
@@ -418,7 +418,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       `For a daily driver from Ridgewood, Saddle River or Franklin Lakes, the Front End Protection package at ${ppfPrice('front-end')} covers the panels that take the hits: full bumper, full hood, full fenders, mirrors, headlights. The Highway & Track Package at ${ppfPrice('highway')} adds the rockers, A-pillars, roof edge and rear arches, which matter on a lowered or wide car and on anything that sees the Parkway at speed. Full Body Armor at ${ppfPrice('full-vehicle')} covers every painted panel and is the choice for a car being kept past the lease, or for a matte or satin factory finish that cannot be spot-repaired.`,
       `Every pattern is cut from the vehicle's own scan data with HAUT Precision Scan before the car is touched, so no blade is used on the paint and the edges are wrapped rather than cut on the panel face. The work happens in a climate-controlled bay, the film cures for 24 to 48 hours before the car leaves, and a full vehicle takes three to five business days. The warranty is ten years from the film's manufacturer, registered to the car.`,
       `Window tint and ceramic coating are done in the same bays, and a new car often has all three done in one visit, which is what the reviews from BMW owners on this site describe. Tint is to New Jersey's limits for a passenger car — the window tint page sets out the film options, and the guide to the state's tint law on this blog explains what is legal on which window.`,
-      `Hours are Monday to Friday 9 to 6 and Saturday 9 to 4 at 361 NJ-17, Hackensack — the Lodi end of the road, a mile south of the Route 4 junction.`,
+      `Hours are Monday to Friday, 10 to 7, at 361 NJ-17, Hackensack — the Lodi end of the road, a mile south of the Route 4 junction.`,
     ],
   },
   {

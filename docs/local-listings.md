@@ -29,8 +29,8 @@ https://hautppfstudio.com/?utm_source=google&utm_medium=organic&utm_campaign=gbp
 Часы:
 
 ```
-Monday–Friday 9:00 AM – 6:00 PM
-Saturday 9:00 AM – 4:00 PM
+Monday–Friday 10:00 AM – 7:00 PM
+Saturday Closed
 Sunday Closed
 ```
 
@@ -45,7 +45,7 @@ Paint protection film, ceramic coating and window tinting at 361 NJ-17, Hackensa
 Длинное (до 750 символов — Google Business Profile, Facebook):
 
 ```
-HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. PPF patterns are cut from the car's own scan data with HAUT Precision Scan — no blade on the paint, edges wrapped. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 9–6, Saturday 9–4.
+HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. PPF patterns are cut from the car's own scan data with HAUT Precision Scan — no blade on the paint, edges wrapped. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 10–7.
 ```
 
 ## Категории
@@ -119,7 +119,7 @@ Satin finish without a respray: a matte film over factory gloss paint, fully rev
 ```
 
 ```
-Automotive window tint from $199, cut by plotter to the car's own pattern, within New Jersey legal limits. Vehicles only. Mon–Fri 9–6, Sat 9–4 at 361 NJ-17, Hackensack.
+Automotive window tint from $199, cut by plotter to the car's own pattern, within New Jersey legal limits. Vehicles only. Mon–Fri 10–7 at 361 NJ-17, Hackensack.
 ```
 
 ## Остальные площадки
