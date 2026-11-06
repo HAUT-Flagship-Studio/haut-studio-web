@@ -23,6 +23,13 @@
  *      with no payment marked, plus leads left "Новая" for over a day. Sent
  *      through https://hautppfstudio.com/api/notify, so the bot token stays in
  *      Vercel.
+ *   4. Training (haut-usa.com/training, added 2026-10-24). doPost with
+ *      sheet: "Training" appends to the "Training" tab instead of the leads
+ *      tab — no Status column, no reminders, nothing sent to Meta. doGet
+ *      ?action=training-content serves the three tabs the owner edits instead
+ *      of an admin: "Training prices", "Training dates", "Training reviews".
+ *      haut-usa.com reads them every 5 minutes. Menu HAUT → Create training
+ *      tabs makes all four with their headers.
  *
  * One-time setup (Project Settings → Script Properties):
  *   SITE_SECRET = the value of LEADS_SHEET_SECRET in Vercel.
@@ -90,8 +97,9 @@ function doPost(e) {
   const lock = LockService.getScriptLock()
   lock.waitLock(20000)
   try {
-    const sheet = leadsSheet()
     const d = JSON.parse(e.postData.contents)
+    if (d.sheet === 'Training') return appendTraining(d)
+    const sheet = leadsSheet()
     if (sheet.getRange(1, COL.utmSource).getValue() === '' || sheet.getRange(1, COL.service).getValue() === '') {
       ensureLayout(sheet)
     }
@@ -307,6 +315,78 @@ function dailyDigest() {
   if (parts.length) notify(parts.join('\n\n'))
 }
 
+// ── 4. Training (haut-usa.com) ───────────────────────────────────────────────
+const TRAINING_TABS = {
+  leads: {
+    name: 'Training',
+    headers: ['timestamp', 'package', 'module', 'experience', 'owns_shop', 'dates', 'people', 'name',
+      'phone', 'email', 'language', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'ad_name', 'fbclid'],
+  },
+  prices: {
+    name: 'Training prices',
+    headers: ['package', 'price', 'format'],
+    seed: [['pro', '$500', '1 day · 3–5 people'], ['express', '$3,500', '4 days · up to 4 people'], ['full', '$9,000', '4 weeks · 1–2 people']],
+  },
+  dates: {
+    name: 'Training dates',
+    // package: pro or express. module: 1–5, Pro only. seats_left: a number.
+    headers: ['package', 'module', 'date', 'seats_left'],
+  },
+  reviews: {
+    name: 'Training reviews',
+    // show: yes to publish. photo_url: a public https link to the photo.
+    headers: ['name', 'shop', 'city', 'quote', 'photo_url', 'show'],
+  },
+}
+
+/** The tab, created at the END so the leads tab stays first (leadsSheet()). */
+function trainingTab(key) {
+  const spec = TRAINING_TABS[key]
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  let sheet = ss.getSheetByName(spec.name)
+  if (!sheet) {
+    sheet = ss.insertSheet(spec.name, ss.getSheets().length)
+    sheet.getRange(1, 1, 1, spec.headers.length).setValues([spec.headers]).setFontWeight('bold')
+    sheet.setFrozenRows(1)
+    if (spec.seed) sheet.getRange(2, 1, spec.seed.length, spec.headers.length).setValues(spec.seed)
+  }
+  return sheet
+}
+
+function appendTraining(d) {
+  const sheet = trainingTab('leads')
+  sheet.appendRow(TRAINING_TABS.leads.headers.map((h) => (h === 'timestamp' ? d.timestamp || new Date().toISOString() : safe(d[h]))))
+  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON)
+}
+
+/** Rows of a content tab as objects keyed by header; blank rows skipped. */
+function tabRows(key) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(TRAINING_TABS[key].name)
+  if (!sheet || sheet.getLastRow() < 2) return []
+  const values = sheet.getDataRange().getDisplayValues()
+  const headers = values[0].map((h) => String(h).trim())
+  return values.slice(1)
+    .filter((row) => row.some((c) => String(c).trim() !== ''))
+    .map((row) => Object.fromEntries(headers.map((h, i) => [h, String(row[i]).trim()])))
+}
+
+/** Public, read-only: only what the training page shows anyway. */
+function doGet(e) {
+  if (!e || !e.parameter || e.parameter.action !== 'training-content') {
+    return ContentService.createTextOutput(JSON.stringify({ error: 'unknown action' })).setMimeType(ContentService.MimeType.JSON)
+  }
+  const content = {
+    prices: tabRows('prices'),
+    dates: tabRows('dates'),
+    reviews: tabRows('reviews').filter((r) => /^(yes|да|y)$/i.test(r.show || '')),
+  }
+  return ContentService.createTextOutput(JSON.stringify(content)).setMimeType(ContentService.MimeType.JSON)
+}
+
+function createTrainingTabs() {
+  Object.keys(TRAINING_TABS).forEach(trainingTab)
+}
+
 // ── Setup and menu ──────────────────────────────────────────────────────────
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
@@ -324,5 +404,9 @@ function setup() {
 }
 
 function onOpen() {
-  SpreadsheetApp.getUi().createMenu('HAUT').addItem('Send paid rows to Meta', 'sendPaidRows').addToUi()
+  SpreadsheetApp.getUi()
+    .createMenu('HAUT')
+    .addItem('Send paid rows to Meta', 'sendPaidRows')
+    .addItem('Create training tabs', 'createTrainingTabs')
+    .addToUi()
 }
