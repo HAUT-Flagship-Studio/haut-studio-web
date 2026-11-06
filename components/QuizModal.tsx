@@ -6,6 +6,7 @@ import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
 import ConsentNotice from './ConsentNotice'
+import LeadHoneypot, { honeypotValue } from './LeadHoneypot'
 import { track, trackLead, trackLeadFailed, trackLeadPixel, trackPriceViewed, leadEventId, LeadError } from '@/lib/analytics'
 import { getAttribution } from '@/lib/attribution'
 
@@ -183,6 +184,8 @@ export default function QuizModal({
   const [answers, setAnswers] = useState<Answers>(INITIAL_ANSWERS)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [capturePhone, setCapturePhone] = useState('')
+  /** When the phone form came on screen — a bot sends it within moments. */
+  const captureShownAt = useRef(0)
   const [captureStatus, setCaptureStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
   useDialogA11y(isOpen, dialogRef, onClose)
@@ -281,16 +284,21 @@ export default function QuizModal({
           eventId,
           eventSourceUrl: window.location.href,
           attribution: getAttribution(),
+          hp: honeypotValue(e.currentTarget as HTMLFormElement),
+          formMs: captureShownAt.current ? Date.now() - captureShownAt.current : undefined,
         }),
       })
+      const body = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
         throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
       }
       // A phone number is a real enquiry, so it is a Lead — not a custom
-      // PartialLead that Meta can count but never optimise for.
-      trackLeadPixel({ source: 'quiz', service: 'ppf', vehicle: answers.bodyType, packageName, value: total }, eventId)
-      trackLead({ value: total, partial: true })
+      // PartialLead that Meta can count but never optimise for. Unless the
+      // server flagged it as a bot: thank it like anyone else, count nothing.
+      if (body?.counted !== false) {
+        trackLeadPixel({ source: 'quiz', service: 'ppf', vehicle: answers.bodyType, packageName, value: total }, eventId)
+        trackLead({ value: total, partial: true })
+      }
       setCaptureStatus('sent')
     } catch (err) {
       trackLeadFailed(err instanceof LeadError ? err.reason : 'network', true)
@@ -566,7 +574,15 @@ export default function QuizModal({
                     <p className="font-roboto text-[#DADADA]/70 text-xs">
                       Not ready to finish the estimator? Leave your number and we&apos;ll text you this exact estimate.
                     </p>
-                    <form onSubmit={handleSendEstimate} data-clarity-mask="true" className="flex flex-col sm:flex-row gap-2">
+                    <form
+                      ref={(el) => {
+                        if (el && !captureShownAt.current) captureShownAt.current = Date.now()
+                      }}
+                      onSubmit={handleSendEstimate}
+                      data-clarity-mask="true"
+                      className="flex flex-col sm:flex-row gap-2"
+                    >
+                      <LeadHoneypot />
                       <input
                         type="tel"
                         required

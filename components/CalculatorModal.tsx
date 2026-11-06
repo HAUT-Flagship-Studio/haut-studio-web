@@ -17,6 +17,7 @@ import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import { PhoneLink, SmsLink } from './TrackedLinks'
 import ConsentNotice from './ConsentNotice'
+import LeadHoneypot, { honeypotValue } from './LeadHoneypot'
 import {
   serviceOfPage,
   setQuoteContext,
@@ -203,6 +204,8 @@ export default function CalculatorModal({
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
+  /** When the contact form came on screen — a bot sends it within moments. */
+  const formShownAt = useRef(0)
   const dialogRef = useRef<HTMLDivElement>(null)
   const focusedFields = useRef(new Set<string>())
   const stepRef = useRef(step)
@@ -266,7 +269,10 @@ export default function CalculatorModal({
   useEffect(() => {
     if (!isOpen || submitted) return
     track('CalculatorStepViewed', { step, service })
-    if (step === 4) trackQuoteFormViewed(quote)
+    if (step === 4) {
+      formShownAt.current = Date.now()
+      trackQuoteFormViewed(quote)
+    }
     if (step >= 2) trackPriceViewed({ ...quote, value: total > 0 ? total : fromPrice(service, category) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, step])
@@ -365,14 +371,19 @@ export default function CalculatorModal({
           eventId,
           eventSourceUrl: window.location.href,
           attribution: getAttribution(),
+          hp: honeypotValue(e.currentTarget as HTMLFormElement),
+          formMs: formShownAt.current ? Date.now() - formShownAt.current : undefined,
         }),
       })
+      const body = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
         throw new LeadError(body?.error === 'not_configured' ? 'not_configured' : 'delivery_failed')
       }
-      trackLeadPixel({ source: 'calculator', service, vehicle: category, packageName, value: total }, eventId)
-      trackLead({ value: total })
+      // The server flagged it as a bot: thank it like anyone else, count nothing.
+      if (body?.counted !== false) {
+        trackLeadPixel({ source: 'calculator', service, vehicle: category, packageName, value: total }, eventId)
+        trackLead({ value: total })
+      }
       setSubmitted(true)
     } catch (err) {
       trackLeadFailed(err instanceof LeadError ? err.reason : 'network', false)
@@ -681,6 +692,7 @@ export default function CalculatorModal({
                       className="w-full bg-transparent border border-[#DADADA]/25 text-white font-roboto text-sm px-4 py-3 focus:outline-none focus:border-[#9FFE0A] transition-colors placeholder:text-[#DADADA]/30 rounded-none resize-none"
                     />
                   </div>
+                  <LeadHoneypot />
                   {error && <p className="text-red-400 font-roboto text-sm">{error}</p>}
                   <ConsentNotice />
                   <p className="font-roboto text-[#DADADA]/40 text-xs text-center">

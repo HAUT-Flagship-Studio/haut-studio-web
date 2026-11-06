@@ -2,6 +2,7 @@ import { NextRequest, NextResponse, after } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { browserFromRequest, sendCapiEvent } from '@/lib/metaCapi'
 import { TEST_COOKIE, testModeFrom } from '@/lib/attribution'
+import { clientIp, leadSuspicion } from '@/lib/leadGuard'
 
 // Three channels with a timeout and one retry each can outlast the default.
 export const maxDuration = 30
@@ -100,6 +101,8 @@ export async function POST(req: NextRequest) {
     // A browser in test mode (?test_event_code= or ?test=1): the row is marked
     // Test, nobody is messaged, and Meta gets it under Test Events only.
     const { test } = testModeFrom(req.cookies.get(TEST_COOKIE)?.value)
+    // Looks automated: still delivered, marked, and never counted as a Lead.
+    const suspicion = leadSuspicion(body, clientIp(req.headers))
 
     const [firstName, ...rest] = name.split(/\s+/)
     const lastName = rest.join(' ')
@@ -123,6 +126,7 @@ export async function POST(req: NextRequest) {
 
     if (telegramOn && !test) {
       const lines = [
+        suspicion ? `⚠️ LIKELY SPAM (${suspicion}) — not counted as a lead in Meta or GA4` : null,
         partial ? '🟡 Partial HAUT Lead (phone only, from quiz result)' : '🚗 New HAUT Lead',
         `👤 Name: ${name || 'Not provided yet'}`,
         `📞 Phone: ${phone || 'N/A'}`,
@@ -152,7 +156,7 @@ export async function POST(req: NextRequest) {
             vehicle,
             services: coverageLabel,
             estimate: estimatedPrice > 0 ? priceLabel : '',
-            type: test ? 'Test' : partial ? 'Partial' : 'Full',
+            type: test ? 'Test' : suspicion ? 'Suspect' : partial ? 'Partial' : 'Full',
             notes: message,
             form: sourceLabel,
             channel: channelLabel,
@@ -174,7 +178,7 @@ export async function POST(req: NextRequest) {
 
     // Channel names only — the errors can carry webhook responses.
     const summary = deliveries.map(({ channel, ok }) => ({ channel, ok }))
-    const record = { name, phone, email, vehicle, services: coverageLabel, price: priceLabel, source, partial, test, ...utm }
+    const record = { name, phone, email, vehicle, services: coverageLabel, price: priceLabel, source, partial, test, suspicion, ...utm }
 
     if (deliveries.length === 0) {
       console.error('[/api/lead] LEAD_LOST no delivery channel is configured:', JSON.stringify(record))
@@ -188,7 +192,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(
-      `[/api/lead] delivered via ${delivered.map((d) => `${d.channel} ${d.ms}ms`).join(', ')}` +
+      `[/api/lead] ${suspicion ? `SUSPECT ${suspicion}, ` : ''}delivered via ${delivered.map((d) => `${d.channel} ${d.ms}ms`).join(', ')}` +
         (failed.length ? `; FAILED ${failed.map((d) => d.channel).join(', ')}` : '')
     )
 
@@ -203,7 +207,7 @@ export async function POST(req: NextRequest) {
         ).catch(() => {})
       }
 
-      if (eventId) {
+      if (eventId && !suspicion) {
         await sendCapiEvent({
           eventName: 'Lead',
           eventId,
@@ -226,7 +230,8 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    return NextResponse.json({ success: true, deliveries: summary }, { status: 200 })
+    // `counted: false` tells the form to skip its own Lead and generate_lead.
+    return NextResponse.json({ success: true, counted: !suspicion, deliveries: summary }, { status: 200 })
   } catch (error) {
     console.error('[/api/lead] Error:', error)
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
