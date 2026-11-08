@@ -22,9 +22,12 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Hero
-        locationBadge="HACKENSACK, NJ"
+        locationBadge="Manufacturer Flagship Studio"
         heading={
           <>
+            <span className="block font-roboto font-medium text-sm sm:text-base tracking-[0.2em] uppercase text-[#DADADA] mb-4">
+              PPF, Ceramic Coating & Window Tint in Hackensack,&nbsp;NJ
+            </span>
             <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">PPF & Ceramic.</span>
             <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">Window Tinting.</span>
             <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-[#9FFE0A]">

@@ -63,9 +63,12 @@ export default function CeramicPage() {
       />
       <PageHero
         backgroundImage="/assets/service-ceramic-coating.webp"
-        eyebrow="Ceramic Coating"
+        eyebrow="Manufacturer Flagship Studio"
         heading={
           <>
+            <span className="block font-roboto font-medium text-sm sm:text-base tracking-[0.2em] uppercase text-[#DADADA] mb-4">
+              Ceramic Coating in Hackensack,&nbsp;NJ
+            </span>
             UV Fade & Grime,
             <br />
             <span className="text-[#9FFE0A]">Sealed Out for Years</span>

@@ -53,9 +53,12 @@ export default function PPFPage() {
       />
       <Hero
         backgroundImage="/assets/ppf-page-cover.webp"
-        locationBadge="✦ HAUT PAINT PROTECTION FILM"
+        locationBadge="✦ Manufacturer Flagship Studio"
         heading={
           <>
+            <span className="block font-roboto font-medium text-sm sm:text-base tracking-[0.2em] uppercase text-[#DADADA] mb-4">
+              Paint Protection Film in Hackensack,&nbsp;NJ
+            </span>
             <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">Uncompromising</span>
             <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">Protection for Your</span>
             <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[#9FFE0A]">Factory Paint.</span>

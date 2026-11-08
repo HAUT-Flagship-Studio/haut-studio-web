@@ -70,9 +70,12 @@ export default function WindowTintPage() {
       />
       <PageHero
         backgroundImage="/assets/service-window-tinting.webp"
-        eyebrow="Automotive Window Tinting"
+        eyebrow="Manufacturer Flagship Studio"
         heading={
           <>
+            <span className="block font-roboto font-medium text-sm sm:text-base tracking-[0.2em] uppercase text-[#DADADA] mb-4">
+              Car Window Tinting in Hackensack,&nbsp;NJ
+            </span>
             Cabin Heat, UV Fade & Glare.
             <br />
             <span className="text-[#9FFE0A]">Blocked at the Glass.</span>

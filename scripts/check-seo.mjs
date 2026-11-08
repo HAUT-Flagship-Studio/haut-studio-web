@@ -307,6 +307,34 @@ if (!existsSync('lib/serviceArea.ts')) {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * 7. Every service page's H1 names its service and the city.
+ *
+ * The H1s were slogans — "Uncompromising Protection for Your Factory Paint" —
+ * while every shop ranking above us for "ppf hackensack" (Tint World, Sound
+ * Waves, 46tints) puts the service and the town in its H1. The slogan stays;
+ * the H1 also carries a plain line, and a copy rewrite must not drop it.
+ * ------------------------------------------------------------------ */
+const H1_SERVICE = {
+  '/': /\bppf\b|paint protection film/i,
+  '/ppf': /paint protection film/i,
+  '/ceramic': /ceramic coating/i,
+  '/window-tint': /window tint/i,
+}
+
+for (const page of STATIC) {
+  const service = H1_SERVICE[page.route]
+  if (!service) continue
+  const heading = /\bheading=\{([\s\S]*?)\n\s*\}\n\s*subtitle=/.exec(page.src)?.[1] ?? ''
+  if (!service.test(heading) || !/hackensack/i.test(heading)) {
+    fail(
+      'service-h1-missing-keyword',
+      `${page.file} hero heading (the page's H1) must name its service and "Hackensack". ` +
+        `Keep the slogan, but keep the plain service + city line above it.`
+    )
+  }
+}
+
 /* ------------------------------------------------------------------ */
 
 if (failures.length > 0) {
