@@ -10,6 +10,7 @@ import {
 } from '@/lib/data'
 import { BODY_TYPES, PPF, CERAMIC, TINT, WSPF, type ServiceOption } from '@/lib/pricing'
 import { BEYOND_RADIUS, SERVICE_AREA, SERVICE_AREA_COUNTIES, SERVICE_RADIUS_MILES } from '@/lib/serviceArea'
+import { MAKE_PAGES } from '@/lib/makes'
 
 /**
  * /llms.txt — what this studio is, where it is, and what it charges, in one
@@ -147,6 +148,7 @@ ${FAQ_ITEMS.map((f) => `### ${f.question}\n\n${f.answer}`).join('\n\n')}
 
 - Home: ${SITE_URL}
 - Paint protection film: ${SITE_URL}/ppf
+${MAKE_PAGES.map((p) => `- ${p.make} paint protection film: ${SITE_URL}/ppf/${p.slug}`).join('\n')}
 - Ceramic coating: ${SITE_URL}/ceramic
 - Window tinting: ${SITE_URL}/window-tint
 - Process: ${SITE_URL}/our-process

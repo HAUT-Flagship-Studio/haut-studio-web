@@ -230,8 +230,8 @@ if (!sitemap) {
   const known = new Set(STATIC.map((p) => p.route))
   for (const url of listed) {
     const clean = url.replace(/\/$/, '') || '/'
-    // Blog posts come from generateStaticParams, so only check literal routes.
-    if (clean.startsWith('/blog/')) continue
+    // Blog posts and make pages come from generateStaticParams, so only check literal routes.
+    if (clean.startsWith('/blog/') || clean.startsWith('/ppf/')) continue
     if (!known.has(clean)) {
       fail('sitemap-lists-unknown-route', `app/sitemap.ts lists ${url}, which has no page.tsx.`)
     }
@@ -308,7 +308,7 @@ if (!existsSync('lib/serviceArea.ts')) {
 }
 
 /* ------------------------------------------------------------------ *
- * 7. Every service page's H1 names its service and the city.
+ * 9. Every service page's H1 names its service and the city.
  *
  * The H1s were slogans — "Uncompromising Protection for Your Factory Paint" —
  * while every shop ranking above us for "ppf hackensack" (Tint World, Sound

@@ -10,6 +10,7 @@ import PPFFaq from '@/components/PPFFaq'
 import PPFFinalCTA from '@/components/PPFFinalCTA'
 import DriveFrom from '@/components/DriveFrom'
 import { PPF_PACKAGES, PPF_FAQ_ITEMS } from '@/lib/data'
+import { MAKE_PAGES } from '@/lib/makes'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
 const PAINT_THREATS = [
@@ -34,7 +35,7 @@ const PAINT_THREATS = [
 export const metadata: Metadata = {
   title: 'Paint Protection Film (PPF) in Hackensack, NJ | Packages & Pricing | HAUT Flagship Studio',
   description:
-    'Paint protection film (PPF) in Hackensack, NJ, for Bergen County and North Jersey drivers — self-healing film with a 10-year manufacturer warranty, cut with HAUT Precision Scan for zero-blade contact. Front End, Highway & Track, and Full Body Armor packages installed by certified master installers. Compare packages and pricing.',
+    'Paint protection film (PPF) in Hackensack, NJ, a mile from Lodi, for Bergen County and North Jersey drivers — self-healing film with a 10-year manufacturer warranty, cut with HAUT Precision Scan for zero-blade contact. Front End, Highway & Track, and Full Body Armor packages installed by certified master installers. Compare packages and pricing.',
   alternates: {
     canonical: 'https://hautppfstudio.com/ppf',
   },
@@ -183,6 +184,28 @@ export default function PPFPage() {
           </>
         }
       />
+
+      {/* By make: the cars from this bay, with Exotic / Supercar pricing */}
+      <section
+        className="bg-[#1A292E] py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-800"
+        aria-label="Paint protection film by make"
+        data-track-section="ppf_makes"
+      >
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+          <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase shrink-0">✦ By Make</p>
+          <div className="flex flex-wrap gap-3">
+            {MAKE_PAGES.map((page) => (
+              <Link
+                key={page.slug}
+                href={`/ppf/${page.slug}`}
+                className="btn-outline px-5 py-2.5 text-sm rounded-none"
+              >
+                {page.make} PPF →
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Cross-sell */}
       <section

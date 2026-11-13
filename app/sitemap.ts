@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { BLOG_ARTICLES } from '@/lib/data'
+import { MAKE_PAGES } from '@/lib/makes'
 
 const BASE_URL = 'https://hautppfstudio.com'
 
@@ -24,5 +25,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }))
 
-  return [...staticRoutes, ...blogRoutes]
+  const makeRoutes: MetadataRoute.Sitemap = MAKE_PAGES.map((page) => ({
+    url: `${BASE_URL}/ppf/${page.slug}`,
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }))
+
+  return [...staticRoutes, ...makeRoutes, ...blogRoutes]
 }
