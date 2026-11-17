@@ -23,7 +23,7 @@ import { STUDIO } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'About HAUT Flagship Studio | Inside the Hackensack, NJ Facility',
   description:
-    'Inside HAUT Flagship Studio at 361 NJ-17: sealed positive-pressure install bays with filtered air handling, factory-trained installers certified on HAUT Precision Scan, and patterns plotted from vehicle-specific scan data so no blade meets your paint.',
+    'Inside HAUT Flagship Studio at 361 NJ-17: sealed bays with filtered air, installers certified on HAUT Precision Scan, and no blade on your paint.',
   alternates: {
     canonical: 'https://hautppfstudio.com/about',
   },

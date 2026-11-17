@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BLOG_ARTICLES, SERVICES_OVERVIEW, STUDIO } from '@/lib/data'
+import { ARTICLE_AUTHOR, BLOG_ARTICLES, SERVICES_OVERVIEW, STUDIO, articleTitleTag } from '@/lib/data'
 import { PhoneLink } from '@/components/TrackedLinks'
 
 export async function generateMetadata({
@@ -13,12 +13,19 @@ export async function generateMetadata({
   const article = BLOG_ARTICLES.find((a) => a.slug === slug)
   if (!article) return {}
   return {
-    title: `${article.title} | HAUT Flagship Studio`,
+    title: articleTitleTag(article),
     description: article.metaDescription,
     alternates: {
       canonical: `https://hautppfstudio.com/blog/${slug}`,
     },
   }
+}
+
+/** "October 2026" → "2026-10", a valid ISO 8601 date for datePublished. */
+function isoMonth(label: string): string {
+  const d = new Date(`1 ${label}`)
+  if (Number.isNaN(d.getTime())) throw new Error(`Unparseable article date: ${label}`)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 export function generateStaticParams() {
@@ -43,11 +50,18 @@ export default async function BlogPostPage({
     '@type': 'Article',
     headline: article.title,
     description: article.metaDescription,
-    datePublished: article.date,
+    datePublished: isoMonth(article.date),
+    mainEntityOfPage: `https://hautppfstudio.com/blog/${slug}`,
+    // A local photo in webp, not a placeholder SVG — search engines ignore SVG here.
+    ...(article.image.endsWith('.svg')
+      ? {}
+      : { image: [`https://hautppfstudio.com${article.image}`] }),
+    // The Person is declared once, on the brand site; this points at it.
     author: {
-      '@type': 'Organization',
-      name: 'HAUT Flagship Studio',
-      url: 'https://hautppfstudio.com',
+      '@type': 'Person',
+      '@id': ARTICLE_AUTHOR.id,
+      name: ARTICLE_AUTHOR.name,
+      url: ARTICLE_AUTHOR.url,
     },
     publisher: {
       '@type': 'Organization',
@@ -84,8 +98,14 @@ export default async function BlogPostPage({
             {article.title}
           </h1>
 
-          <div className="flex items-center gap-4 text-[#DADADA]/50 font-roboto text-sm mb-8 border-b border-[#DADADA]/10 pb-8">
-            <span>HAUT Flagship Studio</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[#DADADA]/50 font-roboto text-sm mb-8 border-b border-[#DADADA]/10 pb-8 [&>span]:whitespace-nowrap">
+            <span>
+              By{' '}
+              <a href={ARTICLE_AUTHOR.url} rel="author" className="text-[#DADADA]/80 hover:text-[#9FFE0A] underline-offset-2 hover:underline">
+                {ARTICLE_AUTHOR.name}
+              </a>
+              , {ARTICLE_AUTHOR.jobTitle}
+            </span>
             <span>·</span>
             <span>{article.date}</span>
             <span>·</span>

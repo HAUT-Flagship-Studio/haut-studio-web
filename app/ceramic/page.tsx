@@ -11,7 +11,7 @@ import { buildFaqSchema } from '@/lib/faqSchema'
 export const metadata: Metadata = {
   title: 'Ceramic Coating in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'HAUT Ceramic — dual-layer 9H coating that blocks UV fade and protects resale value. From $999, installed by certified master installers at HAUT Flagship Studio, Hackensack, NJ.',
+    'HAUT Ceramic: a dual-layer 9H coating against UV fade, from $999, applied by certified installers at HAUT Flagship Studio in Hackensack, NJ.',
   alternates: {
     canonical: 'https://hautppfstudio.com/ceramic',
   },

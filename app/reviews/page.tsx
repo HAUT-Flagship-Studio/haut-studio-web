@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   // See scripts/check-seo.mjs, rule metadata-competes-with-service-pages.
   title: '5.0 Star Client Reviews | HAUT Flagship Studio',
   description:
-    "20 verified five-star Google reviews in the clients' own words — Maybachs, Range Rovers, BMW M cars and Teslas, from owners who came back a second and third time. Read what they said about the work before you book yours.",
+    "20 five-star Google reviews in clients' own words: Maybachs, Range Rovers, BMW M cars and Teslas, from owners who came back a second and third time.",
   alternates: {
     canonical: 'https://hautppfstudio.com/reviews',
   },

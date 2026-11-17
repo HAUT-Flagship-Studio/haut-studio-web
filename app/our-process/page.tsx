@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   // See scripts/check-seo.mjs, rule metadata-competes-with-service-pages.
   title: 'Our Process | Step-by-Step Installation at HAUT Flagship Studio',
   description:
-    'Every step from paint decontamination to final inspection: patterns plotted from vehicle-specific scan data, a sealed positive-pressure bay with filtered air handling, edges hand-tucked and heat-formed, and no blade contact anywhere on the car.',
+    'Each step from paint decontamination to final inspection: scan-data patterns, a sealed filtered-air bay, hand-tucked edges and no blade on the car.',
   alternates: {
     canonical: 'https://hautppfstudio.com/our-process',
   },

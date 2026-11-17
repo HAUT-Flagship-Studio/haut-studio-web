@@ -58,11 +58,12 @@ export async function generateMetadata({
   const { make } = await params
   const page = MAKE_PAGES.find((p) => p.slug === make)
   if (!page) return {}
-  const models = [...new Set(makePhotos(page.make).map((p) => p.vehicle))].join(', ')
+  // "Ferrari SF90 Stradale" → "SF90 Stradale": the make is already the description's first word.
+  const models = [...new Set(makePhotos(page.make).map((p) => p.vehicle.replace(`${page.make} `, '')))].join(', ')
   const from = Math.min(...Object.values(EXOTIC_PPF_PRICE)).toLocaleString('en-US')
   return {
-    title: `${page.make} Paint Protection Film (PPF) in Hackensack, NJ | HAUT Flagship Studio`,
-    description: `${page.make} PPF installed in Hackensack, NJ, for Bergen County and North Jersey owners: ${models} done in this studio, patterns cut with no blade on the paint, 10-year manufacturer warranty, Exotic-class packages from $${from}.`,
+    title: `${page.make} PPF in Hackensack, NJ | HAUT Flagship Studio`,
+    description: `${page.make} paint protection film in Hackensack, NJ: ${models} done in this studio, cut with no blade on paint, 10-year warranty, from $${from}.`,
     alternates: { canonical: `${BASE_URL}/ppf/${page.slug}` },
   }
 }

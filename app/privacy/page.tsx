@@ -5,7 +5,7 @@ import { STUDIO } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Privacy Policy | HAUT Flagship Studio',
   description:
-    'What HAUT Flagship Studio collects when you request an estimate, how the Meta Pixel, Google Analytics and Microsoft Clarity are used, what is shared with advertising platforms, and how to stop calls, texts and email.',
+    'What HAUT Flagship Studio collects with an estimate request, how Meta Pixel, Google Analytics and Clarity are used, and how to stop calls, texts and email.',
   alternates: {
     canonical: 'https://hautppfstudio.com/privacy',
   },

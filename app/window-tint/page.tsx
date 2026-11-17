@@ -16,9 +16,9 @@ import { buildFaqSchema } from '@/lib/faqSchema'
 // because none of that intent can be served here. The word "automotive" is the
 // whole fix; the studio tints cars.
 export const metadata: Metadata = {
-  title: 'Automotive Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
+  title: 'Car Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Ceramic IR window film for cars — blocks heat and UV fade without killing your signal. Front window, full vehicle, and windshield packages from $199, installed by certified master installers in Hackensack, NJ. Automotive only; we do not tint homes or storefronts.',
+    'Ceramic IR window film for cars: blocks heat and UV without blocking signal. Front, full-vehicle and windshield packages from $199 in Hackensack, NJ.',
   alternates: {
     canonical: 'https://hautppfstudio.com/window-tint',
   },

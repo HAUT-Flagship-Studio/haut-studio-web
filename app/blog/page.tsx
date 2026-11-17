@@ -6,7 +6,7 @@ import { BLOG_ARTICLES } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'PPF & Ceramic Coating Guides | HAUT Flagship Studio Blog',
   description:
-    'Process-driven articles on Paint Protection Film, ceramic coatings, and vehicle detailing — written by the technicians at HAUT Flagship Studio in Hackensack, NJ.',
+    'Articles on paint protection film and ceramic coating by Vadim Nedelenko, founder of HAUT: film lifespan, NJ road salt, tint law and the install process.',
   alternates: {
     canonical: 'https://hautppfstudio.com/blog',
   },
@@ -32,7 +32,7 @@ export default function BlogPage() {
           <div className="w-16 h-0.5 bg-[#9FFE0A] mb-6" />
           <p className="font-roboto text-[#DADADA]/70 max-w-xl">
             Technical guides, maintenance advice, and honest breakdowns of what PPF and ceramic
-            coating actually do — written by our technicians.
+            coating actually do — written by Vadim Nedelenko, founder of HAUT.
           </p>
         </div>
 

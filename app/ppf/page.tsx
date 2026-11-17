@@ -33,9 +33,9 @@ const PAINT_THREATS = [
 ]
 
 export const metadata: Metadata = {
-  title: 'Paint Protection Film (PPF) in Hackensack, NJ | Packages & Pricing | HAUT Flagship Studio',
+  title: 'Paint Protection Film in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Paint protection film (PPF) in Hackensack, NJ, a mile from Lodi, for Bergen County and North Jersey drivers — self-healing film with a 10-year manufacturer warranty, cut with HAUT Precision Scan for zero-blade contact. Front End, Highway & Track, and Full Body Armor packages installed by certified master installers. Compare packages and pricing.',
+    'PPF in Hackensack, NJ: self-healing film, 10-year manufacturer warranty, cut with HAUT Precision Scan so no blade touches paint. Packages and prices by car.',
   alternates: {
     canonical: 'https://hautppfstudio.com/ppf',
   },

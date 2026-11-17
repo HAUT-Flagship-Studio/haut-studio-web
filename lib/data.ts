@@ -25,14 +25,41 @@ export interface BlogArticle {
   category: string
   /** The service page this article belongs to, so its CTA points at the page that owns the topic. */
   service: ServiceId
+  /** The H1. Can be as long as the article needs. */
   title: string
+  /**
+   * The <title> tag, when `title` plus the site suffix would run past 65
+   * characters and get cut off in search results. See articleTitleTag().
+   */
+  seoTitle?: string
   excerpt: string
+  /** 70–160 characters; scripts/check-meta.mjs fails the build outside that. */
   metaDescription: string
   readTime: string
   date: string
   image: string
   imageAlt: string
   content: string[]
+}
+
+/**
+ * Every article is published under the founder of HAUT. His Person entity lives
+ * on the brand site; the studio's Article markup points at that @id rather than
+ * declaring a second, disconnected Vadim Nedelenko.
+ */
+export const ARTICLE_AUTHOR = {
+  name: 'Vadim Nedelenko',
+  jobTitle: 'Founder, HAUT',
+  url: 'https://haut-usa.com/about-us/vadim-nedelenko',
+  id: 'https://haut-usa.com/about-us/vadim-nedelenko#person',
+} as const
+
+const TITLE_SUFFIX = ' | HAUT Flagship Studio'
+
+/** The <title> for an article: the suffix when it fits in 65 characters, else the short title alone. */
+export function articleTitleTag(article: BlogArticle): string {
+  const base = article.seoTitle ?? article.title
+  return (base + TITLE_SUFFIX).length <= 65 ? base + TITLE_SUFFIX : base
 }
 
 export interface ClientReview {
@@ -386,7 +413,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     category: 'Local Guide',
     title: 'Paint Protection Film for the Palisades Towns: Alpine, Tenafly, Englewood Cliffs, Cresskill, Closter and Fort Lee',
     excerpt: `Every town along the Palisades — Alpine, Closter, Demarest, Cresskill, Tenafly, Englewood Cliffs, Fort Lee, Edgewater — lies inside ten miles of the studio at 361 NJ-17. The distance to each, what their cars take on the road down, and which coverage fits.`,
-    metaDescription: `PPF for Alpine, Tenafly, Englewood Cliffs, Cresskill, Closter and Fort Lee: the distance from each town to the Hackensack studio, which coverage fits a Range Rover, G-Class or Porsche, and current package pricing.`,
+    seoTitle: 'PPF for Alpine, Tenafly, Englewood Cliffs, Closter & Fort Lee',
+    metaDescription: `PPF for Alpine, Tenafly, Englewood Cliffs, Cresskill, Closter and Fort Lee: distance to the Hackensack studio, which coverage fits, and package prices.`,
     readTime: '7 min read',
     date: 'October 2026',
     image: '/assets/work/Porsche-GT3RS-full-ppf.webp',
@@ -407,7 +435,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     category: 'Local Guide',
     title: 'PPF on the Route 17 Side: Ridgewood, Ho-Ho-Kus, Saddle River, Franklin Lakes, Wyckoff and Oradell to the Hackensack Studio',
     excerpt: `Ridgewood, Ho-Ho-Kus, Glen Rock, Wyckoff and Oradell sit inside ten miles of 361 NJ-17, and Saddle River, Upper Saddle River and Franklin Lakes just past the line — all straight down the road the dealerships are on. Why the week a new car is delivered is the week to film it, and what each package covers.`,
-    metaDescription: `Paint protection film for Ridgewood, Ho-Ho-Kus, Saddle River, Upper Saddle River, Franklin Lakes, Wyckoff and Oradell: distance to the Hackensack studio, why to film a new car before its first week on Route 17, and package pricing.`,
+    seoTitle: 'PPF for Ridgewood, Saddle River, Franklin Lakes & Wyckoff, NJ',
+    metaDescription: `PPF for Ridgewood, Ho-Ho-Kus, Saddle River, Franklin Lakes, Wyckoff and Oradell: distance to the studio, why to film a new car early, and prices.`,
     readTime: '6 min read',
     date: 'October 2026',
     image: '/assets/work/Lamborghini-Rivuelto-full-ppf.webp',
@@ -426,10 +455,11 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     service: 'ppf',
     category: 'Maintenance',
     title: 'Winter Driving in New Jersey: Protecting Your Paint From Road Salt',
+    seoTitle: 'Protecting Your Paint From New Jersey Road Salt',
     excerpt:
       'Road salt on the Garden State Parkway and Route 17 does real, measurable damage to exposed clear coat over a single winter. Here is what actually protects against it — and what does not.',
     metaDescription:
-      'Road salt accelerates paint corrosion over a New Jersey winter. Here is how PPF and ceramic coating actually reduce the damage, and what washing habits matter most.',
+      'Road salt speeds up paint corrosion over a New Jersey winter. How PPF and ceramic coating actually reduce the damage, and which washing habits matter.',
     readTime: '4 min read',
     date: 'August 2026',
     image: '/assets/placeholders/blog-winter-road-salt.svg',
@@ -451,7 +481,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     excerpt:
       'Tint darkness rules vary by state, and New Jersey is stricter than most on front glass. Here is what VLT percentage is actually legal on each window before you book an install.',
     metaDescription:
-      'A breakdown of New Jersey\'s window tint laws — what VLT percentage is legal on front windows, rear windows, and the windshield, and what gets flagged at inspection.',
+      'New Jersey\'s window tint laws: what VLT percentage is legal on front windows, rear windows and the windshield, and what gets flagged at inspection.',
     readTime: '4 min read',
     date: 'June 2026',
     image: '/assets/placeholders/blog-nj-tint-law.svg',
@@ -470,10 +500,11 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     service: 'ceramic',
     category: 'Maintenance',
     title: 'How Long Does Ceramic Coating Actually Last? A Realistic Maintenance Guide',
+    seoTitle: 'How Long Does Ceramic Coating Last? A Maintenance Guide',
     excerpt:
       'Ceramic coating doesn\'t fail overnight — its hydrophobic performance fades gradually with UV exposure, contamination, and wash habits. Here is what actually determines whether a coating holds up for two years or five.',
     metaDescription:
-      'Ceramic coating lifespan depends on UV exposure, wash habits, and maintenance — not a fixed expiration date. Here is what actually determines how long the hydrophobic layer holds up.',
+      'Ceramic coating lifespan depends on UV exposure, wash habits and maintenance, not a fixed expiry date. What decides how long the hydrophobic layer holds.',
     readTime: '5 min read',
     date: 'April 2026',
     image: '/assets/placeholders/blog-ceramic-lifespan.svg',
@@ -492,10 +523,11 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     service: 'ppf',
     category: 'Technical Guide',
     title: 'PPF vs. Ceramic Coating: When to Use Which (And When to Use Both)',
+    seoTitle: 'PPF vs. Ceramic Coating: Which to Use, and When to Use Both',
     excerpt:
       'Paint Protection Film and ceramic coating solve different problems. PPF is a physical barrier — ceramic is a chemical sealant. Understanding the distinction helps you decide what your vehicle actually needs.',
     metaDescription:
-      'Paint Protection Film and ceramic coating solve different problems. PPF is a physical barrier — ceramic is a chemical sealant. Understanding the distinction helps you decide what your vehicle actually needs.',
+      'PPF and ceramic coating solve different problems: film is a physical barrier, ceramic a chemical sealant. How to decide which one your car needs.',
     readTime: '5 min read',
     date: 'February 2026',
     image: '/assets/placeholders/blog-ppf-vs-ceramic.svg',
@@ -515,6 +547,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     service: 'ppf',
     category: 'Maintenance',
     title: 'How Long Does Paint Protection Film Last? Realistic Timelines by Usage',
+    seoTitle: 'How Long Does Paint Protection Film Last? Real Timelines',
     excerpt:
       'Most PPF manufacturers quote 10 years. The real answer depends on UV exposure, washing frequency, and whether the topcoat is self-healing. Here is what to expect based on driving patterns.',
     metaDescription:
@@ -537,6 +570,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     service: 'ppf',
     category: 'Local Guide',
     title: 'Getting PPF in Hackensack, NJ: What the Process Actually Looks Like',
+    seoTitle: 'Getting PPF in Hackensack, NJ: What the Process Looks Like',
     excerpt:
       'From first consultation to final delivery, a full vehicle PPF installation takes 3–5 days at HAUT. Here is a step-by-step walkthrough of the process, including paint decontamination, digital pattern cutting, and post-install care.',
     metaDescription:

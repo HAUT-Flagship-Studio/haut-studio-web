@@ -24,7 +24,7 @@ import {
 // see scripts/check-seo.mjs, rule body-competes-with-service-pages.
 export const metadata: Metadata = {
   title: `Service Area | ${SERVICE_AREA.length} Towns Within ${SERVICE_RADIUS_MILES} Miles of the Hackensack Studio`,
-  description: `HAUT Flagship Studio at 361 NJ-17 draws from ${townsInState('NJ').length} municipalities across ${SERVICE_AREA_COUNTIES.length} New Jersey counties, plus Manhattan through the Lincoln Tunnel — every town within ${SERVICE_RADIUS_MILES} miles, measured from the studio, with the distance for each one.`,
+  description: `${townsInState('NJ').length} New Jersey towns in ${SERVICE_AREA_COUNTIES.length} counties, plus Manhattan, within ${SERVICE_RADIUS_MILES} miles of HAUT Flagship Studio at 361 NJ-17, with the distance to each.`,
   alternates: {
     canonical: 'https://hautppfstudio.com/service-area',
   },

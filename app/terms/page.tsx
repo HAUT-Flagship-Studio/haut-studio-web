@@ -6,7 +6,7 @@ import { STUDIO } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Terms of Service | HAUT Flagship Studio',
   description:
-    'Terms for using the HAUT Flagship Studio website and booking work at the studio: how online estimates relate to the final price, scheduling, payment, warranties and text messages.',
+    'Terms for the HAUT Flagship Studio website and bookings: how online estimates relate to the final price, scheduling, payment, warranties and texts.',
   alternates: {
     canonical: 'https://hautppfstudio.com/terms',
   },

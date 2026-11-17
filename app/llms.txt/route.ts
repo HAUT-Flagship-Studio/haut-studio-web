@@ -6,6 +6,8 @@ import {
   WINDOW_TINT_PACKAGES,
   FAQ_ITEMS,
   CLIENT_REVIEWS,
+  BLOG_ARTICLES,
+  ARTICLE_AUTHOR,
   type PackageItem,
 } from '@/lib/data'
 import { BODY_TYPES, PPF, CERAMIC, TINT, WSPF, type ServiceOption } from '@/lib/pricing'
@@ -156,6 +158,14 @@ ${MAKE_PAGES.map((p) => `- ${p.make} paint protection film: ${SITE_URL}/ppf/${p.
 - Service area: ${SITE_URL}/service-area
 - About: ${SITE_URL}/about
 - Articles: ${SITE_URL}/blog
+- Privacy policy: ${SITE_URL}/privacy
+- Terms of service: ${SITE_URL}/terms
+
+## Articles
+
+Written by ${ARTICLE_AUTHOR.name}, founder of HAUT (${ARTICLE_AUTHOR.url}).
+
+${BLOG_ARTICLES.map((a) => `- [${a.title}](${SITE_URL}/blog/${a.slug}) (${a.date}): ${a.metaDescription}`).join('\n')}
 
 ## Citation
 
