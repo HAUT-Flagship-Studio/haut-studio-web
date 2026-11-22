@@ -20,8 +20,8 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          <strong>What you give us.</strong> When you use the price calculator, the 2-minute assessment or call us:
-          your name, phone number, email address, vehicle details, your answers, the services you selected, the
+          <strong>What you give us.</strong> When you use the price calculator, the 2-minute assessment, the drop-off booking form or call us:
+          your name, phone number, email address, vehicle details, the drop-off day and time you request, your answers, the services you selected, the
           estimate shown to you, and any notes you write.
         </p>
         <p>
@@ -184,7 +184,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="October 18, 2026"
+      updated="November 22, 2026"
       intro={
         <p>
           This policy explains what {STUDIO.name} ({STUDIO.address}) collects through this website, why, who it is

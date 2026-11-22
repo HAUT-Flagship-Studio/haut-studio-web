@@ -222,12 +222,12 @@ export function trackAddressClick(location: string, directions = false) {
  * `generate_lead` is GA4's own recommended event name, so it lands in the
  * standard reports rather than needing a custom one.
  */
-export function trackLead(params: { value?: number; partial?: boolean }) {
+export function trackLead(params: { value?: number; partial?: boolean; booking?: boolean }) {
   if (typeof window === 'undefined') return
   window.gtag?.('event', 'generate_lead', {
     currency: 'USD',
     value: params.value ?? 0,
-    lead_type: params.partial ? 'partial' : 'full',
+    lead_type: params.booking ? 'booking' : params.partial ? 'partial' : 'full',
   })
 }
 
@@ -270,7 +270,7 @@ export function newEventId(): string {
   }
 }
 
-export type QuoteSource = 'calculator' | 'quiz'
+export type QuoteSource = 'calculator' | 'quiz' | 'booking'
 
 export interface QuoteDetails {
   source: QuoteSource

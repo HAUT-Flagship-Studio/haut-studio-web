@@ -156,6 +156,7 @@ ${MAKE_PAGES.map((p) => `- ${p.make} paint protection film: ${SITE_URL}/ppf/${p.
 - Process: ${SITE_URL}/our-process
 - Reviews: ${SITE_URL}/reviews
 - Service area: ${SITE_URL}/service-area
+- Book a drop-off (request, the studio calls to confirm): ${SITE_URL}/book
 - About: ${SITE_URL}/about
 - Articles: ${SITE_URL}/blog
 - Privacy policy: ${SITE_URL}/privacy
