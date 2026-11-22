@@ -69,6 +69,10 @@ function cheapestPrice(options: Record<string, ServiceOption>): number {
   return Math.min(...Object.values(options).flatMap((o) => Object.values(o.prices)))
 }
 
-export const CHEAPEST_PPF_PRICE = cheapestPrice(PPF)
-export const CHEAPEST_CERAMIC_PRICE = cheapestPrice(CERAMIC)
-export const CHEAPEST_TINT_PRICE = cheapestPrice(TINT)
+// "From" prices for the service cards and llms.txt. They follow the headline
+// service (sedan Front End PPF, sedan body ceramic), not the cheapest line in
+// the calculator — otherwise wheel ceramic ($399) and Cybertruck Bikini PPF
+// would advertise prices that /ppf, /ceramic and the Google profile never show.
+export const PPF_FROM_PRICE = PPF.frontEnd.prices.sedan
+export const CERAMIC_FROM_PRICE = CERAMIC.body.prices.sedan
+export const TINT_FROM_PRICE = cheapestPrice(TINT)

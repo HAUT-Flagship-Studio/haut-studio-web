@@ -1,4 +1,4 @@
-import { CHEAPEST_PPF_PRICE, CHEAPEST_CERAMIC_PRICE, CHEAPEST_TINT_PRICE } from './pricing'
+import { PPF_FROM_PRICE, CERAMIC_FROM_PRICE, TINT_FROM_PRICE } from './pricing'
 import { ALL_NAMED_TOWNS } from './serviceArea'
 
 export interface PackageItem {
@@ -322,7 +322,7 @@ export const SERVICES_OVERVIEW = [
     id: 'ppf',
     name: 'Paint Protection Film',
     tagline: 'High-performance physical shield designed to absorb everyday road impact, helping defend your factory paint against rock chips, swirl marks, and road wear.',
-    priceFrom: CHEAPEST_PPF_PRICE,
+    priceFrom: PPF_FROM_PRICE,
     href: '/ppf',
     image: '/assets/service-ppf.webp',
     imageAlt: 'Paint protection film service overview',
@@ -331,7 +331,7 @@ export const SERVICES_OVERVIEW = [
     id: 'ceramic',
     name: 'Ceramic Coating',
     tagline: 'Ultra-gloss hydrophobic barrier that repels dirt and water, making routine washes effortless while helping preserve your paint’s depth and UV resistance.',
-    priceFrom: CHEAPEST_CERAMIC_PRICE,
+    priceFrom: CERAMIC_FROM_PRICE,
     href: '/ceramic',
     image: '/assets/service-ceramic-coating.webp',
     imageAlt: 'Ceramic coating service overview',
@@ -340,7 +340,7 @@ export const SERVICES_OVERVIEW = [
     id: 'window-tint',
     name: 'Window Tinting',
     tagline: 'Advanced ceramic tint engineered to reduce cabin heat and block harmful UV rays—enhancing everyday driving comfort while protecting your interior leather and trim.',
-    priceFrom: CHEAPEST_TINT_PRICE,
+    priceFrom: TINT_FROM_PRICE,
     href: '/window-tint',
     image: '/assets/service-window-tinting.webp',
     imageAlt: 'Window tinting service overview',
