@@ -163,8 +163,12 @@ const localBusinessSchema = {
       '@type': 'Offer',
       name: pkg.name,
       description: pkg.tagline,
-      price: String(pkg.price),
-      priceCurrency: 'USD',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        minPrice: pkg.price,
+        ...(pkg.priceMax ? { maxPrice: pkg.priceMax } : {}),
+        priceCurrency: 'USD',
+      },
     })),
   },
 }

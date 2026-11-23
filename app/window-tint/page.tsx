@@ -7,6 +7,7 @@ import ProcessBanner from '@/components/ProcessBanner'
 import TintFaq from '@/components/TintFaq'
 import DriveFrom from '@/components/DriveFrom'
 import { WINDOW_TINT_PACKAGES, TINT_FEATURE_MATRIX, TINT_FAQ_ITEMS } from '@/lib/data'
+import { TINT_FROM_PRICE } from '@/lib/pricing'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
 // "Window Tinting" on its own reads as any glass in any building, and Google
@@ -18,7 +19,7 @@ import { buildFaqSchema } from '@/lib/faqSchema'
 export const metadata: Metadata = {
   title: 'Car Window Tinting in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'Ceramic IR window film for cars: blocks heat and UV without blocking signal. Front, full-vehicle and windshield packages from $199 in Hackensack, NJ.',
+    `Ceramic IR window film for cars: blocks heat and UV without blocking signal. Front, full-vehicle and windshield packages from $${TINT_FROM_PRICE} in Hackensack, NJ.`,
   alternates: {
     canonical: 'https://hautppfstudio.com/window-tint',
   },

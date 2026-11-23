@@ -1,11 +1,17 @@
-import { PPF_FROM_PRICE, CERAMIC_FROM_PRICE, TINT_FROM_PRICE } from './pricing'
+import { PPF_FROM_PRICE, CERAMIC_FROM_PRICE, TINT_FROM_PRICE, PPF, CERAMIC, TINT, type ServiceOption } from './pricing'
+
+/** A package card's price range, read from the calculator so the two can never disagree. */
+const range = (o: ServiceOption) => ({ price: Math.min(...Object.values(o.prices)), priceMax: Math.max(...Object.values(o.prices)) })
 import { ALL_NAMED_TOWNS } from './serviceArea'
 
 export interface PackageItem {
   id: string
   name: string
   tagline: string
+  /** The lowest class's price — the "from" on the card. */
   price: number
+  /** The highest class's price, for the structured data. */
+  priceMax?: number
   description: string
   inclusions: string[]
   image: string
@@ -117,7 +123,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     id: 'front-end',
     name: 'Front End Protection',
     tagline: 'Primary Impact Zone Defense',
-    price: 2399,
+    ...range(PPF.frontEnd),
     description:
       "Self-healing optical film applied to the primary impact zone — full bumper, full hood, full fenders, mirrors, and headlights. HAUT Precision Scan patterns are cut to your vehicle's exact contours with zero-blade contact. Best for daily drivers protecting against 90% of highway stone chips.",
     inclusions: [
@@ -136,7 +142,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     id: 'highway',
     name: 'Highway & Track Package',
     tagline: 'Full Perimeter + Track Defense',
-    price: 3199,
+    ...range(PPF.highway),
     description:
       'Everything in Front End Protection, plus rocker panels, A-pillars, full roof leading edge, and rear wheel splash arches for the debris and tire spray that catch up with a car at speed. Same self-healing optical film, same zero-blade HAUT Precision Scan cut. Best for sports cars, lowered vehicles, and frequent freeway commuters.',
     inclusions: [
@@ -155,7 +161,7 @@ export const PPF_PACKAGES: PackageItem[] = [
     id: 'full-vehicle',
     name: 'Full Body Armor',
     tagline: '100% Exterior Coverage',
-    price: 6499,
+    ...range(PPF.fullBody),
     description:
       'Complete exterior coverage of every painted panel, carbon fiber component, door jamb, and sill — cut panel-for-panel from HAUT Precision Scan patterns with zero on-car cutting. Best for exotics, supercars, new vehicle deliveries, and matte/satin conversions.',
     inclusions: [
@@ -175,7 +181,7 @@ export const CERAMIC_PACKAGE: PackageItem = {
   id: 'ceramic',
   name: 'HAUT Ceramic',
   tagline: 'UV Fade & Resale Value Defense',
-  price: 999,
+  ...range(CERAMIC.body),
   description:
     'HAUT Ceramic is a dual-layer 9H sealant that bonds directly to your clear coat or PPF, blocking the UV exposure that fades paint and the road grime that dulls resale value. One application, years of hydrophobic gloss — no more wax appointments.',
   inclusions: [
@@ -195,7 +201,7 @@ export const WINDOW_TINT_PACKAGES: PackageItem[] = [
     id: 'tint-front',
     name: 'Front Windows',
     tagline: 'Daily Heat & UV Defense',
-    price: 199,
+    ...range(TINT.twoFront),
     description:
       'Ceramic IR film on the front driver and passenger windows — the two panels that take the most direct UV exposure and cabin heat on every drive. HAUT Precision Scan-cut for a factory-clean edge with zero bubbling.',
     inclusions: [
@@ -212,7 +218,7 @@ export const WINDOW_TINT_PACKAGES: PackageItem[] = [
     id: 'tint-windshield',
     name: 'Windshield Tint',
     tagline: 'Full Windshield Heat Defense',
-    price: 299,
+    ...range(TINT.windshieldOnly),
     description:
       "Full-coverage ceramic IR film across your entire windshield — a light, legal shade that cuts heat and glare without darkening your view, the front glass most tint packages leave exposed. HAUT Precision Scan-cut to your windshield's curve for a factory-clean edge with zero bubbling.",
     inclusions: [
@@ -229,7 +235,7 @@ export const WINDOW_TINT_PACKAGES: PackageItem[] = [
     id: 'tint-full',
     name: 'Full Vehicle Tint',
     tagline: 'Full Cabin Heat & UV Defense',
-    price: 799,
+    ...range(TINT.fullCabin),
     description:
       "Ceramic IR film across every side and rear window, cut to each window's exact profile. Blocks the infrared heat and UV radiation that fade interior trim and crack dashboards — without the signal interference of metallic film.",
     inclusions: [

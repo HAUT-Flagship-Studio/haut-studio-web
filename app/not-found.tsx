@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PhoneLink } from '@/components/TrackedLinks'
 import { STUDIO } from '@/lib/data'
+import { CERAMIC_FROM_PRICE, TINT_FROM_PRICE } from '@/lib/pricing'
 
 // Until now a wrong address got Next's built-in 404: black text on white, no
 // header, no footer, no way back. Analytics showed thirteen such addresses in
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
 
 const ROUTES = [
   { href: '/ppf', label: 'Paint Protection Film', note: 'Packages, pricing and the film itself' },
-  { href: '/ceramic', label: 'Ceramic Coating', note: 'Dual-layer 9H, from $999' },
-  { href: '/window-tint', label: 'Automotive Window Tinting', note: 'Ceramic IR film, from $199' },
+  { href: '/ceramic', label: 'Ceramic Coating', note: `Dual-layer 9H, from $${CERAMIC_FROM_PRICE}` },
+  { href: '/window-tint', label: 'Automotive Window Tinting', note: `Ceramic IR film, from $${TINT_FROM_PRICE}` },
   { href: '/our-process', label: 'Our Process', note: 'Every step, decontamination to inspection' },
   { href: '/service-area', label: 'Service Area', note: 'Every town within 10 miles' },
   { href: '/reviews', label: 'Client Reviews', note: 'Unedited, as they were written' },

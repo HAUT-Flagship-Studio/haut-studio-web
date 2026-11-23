@@ -6,12 +6,13 @@ import ProcessBanner from '@/components/ProcessBanner'
 import CeramicFaq from '@/components/CeramicFaq'
 import DriveFrom from '@/components/DriveFrom'
 import { CERAMIC_PACKAGE, CERAMIC_FAQ_ITEMS } from '@/lib/data'
+import { CERAMIC_FROM_PRICE } from '@/lib/pricing'
 import { buildFaqSchema } from '@/lib/faqSchema'
 
 export const metadata: Metadata = {
   title: 'Ceramic Coating in Hackensack, NJ | HAUT Flagship Studio',
   description:
-    'HAUT Ceramic: a dual-layer 9H coating against UV fade, from $999, applied by certified installers at HAUT Flagship Studio in Hackensack, NJ.',
+    `HAUT Ceramic: a dual-layer 9H coating against UV fade, from $${CERAMIC_FROM_PRICE}, applied by certified installers at HAUT Flagship Studio in Hackensack, NJ.`,
   alternates: {
     canonical: 'https://hautppfstudio.com/ceramic',
   },
