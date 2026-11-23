@@ -46,6 +46,9 @@ export default function GClassWinterPage() {
 
   const gClass = MAKE_PAGES.find((p) => p.slug === 'g-class')
   const photos = gClass ? makePhotos(gClass) : []
+  // Section 4 of the ТЗ: three or four G-Class shots, close on the edges and gaps.
+  const WORK_IDS = ['brabus-g-class-three-quarter', 'brabus-g-class-hood', 'brabus-g-class-door-gap', 'brabus-g-class-hinge']
+  const workPhotos = photos.filter((p) => WORK_IDS.includes(p.id))
   const reviews = REVIEW_NAMES.map((n) => CLIENT_REVIEWS.find((r) => r.name === n)).filter((r) => r !== undefined)
 
   return (
@@ -53,9 +56,9 @@ export default function GClassWinterPage() {
       {/* 1. First screen */}
       <section data-track-section="offer_hero" className="relative overflow-hidden pt-24 pb-12 md:pt-36 md:pb-20 px-4 sm:px-6 lg:px-8">
         {photos[0] && (
-          <Image src={photos[0].image} alt={photos[0].imageAlt} fill priority sizes="100vw" className="object-cover opacity-35" />
+          <Image src={photos[0].image} alt={photos[0].imageAlt} fill priority sizes="100vw" className="object-cover object-[50%_35%] opacity-60" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A292E]/40 via-[#1A292E]/70 to-[#1A292E]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1A292E]/30 via-[#1A292E]/75 to-[#1A292E]" />
         <div className="relative max-w-3xl mx-auto">
           <h1 className="font-kanit font-black text-white text-4xl sm:text-6xl leading-[1.05] mb-5">
             Full Body PPF on a G-Class.{' '}
@@ -106,9 +109,9 @@ export default function GClassWinterPage() {
       {/* 4. Work and reviews */}
       <section data-track-section="offer_work" className="py-14 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
         <div className="max-w-5xl mx-auto">
-          {photos.length > 0 && (
-            <div className={`grid gap-4 mb-10 ${photos.length > 1 ? 'sm:grid-cols-2' : ''}`}>
-              {photos.map((p) => (
+          {workPhotos.length > 0 && (
+            <div className="grid gap-4 mb-10 sm:grid-cols-2">
+              {workPhotos.map((p) => (
                 <figure key={p.id} className="card-folded relative aspect-[4/3] overflow-hidden border border-slate-800">
                   <Image src={p.image} alt={p.imageAlt} fill sizes="(min-width: 640px) 50vw, 100vw" className="object-cover" />
                   <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#1A292E]/95 to-transparent p-4 text-white text-sm font-bold">

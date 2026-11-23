@@ -20,8 +20,8 @@ export interface MakePage {
   make: string
   /** "G-Classes" — when the plural is not make + "s". */
   plural?: string
-  /** Which WORK_GALLERY cars belong here, when their names do not start with the make. */
-  matches?: RegExp
+  /** Photos of this make when there are more than the home gallery should carry. */
+  photos?: WorkGalleryItem[]
   /** The models for the meta description, when the gallery names do not say it well. */
   models?: string
   /** A time-limited offer shown above the prices, with its landing page. */
@@ -88,7 +88,50 @@ export const MAKE_PAGES: MakePage[] = [
     slug: 'g-class',
     make: 'Mercedes G-Class',
     plural: 'G-Classes',
-    matches: /G-Class|G63/,
+    photos: [
+      {
+        id: 'brabus-g-class-in-bay',
+        image: '/assets/work/brabus-g-class-in-bay.webp',
+        imageAlt: 'Satin grey Brabus G-Class in the bay at HAUT Flagship Studio, next to the Graphtec plotter that cuts its film',
+        vehicle: 'Brabus G-Class',
+        service: 'PPF',
+      },
+      {
+        id: 'brabus-g-class-three-quarter',
+        image: '/assets/work/brabus-g-class-front-three-quarter.webp',
+        imageAlt: 'Brabus G-Class outside HAUT Flagship Studio in Hackensack after its paint protection film install',
+        vehicle: 'Brabus G-Class',
+        service: 'PPF',
+      },
+      {
+        id: 'brabus-g-class-side',
+        image: '/assets/work/brabus-g-class-side-profile.webp',
+        imageAlt: 'Side profile of the Brabus G-Class — the flat doors and rockers that take the spray from the front tires',
+        vehicle: 'Brabus G-Class — the flat sides',
+        service: 'PPF',
+      },
+      {
+        id: 'brabus-g-class-hood',
+        image: '/assets/work/brabus-g-class-hood-front.webp',
+        imageAlt: 'Brabus G-Class hood, bumper and fenders in paint protection film, in the studio bay',
+        vehicle: 'Brabus G-Class — hood and bumper',
+        service: 'PPF',
+      },
+      {
+        id: 'brabus-g-class-door-gap',
+        image: '/assets/work/brabus-g-class-door-gap-edge.webp',
+        imageAlt: 'Brabus G-Class door gap close-up — the film follows the body line and wraps into the gap',
+        vehicle: 'Brabus G-Class — film into the door gap',
+        service: 'PPF',
+      },
+      {
+        id: 'brabus-g-class-hinge',
+        image: '/assets/work/brabus-g-class-wrapped-door-edge.webp',
+        imageAlt: 'Brabus G-Class door gap at the hinge — paint protection film wrapped around both panel edges',
+        vehicle: 'Brabus G-Class — edges at the hinge',
+        service: 'PPF',
+      },
+    ],
     models: 'G63 and Brabus',
     headline: 'G63 and Brabus, Every Painted Panel.',
     subtitle:
@@ -109,10 +152,8 @@ export const MAKE_PAGES: MakePage[] = [
 ]
 
 /** The install photos of one make, in gallery order. */
-export function makePhotos(page: Pick<MakePage, 'make' | 'matches'>): WorkGalleryItem[] {
-  const photos = WORK_GALLERY.filter((item) =>
-    page.matches ? page.matches.test(item.vehicle) : item.vehicle.startsWith(page.make + ' ')
-  )
+export function makePhotos(page: Pick<MakePage, 'make' | 'photos'>): WorkGalleryItem[] {
+  const photos = page.photos ?? WORK_GALLERY.filter((item) => item.vehicle.startsWith(page.make + ' '))
   if (photos.length === 0) throw new Error(`No WORK_GALLERY photos for ${page.make} — a make page needs its own cars`)
   return photos
 }

@@ -298,8 +298,8 @@ export const WORK_GALLERY: WorkGalleryItem[] = [
   },
   {
     id: 'brabus-g-class',
-    image: '/assets/work/brabus-g-class-wrapped-door-edge.webp',
-    imageAlt: 'Brabus G-Class door gap at the hinge — paint protection film wrapped around both panel edges at HAUT Flagship Studio',
+    image: '/assets/work/brabus-g-class-in-bay.webp',
+    imageAlt: 'Satin grey Brabus G-Class in the bay at HAUT Flagship Studio, next to the Graphtec plotter that cuts its film',
     vehicle: 'Brabus G-Class',
     service: 'PPF',
   },
