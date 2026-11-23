@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { AD_LANDINGS } from '@/lib/offers'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
 import { PhoneLink, AddressLink } from './TrackedLinks'
@@ -50,6 +51,30 @@ export default function Header() {
       e.preventDefault()
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
+  }
+
+  // An ad landing keeps one way forward — its form — so the menu and the
+  // estimate button are left out; the logo and the phone stay.
+  if (AD_LANDINGS.includes(pathname)) {
+    return (
+      <header className="absolute top-0 left-0 right-0 z-50 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          <span className="flex items-center gap-3">
+            <Image src="/assets/logo.png" alt="HAUT" width={1699} height={500} priority className="h-8 w-auto" />
+            <span className="hidden sm:inline font-kanit font-semibold text-white text-xs tracking-[0.18em] uppercase leading-none">
+              Flagship Studio
+            </span>
+          </span>
+          <PhoneLink
+            location="header_landing"
+            className="btn-green px-3 sm:px-4 py-2.5 text-sm rounded-none font-kanit whitespace-nowrap"
+            aria-label="Call HAUT Flagship Studio"
+          >
+            ☎ {STUDIO.phone.replace('+1 ', '')}
+          </PhoneLink>
+        </div>
+      </header>
+    )
   }
 
   return (

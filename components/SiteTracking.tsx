@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { G_CLASS_WINTER } from '@/lib/offers'
 import { captureAttribution } from '@/lib/attribution'
 import {
   flushServerEvents,
@@ -148,6 +149,14 @@ export default function SiteTracking() {
     track('PageView', {}, { standard: true, capi: true })
     if (pageType === 'ppf' || pageType === 'ceramic' || pageType === 'tint') {
       track('ViewContent', { content_name: SERVICE_TITLE[pageType], service }, { standard: true, capi: true })
+    }
+    // The ad landing is its own content, so the ad set sees who opened the offer.
+    if (pathname === G_CLASS_WINTER.path) {
+      track(
+        'ViewContent',
+        { content_name: 'G-Class winter offer', service: 'ppf', value: G_CLASS_WINTER.price, currency: 'USD' },
+        { standard: true, capi: true }
+      )
     }
     // One page covers every town; ?town= is there for ads that name one.
     if (pageType === 'location') {

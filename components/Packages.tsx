@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import { useQuiz } from './QuizProvider'
 import type { PackageItem } from '@/lib/data'
+import { BODY_TYPES, PPF } from '@/lib/pricing'
 
 const DEFAULT_TITLE = (
   <>
@@ -18,11 +19,14 @@ export default function Packages({
   eyebrow = 'Pricing & Packages',
   title = DEFAULT_TITLE,
   note = 'All packages use the same self-healing optical film with a 10-year manufacturer warranty. The difference is surface area — not quality.',
+  classTable = false,
 }: {
   packages: PackageItem[]
   eyebrow?: string
   title?: ReactNode
   note?: string
+  /** /ppf: the four vehicle classes under the cards, since the cards show the Tesla price. */
+  classTable?: boolean
 }) {
   const { openQuiz } = useQuiz()
 
@@ -127,10 +131,43 @@ export default function Packages({
           ))}
         </div>
 
+        {classTable && (
+          <div className="mt-12 max-w-4xl mx-auto">
+            <h3 className="font-kanit font-bold text-white text-xl mb-4">Starting prices by vehicle class</h3>
+            <div className="overflow-x-auto border border-[#DADADA]/15">
+              <table className="w-full font-roboto text-sm text-left">
+                <thead className="bg-white/5 text-[#DADADA] text-xs uppercase tracking-wide">
+                  <tr>
+                    <th scope="col" className="px-3 py-3 font-medium">Class</th>
+                    <th scope="col" className="px-3 py-3 font-medium">Front End Protection</th>
+                    <th scope="col" className="px-3 py-3 font-medium">Highway &amp; Track Package</th>
+                    <th scope="col" className="px-3 py-3 font-medium">Full Body Armor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {BODY_TYPES.map((b) => (
+                    <tr key={b.id} className="border-t border-[#DADADA]/10">
+                      <th scope="row" className="px-3 py-3 align-top font-normal">
+                        <span className="block font-kanit font-semibold text-white">{b.label}</span>
+                        <span className="hidden sm:block text-[#DADADA]/50 text-xs mt-0.5 leading-snug">{b.examples}</span>
+                      </th>
+                      {[PPF.frontEnd, PPF.highway, PPF.fullBody].map((o) => (
+                        <td key={o.id} className="px-3 py-3 align-top text-[#9FFE0A] font-kanit font-bold whitespace-nowrap">
+                          ${o.prices[b.id].toLocaleString('en-US')}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Bottom note */}
         <p className="text-center font-roboto text-[#DADADA]/50 text-xs mt-8">
-          All prices are starting points. Final pricing depends on vehicle size, panel condition, and selected film brand.
-          Schedule a consultation for an exact quote.
+          All prices are starting points. Final pricing depends on vehicle size and panel condition. Schedule a
+          consultation for an exact quote.
         </p>
       </div>
     </section>

@@ -60,7 +60,11 @@ export async function POST(req: NextRequest) {
     const email = clean(body.email, 200)
     const message = clean(body.message, 2000)
     const partial = !!body.partial
-    const source = body.source === 'quiz' ? 'quiz' : body.source === 'booking' ? 'booking' : 'calculator'
+    const source =
+      body.source === 'quiz' ? 'quiz' : body.source === 'booking' ? 'booking' : body.source === 'gclass_winter' ? 'gclass_winter' : 'calculator'
+    // The /g-class-winter ad landing asks which month suits; it rides in the notes.
+    const winter = source === 'gclass_winter'
+    const preferredMonth = winter ? clean(body.preferredMonth, 40) : ''
     // A drop-off request from /book carries the day and time asked for. It is
     // checked against the same rules the form uses, so a weekend or a closed
     // day never reaches the studio as if it had been offered.
@@ -100,7 +104,13 @@ export async function POST(req: NextRequest) {
     }
     const fromAd = utm.utm_source || utm.fbclid || utm.gclid
     const sourceLabel =
-      source === 'quiz' ? 'Quiz (2-Min Assessment)' : source === 'booking' ? 'Booking request (/book)' : 'Price Calculator'
+      source === 'quiz'
+        ? 'Quiz (2-Min Assessment)'
+        : source === 'booking'
+          ? 'Booking request (/book)'
+          : winter
+            ? 'G-Class winter (/g-class-winter)'
+            : 'Price Calculator'
     const channelLabel = fromAd
       ? [utm.utm_source || (utm.fbclid ? 'meta' : 'google'), utm.utm_medium, utm.utm_campaign].filter(Boolean).join(' / ')
       : 'organic / direct'
@@ -143,10 +153,13 @@ export async function POST(req: NextRequest) {
         suspicion ? `⚠️ LIKELY SPAM (${suspicion}) — not counted as a lead in Meta or GA4` : null,
         booking
           ? '📅 Drop-off request — call to confirm'
-          : partial
+          : winter
+            ? '🚙 G-Class winter lead — Full Body $12,000 offer'
+            : partial
             ? '🟡 Partial HAUT Lead (phone only, from quiz result)'
             : '🚗 New HAUT Lead',
         booking ? `🗓️ Requested: ${slotLabel}` : null,
+        preferredMonth ? `🗓️ Preferred month: ${preferredMonth}` : null,
         `👤 Name: ${name || 'Not provided yet'}`,
         `📞 Phone: ${phone || 'N/A'}`,
         `📧 Email: ${email || 'Not provided yet'}`,
@@ -176,7 +189,11 @@ export async function POST(req: NextRequest) {
             services: coverageLabel,
             estimate: estimatedPrice > 0 ? priceLabel : '',
             type: test ? 'Test' : suspicion ? 'Suspect' : partial ? 'Partial' : 'Full',
-            notes: booking ? `Requested drop-off: ${slotLabel}${message ? ` — ${message}` : ''}` : message,
+            notes: booking
+              ? `Requested drop-off: ${slotLabel}${message ? ` — ${message}` : ''}`
+              : preferredMonth
+                ? `G-Class winter, preferred month: ${preferredMonth}${message ? ` — ${message}` : ''}`
+                : message,
             form: sourceLabel,
             requested_slot: booking ? `${booking.date} ${booking.time}` : '',
             channel: channelLabel,

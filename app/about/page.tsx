@@ -48,7 +48,7 @@ const HIGHLIGHTS = [
   {
     icon: '◑',
     title: 'Zero-Blade Digital Precision',
-    body: 'Every panel and every window is cut from vehicle-specific 3D scan data through HAUT Precision Scan technology before it ever touches your paint or glass — zero on-car blade contact, zero guesswork, a factory-exact fit on the first try.',
+    body: 'Every panel and every window is cut from patterns traced by hand on the actual car, digitized through HAUT Precision Scan and plotted before it ever touches your paint or glass — zero on-car blade contact, a factory-exact fit on the first try.',
   },
 ]
 
@@ -72,7 +72,7 @@ export default function AboutPage() {
             <span className="text-[#9FFE0A]">Flagship Protection Studio</span>
           </>
         }
-        subtitle="A flagship studio is a facility, not a label. Sealed positive-pressure bays with filtered air handling, factory-trained installers, and every pattern plotted from vehicle-specific scan data before anything touches the car. The same environment and the same zero-blade process for every vehicle that comes through our doors, whether it's a daily driver or a six-figure exotic."
+        subtitle="A flagship studio is a facility, not a label. Sealed positive-pressure bays with filtered air handling, factory-trained installers, and every pattern traced by hand on a real car, then plotted before anything touches yours. The same environment and the same zero-blade process for every vehicle that comes through our doors, whether it's a daily driver or a six-figure exotic."
         ctaLabel="Get Custom Estimate"
       />
 

@@ -175,6 +175,7 @@ export default function PPFPage() {
 
       <Packages
         packages={PPF_PACKAGES}
+        classTable
         eyebrow="Coverage Packages"
         title={
           <>
@@ -185,7 +186,7 @@ export default function PPFPage() {
         }
       />
 
-      {/* By make: the cars from this bay, with Exotic / Supercar pricing */}
+      {/* By make: the cars from this bay, with Exotic & Huge SUV pricing */}
       <section
         className="bg-[#1A292E] py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-800"
         aria-label="Paint protection film by make"

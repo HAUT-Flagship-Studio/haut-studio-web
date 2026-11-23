@@ -270,13 +270,13 @@ export function newEventId(): string {
   }
 }
 
-export type QuoteSource = 'calculator' | 'quiz' | 'booking'
+export type QuoteSource = 'calculator' | 'quiz' | 'booking' | 'gclass_winter'
 
 export interface QuoteDetails {
   source: QuoteSource
   /** The service the flow led with — ppf, ceramic or tint — so Meta can count each separately. */
   service: Service
-  /** Body type: sedan, suv, truck, exotic, cybertruck. */
+  /** Vehicle class: tesla, regular, regularSuv, exotic. */
   vehicle: string
   /** The services shown or chosen, joined — Meta's content_name. */
   packageName: string

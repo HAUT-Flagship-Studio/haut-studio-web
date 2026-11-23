@@ -23,6 +23,7 @@ function VideoCard({ item }: { item: VideoTestimonialItem }) {
         data-video-id={item.id}
         src={item.video}
         poster={item.poster}
+        preload="none"
         controls={playing}
         playsInline
         className="absolute inset-0 w-full h-full object-cover"

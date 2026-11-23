@@ -32,7 +32,7 @@ const PPF_STEPS = [
   {
     step: '02',
     title: 'HAUT Precision Scan Plotting (Zero-Blade Contact)',
-    body: "Your vehicle's exact panel geometry — every recessed edge, door jamb, mirror housing, and body line — is pulled from vehicle-specific 3D scan data and plotted through HAUT Precision Scan technology. Every template is cut before it ever touches your paint, eliminating the on-car blade trimming that risks scoring your clear coat.",
+    body: "Your vehicle's pattern — every recessed edge, door jamb, mirror housing, and body line — is traced by hand on the actual car by our pattern designers, digitized through HAUT Precision Scan, and plotted. Every template is cut before it ever touches your paint, eliminating the on-car blade trimming that risks scoring your clear coat.",
   },
   {
     step: '03',

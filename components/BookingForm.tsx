@@ -13,7 +13,7 @@ type Service = 'ppf' | 'ceramic' | 'tint'
 
 /** Every priced line the calculator sells, grouped the way the form shows them. */
 const GROUPS: { service: Service; label: string; options: ServiceOption[] }[] = [
-  { service: 'ppf', label: 'Paint Protection Film', options: [PPF.frontEnd, PPF.highway, PPF.fullBody, PPF.bikini] },
+  { service: 'ppf', label: 'Paint Protection Film', options: [PPF.frontEnd, PPF.highway, PPF.fullBody] },
   { service: 'ceramic', label: 'Ceramic Coating', options: [CERAMIC.body, CERAMIC.interior, CERAMIC.wheels] },
   { service: 'tint', label: 'Window Tint', options: [TINT.twoFront, TINT.windshieldOnly, TINT.rearHalf, TINT.fullCabin, WSPF.windshieldArmor] },
 ]
@@ -28,7 +28,7 @@ export default function BookingForm() {
   const [days, setDays] = useState<string[]>([])
   useEffect(() => setDays(bookableDays()), [])
 
-  const [vehicle, setVehicle] = useState<VehicleCategory>('sedan')
+  const [vehicle, setVehicle] = useState<VehicleCategory | ''>('')
   const [optionId, setOptionId] = useState<string>(PPF.frontEnd.id)
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
@@ -43,8 +43,12 @@ export default function BookingForm() {
   }, [])
 
   const option = useMemo(() => ALL_OPTIONS.find((o) => o.id === optionId), [optionId])
-  const price = option ? option.prices[vehicle] : 0
-  const vehicleLabel = BODY_TYPES.find((b) => b.id === vehicle)?.label ?? vehicle
+  // Until a class is picked the list shows Tesla-class prices — the lowest,
+  // so every "from" stays true.
+  const priceClass: VehicleCategory = vehicle || 'tesla'
+  const price = option ? option.prices[priceClass] : 0
+  const vehicleLabel = BODY_TYPES.find((b) => b.id === vehicle)?.label ?? ''
+  const vehicleHint = BODY_TYPES.find((b) => b.id === vehicle)?.examples
 
   const onFirstInput = () => {
     if (started.current) return
@@ -135,12 +139,16 @@ export default function BookingForm() {
         <legend className="font-kanit font-bold text-white text-lg mb-3">1. Car and service</legend>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="bk-vehicle" className={label}>Vehicle type</label>
-            <select id="bk-vehicle" className={field} value={vehicle} onChange={(e) => setVehicle(e.target.value as VehicleCategory)}>
+            <label htmlFor="bk-vehicle" className={label}>Vehicle class <span className="text-[#9FFE0A]">*</span></label>
+            <select id="bk-vehicle" required className={field} value={vehicle} onChange={(e) => setVehicle(e.target.value as VehicleCategory)}>
+              <option value="" disabled className="bg-[#1A292E]">Choose a class</option>
               {BODY_TYPES.map((b) => (
                 <option key={b.id} value={b.id} className="bg-[#1A292E]">{b.label}</option>
               ))}
             </select>
+            <p className="font-roboto text-[#DADADA]/50 text-xs mt-1.5 leading-snug">
+              {vehicleHint ?? 'Sedan or coupe: Regular. SUV, pickup or Cybertruck: Regular SUV.'}
+            </p>
           </div>
           <div>
             <label htmlFor="bk-car" className={label}>Year, make, model</label>
@@ -154,7 +162,7 @@ export default function BookingForm() {
               <optgroup key={g.service} label={g.label} className="bg-[#1A292E]">
                 {g.options.map((o) => (
                   <option key={o.id} value={o.id} className="bg-[#1A292E]">
-                    {o.name} — from ${o.prices[vehicle].toLocaleString('en-US')}
+                    {o.name} — from ${o.prices[priceClass].toLocaleString('en-US')}
                   </option>
                 ))}
               </optgroup>

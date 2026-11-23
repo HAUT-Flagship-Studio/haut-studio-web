@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { AD_LANDINGS } from '@/lib/offers'
 import { useQuiz } from './QuizProvider'
 import { STUDIO } from '@/lib/data'
 import { PhoneLink, AddressLink } from './TrackedLinks'
@@ -39,6 +40,9 @@ export default function Footer() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
+
+  // Ad landings carry their own short footer.
+  if (AD_LANDINGS.includes(pathname)) return null
 
   return (
     <footer

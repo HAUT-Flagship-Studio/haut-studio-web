@@ -5,7 +5,6 @@ import {
   BODY_TYPES,
   CERAMIC,
   PPF,
-  PPF_CYBERTRUCK_COLOR,
   resolvePPFOption,
   TINT,
   WSPF,
@@ -111,7 +110,7 @@ const CERAMIC_NOTE =
 function steps(service: CalculatorService) {
   const addons = SERVICES.filter((s) => s !== service).map((s) => SERVICE_COPY[s].addon)
   return [
-    { title: 'What type of vehicle?', subtitle: 'Select the category that best describes your car.' },
+    { title: 'What type of vehicle?', subtitle: 'Not listed? A sedan or coupe is Regular, an SUV is Regular SUV.' },
     SERVICE_COPY[service],
     { title: 'Add-on services', subtitle: `Options include: ${addons.join(', ')}, and windshield protection.` },
     { title: 'Your contact details', subtitle: 'We will confirm your services' },
@@ -119,7 +118,6 @@ function steps(service: CalculatorService) {
 }
 
 const PPF_ROWS: { id: PPFChoice; label: string; option: ServiceOption | null }[] = [
-  { id: 'bikini', label: 'Bikini PPF', option: PPF.bikini },
   { id: 'frontEnd', label: 'Front End PPF', option: PPF.frontEnd },
   { id: 'highway', label: 'Highway PPF', option: PPF.highway },
   { id: 'fullBody', label: 'Full Body PPF', option: PPF.fullBody },
@@ -247,7 +245,7 @@ export default function CalculatorModal({
 
   const totalSteps = 4
   const isResults = false
-  const category = (formData.bodyType || 'sedan') as VehicleCategory
+  const category = (formData.bodyType || 'tesla') as VehicleCategory
 
   const ppfOption = resolvePPFOption(formData.ppf)
   const ceramicOptions = formData.ceramic.map((id) => CERAMIC[id])
@@ -414,16 +412,6 @@ export default function CalculatorModal({
               onSelect={selectPPF}
             />
           ))}
-          {category === 'cybertruck' && (
-            <OptionRow
-              id="colorPPF"
-              label={PPF_CYBERTRUCK_COLOR.name}
-              option={PPF_CYBERTRUCK_COLOR}
-              category={category}
-              active={formData.ppf === 'colorPPF'}
-              onSelect={selectPPF}
-            />
-          )}
         </div>
       )
     }
@@ -548,7 +536,7 @@ export default function CalculatorModal({
             <>
               {/* Step 1 — Vehicle Type */}
               {step === 1 && (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid sm:grid-cols-2 gap-2">
                   {BODY_TYPES.map((b) => (
                     <button
                       key={b.id}
@@ -562,7 +550,8 @@ export default function CalculatorModal({
                       }`}
                       aria-pressed={formData.bodyType === b.id}
                     >
-                      <span className="font-kanit font-semibold text-white text-sm">{b.label}</span>
+                      <span className="block font-kanit font-semibold text-white text-sm">{b.label}</span>
+                      <span className="block font-roboto text-[#DADADA]/60 text-xs mt-1 leading-snug">{b.examples}</span>
                     </button>
                   ))}
                 </div>

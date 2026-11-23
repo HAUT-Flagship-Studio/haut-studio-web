@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BODY_TYPES, CERAMIC, PPF, PPF_CYBERTRUCK_COLOR, TINT, WSPF, type ServiceOption, type VehicleCategory } from '@/lib/pricing'
+import { BODY_TYPES, CERAMIC, PPF, TINT, WSPF, type ServiceOption, type VehicleCategory } from '@/lib/pricing'
 import { STUDIO } from '@/lib/data'
 import { useDialogA11y } from '@/lib/useDialogA11y'
 import type { CalculatorPrefill } from './CalculatorModal'
@@ -103,15 +103,10 @@ function buildRecommendations(answers: Answers): Recommendation[] {
     rec.set(service.id, { id: service.id, name: service.name, price: service.prices[cat], reasons: [reason], optional })
   }
 
-  // PPF — single tier. Leased vehicles are capped below Highway/Full Body —
-  // those tiers overprotect a car you're returning, so leased always resolves
-  // to Bikini (light city use) or Front End (everything else) instead.
+  // PPF — single tier. Leased vehicles are capped at Front End — Highway and
+  // Full Body overprotect a car you're returning.
   if (answers.ownership === 'leased') {
-    if (answers.route === 'city') {
-      add(PPF.bikini, "Leased vehicles don't need investment-grade coverage — Bikini PPF protects the highest-impact panels for light city driving without over-spending on a car you're returning.")
-    } else {
-      add(PPF.frontEnd, 'Leased vehicles are capped at Front End PPF — solid protection for your lease-return condition without the cost of Highway or Full Body coverage.')
-    }
+    add(PPF.frontEnd, 'Leased vehicles are capped at Front End PPF — solid protection for your lease-return condition without the cost of Highway or Full Body coverage.')
   } else if (answers.ownership === 'collector') {
     add(PPF.fullBody, 'Full-body coverage protects the entire investment value of an exotic or collector vehicle.')
   } else if (answers.route === 'highway') {
@@ -120,7 +115,7 @@ function buildRecommendations(answers: Answers): Recommendation[] {
     add(PPF.frontEnd, 'Core front-end coverage protects the highest-impact panels for your daily driving.')
   }
 
-  if (isGWagon(answers.model) || answers.bodyType === 'cybertruck' || answers.route === 'highway') {
+  if (isGWagon(answers.model) || answers.route === 'highway') {
     add(WSPF.windshieldArmor, 'High-speed highway travel and rugged body styles face constant windshield pitting — this shields against chips and cracks.')
   }
 
@@ -137,16 +132,6 @@ function buildRecommendations(answers: Answers): Recommendation[] {
     add(TINT.fullCabin, 'Passengers, kids, and pets benefit from full-cabin UV/heat rejection and added privacy.')
   }
 
-  // Cybertruck-exclusive upsell — surfaced as an optional add-on, not
-  // auto-selected, since it's a premium upgrade rather than a fit-driven need.
-  if (answers.bodyType === 'cybertruck') {
-    add(
-      PPF_CYBERTRUCK_COLOR,
-      'A Cybertruck-exclusive full vehicle color-change film — an optional upgrade over standard Clear PPF.',
-      true
-    )
-  }
-
   return Array.from(rec.values())
 }
 
@@ -157,14 +142,12 @@ function resolveChoices(items: Recommendation[]) {
   let wspf: CalculatorPrefill['wspf'] = 'none'
 
   for (const item of items) {
-    if (item.id === PPF.bikini.id) ppf = 'bikini'
-    else if (item.id === PPF.frontEnd.id) ppf = 'frontEnd'
+    if (item.id === PPF.frontEnd.id) ppf = 'frontEnd'
     else if (item.id === PPF.highway.id) ppf = 'highway'
     else if (item.id === PPF.fullBody.id) ppf = 'fullBody'
     else if (item.id === CERAMIC.body.id) ceramic.push('body')
     else if (item.id === TINT.fullCabin.id) tint = 'fullCabin'
     else if (item.id === WSPF.windshieldArmor.id) wspf = 'windshieldArmor'
-    else if (item.id === PPF_CYBERTRUCK_COLOR.id) ppf = 'colorPPF'
   }
 
   return { ppf, ceramic, tint, wspf }

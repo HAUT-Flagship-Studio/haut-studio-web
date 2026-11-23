@@ -78,7 +78,7 @@ service`, `Window tinting service`.
 **Описание** (до 750 символов):
 
 ```
-HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. PPF patterns are cut from the car's own scan data with HAUT Precision Scan — no blade on the paint, edges wrapped. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 10–7.
+HAUT Flagship Studio installs paint protection film, ceramic coating and automotive window tinting at 361 NJ-17 in Hackensack, a mile from Lodi and a short drive from Fort Lee, Tenafly, Ridgewood, Alpine, Saddle River and Franklin Lakes. PPF patterns are traced by hand on the actual car, digitized with HAUT Precision Scan and plotter-cut — no blade on the paint, edges wrapped. The film is self-healing and carries a ten-year manufacturer warranty registered to the car. Work happens in climate-controlled bays; a full vehicle takes three to five business days. Packages: Front End Protection from $2,399, Highway & Track from $3,199, Full Body Armor from $6,499, ceramic coating from $999, window tint from $199. Open Monday–Friday 10–7.
 ```
 
 **Услуги с ценами** (раздел Services):
@@ -120,7 +120,7 @@ GBP не принимает `.webp`, перед загрузкой конвер�
 1. **Один пост.** Готовые тексты:
 
 ```
-Front End Protection from $2,399: full bumper, full hood, full fenders, mirrors and headlights in self-healing film. Patterns cut from the car's own scan data — no blade on the paint. 10-year manufacturer warranty. 361 NJ-17, Hackensack.
+Front End Protection from $2,399: full bumper, full hood, full fenders, mirrors and headlights in self-healing film. Patterns traced by hand on the actual car and plotter-cut — no blade on the paint. 10-year manufacturer warranty. 361 NJ-17, Hackensack.
 ```
 ```
 New car this month? The week it is delivered is the week to film it. Paint that has never been chipped needs no correction, so the film goes on faster and protects original paint. Front End from $2,399, Full Body Armor from $6,499.

@@ -9,8 +9,12 @@ import DriveFrom from '@/components/DriveFrom'
 import PPFFinalCTA from '@/components/PPFFinalCTA'
 import { PPF_PACKAGES } from '@/lib/data'
 import { EXOTIC_PPF_PRICE, MAKE_PAGES, makePhotos } from '@/lib/makes'
+import { offerIsLive } from '@/lib/offers'
 
 const BASE_URL = 'https://hautppfstudio.com'
+
+// Re-rendered hourly, so a time-limited offer comes off the page the day it ends.
+export const revalidate = 3600
 
 // The owner-confirmed install facts from /ppf's "Before You Book", in short.
 const HOW_IT_GOES_ON = [
@@ -39,7 +43,7 @@ const HOW_IT_GOES_ON = [
 function exoticPackages() {
   return PPF_PACKAGES.map((pkg) => {
     const price = EXOTIC_PPF_PRICE[pkg.id]
-    if (price === undefined) throw new Error(`No Exotic / Supercar price for package ${pkg.id}`)
+    if (price === undefined) throw new Error(`No Exotic & Huge SUV price for package ${pkg.id}`)
     return { ...pkg, price }
   })
 }
@@ -59,7 +63,7 @@ export async function generateMetadata({
   const page = MAKE_PAGES.find((p) => p.slug === make)
   if (!page) return {}
   // "Ferrari SF90 Stradale" → "SF90 Stradale": the make is already the description's first word.
-  const models = [...new Set(makePhotos(page.make).map((p) => p.vehicle.replace(`${page.make} `, '')))].join(', ')
+  const models = page.models ?? [...new Set(makePhotos(page).map((p) => p.vehicle.replace(`${page.make} `, '')))].join(', ')
   const from = Math.min(...Object.values(EXOTIC_PPF_PRICE)).toLocaleString('en-US')
   return {
     title: `${page.make} PPF in Hackensack, NJ | HAUT Flagship Studio`,
@@ -73,7 +77,8 @@ export default async function MakePPFPage({ params }: { params: Promise<{ make: 
   const page = MAKE_PAGES.find((p) => p.slug === make)
   if (!page) notFound()
 
-  const photos = makePhotos(page.make)
+  const photos = makePhotos(page)
+  const offer = page.offer && offerIsLive(page.offer) ? page.offer : null
   const packages = exoticPackages()
 
   const schema = [
@@ -129,7 +134,7 @@ export default async function MakePPFPage({ params }: { params: Promise<{ make: 
         <div className="max-w-6xl mx-auto">
           <p className="text-[#9FFE0A] font-roboto text-sm tracking-[0.2em] uppercase mb-3">✦ From This Bay</p>
           <h2 className="font-kanit font-bold text-white text-3xl lg:text-4xl leading-tight mb-6">
-            {page.make}s We Have
+            {page.plural ?? `${page.make}s`} We Have
             <br />
             <span className="text-[#9FFE0A]">Protected Here.</span>
           </h2>
@@ -196,12 +201,24 @@ export default async function MakePPFPage({ params }: { params: Promise<{ make: 
         </div>
       </section>
 
+      {offer && (
+        <div className="bg-[#1A292E] px-4 sm:px-6 lg:px-8 pt-12 border-t border-slate-800">
+          <Link
+            href={offer.href}
+            data-track-location="make_offer"
+            className="card-folded block max-w-6xl mx-auto border border-[#9FFE0A]/50 bg-[#9FFE0A]/10 p-5 sm:p-6 font-roboto text-white text-base leading-relaxed hover:bg-[#9FFE0A]/15 transition-colors"
+          >
+            {offer.text} <span className="text-[#9FFE0A] font-semibold whitespace-nowrap">See the offer →</span>
+          </Link>
+        </div>
+      )}
+
       <Packages
         packages={packages}
         eyebrow={`Coverage for a ${page.make}`}
         title={
           <>
-            Exotic / Supercar
+            Exotic &amp; Huge SUV
             <br />
             <span className="text-[#9FFE0A]">Pricing</span>
           </>

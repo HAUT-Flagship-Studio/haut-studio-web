@@ -227,7 +227,8 @@ if (!sitemap) {
   const listed = [...sitemap.matchAll(/url:\s*[`'"]([^`'"]+)[`'"]/g)].map((m) =>
     m[1].replace(/^https?:\/\/[^/]+/, '').replace(/\$\{[^}]*\}/, '') || '/'
   )
-  const known = new Set(STATIC.map((p) => p.route))
+  // A noindex page (an ad landing) belongs out of the sitemap, not in it.
+  const known = new Set(STATIC.filter((p) => !/index:\s*false/.test(p.src)).map((p) => p.route))
   for (const url of listed) {
     const clean = url.replace(/\/$/, '') || '/'
     // Blog posts and make pages come from generateStaticParams, so only check literal routes.

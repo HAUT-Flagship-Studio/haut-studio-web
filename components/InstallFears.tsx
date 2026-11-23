@@ -14,7 +14,7 @@ const FEARS: Fear[] = [
     fear: "They'll cut into my paint.",
     tag: 'Zero-Blade Cut',
     answer:
-      "Every pattern is plotter-cut from your vehicle's scan data before the car enters the bay. Edges are wrapped and heat-formed by hand on the car — no blade is used on the paint.",
+      "Every pattern is traced by hand on the actual car, digitized, and plotter-cut before your car enters the bay. Edges are wrapped and heat-formed by hand on the car — no blade is used on the paint.",
   },
   {
     fear: "The film will pull paint off when it's removed.",

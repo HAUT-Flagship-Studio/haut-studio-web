@@ -32,7 +32,7 @@ const SITE_URL = 'https://hautppfstudio.com'
 
 const usd = (n: number) => `$${n.toLocaleString('en-US')}`
 
-/** One row per service tier, one column per body type — the calculator's matrix, flattened. */
+/** One row per service tier, one column per vehicle class — the calculator's matrix, flattened. */
 function priceTable(options: Record<string, ServiceOption>): string {
   const header = `| Service | ${BODY_TYPES.map((b) => b.label).join(' | ')} |`
   const rule = `| --- | ${BODY_TYPES.map(() => '---').join(' | ')} |`
@@ -106,15 +106,15 @@ ${SERVICES_OVERVIEW.map((s) => `### ${s.name} — from ${usd(s.priceFrom)}\n\n${
 
 ## Prices
 
-Prices are per vehicle and vary by body type. These are the studio's published
-figures, not estimates.
+Prices are per vehicle and vary by vehicle class. These are the studio's
+published starting prices, not estimates.
+
+Vehicle classes:
+${BODY_TYPES.map((b) => `- ${b.label}: ${b.examples}`).join('\n')}
 
 ### Paint protection film
 
 ${priceTable(PPF)}
-
-Full-vehicle color-change film for the Tesla Cybertruck is offered alongside
-the clear tiers above at ${usd(6500)}.
 
 ### Ceramic coating
 

@@ -1,4 +1,11 @@
-export type VehicleCategory = 'sedan' | 'suv' | 'truck' | 'exotic' | 'cybertruck'
+/**
+ * PPF is priced in four vehicle classes (owner's grid, 2026-11-22): each class
+ * is about 30% above the one before, rounded to end in 99. Ceramic, tint and
+ * windshield film did not change: Tesla and Regular keep the old sedan price,
+ * Regular SUV the old SUV price, Exotic the old exotic price. Pickups and the
+ * Cybertruck now sit in Regular SUV.
+ */
+export type VehicleCategory = 'tesla' | 'regular' | 'regularSuv' | 'exotic'
 
 export type PriceTable = Record<VehicleCategory, number>
 
@@ -8,61 +15,44 @@ export interface ServiceOption {
   prices: PriceTable
 }
 
-export const CATEGORY_MULTIPLIERS: Record<VehicleCategory, number> = {
-  sedan: 1.0,
-  suv: 1.05,
-  truck: 1.08,
-  exotic: 1.1,
-  cybertruck: 1.25,
-}
-
-export const BODY_TYPES: { id: VehicleCategory; label: string }[] = [
-  { id: 'sedan', label: 'Sedan / Coupe' },
-  { id: 'suv', label: 'SUV / Crossover' },
-  { id: 'truck', label: 'Truck / Pickup' },
-  { id: 'exotic', label: 'Exotic / Supercar' },
-  { id: 'cybertruck', label: 'Tesla Cybertruck' },
+export const BODY_TYPES: { id: VehicleCategory; label: string; examples: string }[] = [
+  { id: 'tesla', label: 'Tesla', examples: 'Any Tesla except the Cybertruck' },
+  { id: 'regular', label: 'Regular (Sedan / Coupe)', examples: 'BMW, Mercedes-Benz, Audi, Lexus, Genesis, Acura sedans, coupes and wagons' },
+  { id: 'regularSuv', label: 'Regular SUV', examples: 'SUVs, crossovers, pickups, Cybertruck — BMW X3–X7, GLE, Q7, Cayenne, Macan, Range Rover Sport' },
+  { id: 'exotic', label: 'Exotic & Huge SUV', examples: 'Ferrari, Lamborghini, McLaren, Porsche 911, Rolls-Royce, Bentley, G-Class, Escalade, Range Rover' },
 ]
 
-export const PPF: Record<'bikini' | 'frontEnd' | 'highway' | 'fullBody', ServiceOption> = {
-  bikini: { id: 'ppf-bikini', name: 'Bikini PPF', prices: { sedan: 1399, suv: 1469, truck: 1511, exotic: 1539, cybertruck: 1119 } },
-  frontEnd: { id: 'ppf-front-end', name: 'Front End PPF', prices: { sedan: 2399, suv: 2519, truck: 2591, exotic: 2639, cybertruck: 1919 } },
-  highway: { id: 'ppf-highway', name: 'Highway PPF', prices: { sedan: 3199, suv: 3359, truck: 3455, exotic: 3519, cybertruck: 2559 } },
-  fullBody: { id: 'ppf-full-body', name: 'Full Body PPF', prices: { sedan: 6499, suv: 6824, truck: 7019, exotic: 7149, cybertruck: 5199 } },
+export const PPF: Record<'frontEnd' | 'highway' | 'fullBody', ServiceOption> = {
+  frontEnd: { id: 'ppf-front-end', name: 'Front End PPF', prices: { tesla: 2399, regular: 3099, regularSuv: 4099, exotic: 5299 } },
+  highway: { id: 'ppf-highway', name: 'Highway PPF', prices: { tesla: 3199, regular: 4199, regularSuv: 5399, exotic: 7099 } },
+  fullBody: { id: 'ppf-full-body', name: 'Full Body PPF', prices: { tesla: 6499, regular: 8499, regularSuv: 10999, exotic: 14299 } },
 }
 
-// Cybertruck-exclusive upgrade — a full vehicle color-change film, offered
-// alongside (not instead of) the Clear PPF tiers above. Same flat price
-// regardless of category since it is never selectable outside 'cybertruck'.
-export const PPF_CYBERTRUCK_COLOR: ServiceOption = {
-  id: 'ppf-color-cybertruck',
-  name: 'Color PPF (Full Vehicle Change)',
-  prices: { sedan: 6500, suv: 6500, truck: 6500, exotic: 6500, cybertruck: 6500 },
-}
-
-export type PPFChoice = 'none' | keyof typeof PPF | 'colorPPF'
+export type PPFChoice = 'none' | keyof typeof PPF
 
 export function resolvePPFOption(choice: PPFChoice): ServiceOption | null {
   if (choice === 'none') return null
-  if (choice === 'colorPPF') return PPF_CYBERTRUCK_COLOR
   return PPF[choice]
 }
 
+/** Old sedan / SUV / exotic prices carried onto the four classes. */
+const carry = (sedan: number, suv: number, exotic: number): PriceTable => ({ tesla: sedan, regular: sedan, regularSuv: suv, exotic })
+
 export const CERAMIC: Record<'wheels' | 'body' | 'interior', ServiceOption> = {
-  wheels: { id: 'ceramic-wheels', name: 'Ceramic Wheel Coating', prices: { sedan: 399, suv: 419, truck: 431, exotic: 439, cybertruck: 499 } },
-  body: { id: 'ceramic-body', name: 'Ceramic Coating (Body)', prices: { sedan: 999, suv: 1049, truck: 1079, exotic: 1099, cybertruck: 1249 } },
-  interior: { id: 'ceramic-interior', name: 'Ceramic Interior Coating', prices: { sedan: 699, suv: 734, truck: 755, exotic: 769, cybertruck: 874 } },
+  wheels: { id: 'ceramic-wheels', name: 'Ceramic Wheel Coating', prices: carry(399, 419, 439) },
+  body: { id: 'ceramic-body', name: 'Ceramic Coating (Body)', prices: carry(999, 1049, 1099) },
+  interior: { id: 'ceramic-interior', name: 'Ceramic Interior Coating', prices: carry(699, 734, 769) },
 }
 
 export const TINT: Record<'twoFront' | 'windshieldOnly' | 'rearHalf' | 'fullCabin', ServiceOption> = {
-  twoFront: { id: 'tint-two-front', name: '2 Front Windows Tint', prices: { sedan: 199, suv: 209, truck: 215, exotic: 219, cybertruck: 249 } },
-  windshieldOnly: { id: 'tint-windshield-only', name: 'Windshield Tint', prices: { sedan: 299, suv: 314, truck: 323, exotic: 329, cybertruck: 374 } },
-  rearHalf: { id: 'tint-rear-half', name: 'Rear Half Tint', prices: { sedan: 599, suv: 629, truck: 647, exotic: 659, cybertruck: 749 } },
-  fullCabin: { id: 'tint-full-cabin', name: 'Full Cabin Ceramic Tint', prices: { sedan: 799, suv: 839, truck: 863, exotic: 879, cybertruck: 999 } },
+  twoFront: { id: 'tint-two-front', name: '2 Front Windows Tint', prices: carry(199, 209, 219) },
+  windshieldOnly: { id: 'tint-windshield-only', name: 'Windshield Tint', prices: carry(299, 314, 329) },
+  rearHalf: { id: 'tint-rear-half', name: 'Rear Half Tint', prices: carry(599, 629, 659) },
+  fullCabin: { id: 'tint-full-cabin', name: 'Full Cabin Ceramic Tint', prices: carry(799, 839, 879) },
 }
 
 export const WSPF: Record<'windshieldArmor', ServiceOption> = {
-  windshieldArmor: { id: 'wspf-windshield-armor', name: 'Windshield Armor (WSPF)', prices: { sedan: 799, suv: 839, truck: 863, exotic: 879, cybertruck: 999 } },
+  windshieldArmor: { id: 'wspf-windshield-armor', name: 'Windshield Armor (WSPF)', prices: carry(799, 839, 879) },
 }
 
 function cheapestPrice(options: Record<string, ServiceOption>): number {
@@ -70,9 +60,8 @@ function cheapestPrice(options: Record<string, ServiceOption>): number {
 }
 
 // "From" prices for the service cards and llms.txt. They follow the headline
-// service (sedan Front End PPF, sedan body ceramic), not the cheapest line in
-// the calculator — otherwise wheel ceramic ($399) and Cybertruck Bikini PPF
-// would advertise prices that /ppf, /ceramic and the Google profile never show.
-export const PPF_FROM_PRICE = PPF.frontEnd.prices.sedan
-export const CERAMIC_FROM_PRICE = CERAMIC.body.prices.sedan
+// service (Tesla-class Front End PPF, Regular body ceramic), not the cheapest line in
+// the calculator — otherwise wheel ceramic ($399) would advertise prices that /ppf, /ceramic and the Google profile never show.
+export const PPF_FROM_PRICE = PPF.frontEnd.prices.tesla
+export const CERAMIC_FROM_PRICE = CERAMIC.body.prices.regular
 export const TINT_FROM_PRICE = cheapestPrice(TINT)

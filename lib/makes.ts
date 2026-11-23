@@ -1,9 +1,10 @@
 import { WORK_GALLERY, type WorkGalleryItem } from './data'
 import { PPF } from './pricing'
+import { G_CLASS_WINTER } from './offers'
 
 /**
  * One page per make the studio has real install photos of: /ppf/ferrari,
- * /ppf/lamborghini, /ppf/porsche.
+ * /ppf/lamborghini, /ppf/porsche, /ppf/g-class.
  *
  * Owners of these cars search by the car — "ferrari ppf nj", "gt3 rs paint
  * protection film" — not by town, and those results carry almost no map pack,
@@ -12,11 +13,19 @@ import { PPF } from './pricing'
  * from this bay, and the build fails if a make has none.
  */
 
-export type MakeSlug = 'ferrari' | 'lamborghini' | 'porsche'
+export type MakeSlug = 'ferrari' | 'lamborghini' | 'porsche' | 'g-class'
 
 export interface MakePage {
   slug: MakeSlug
   make: string
+  /** "G-Classes" — when the plural is not make + "s". */
+  plural?: string
+  /** Which WORK_GALLERY cars belong here, when their names do not start with the make. */
+  matches?: RegExp
+  /** The models for the meta description, when the gallery names do not say it well. */
+  models?: string
+  /** A time-limited offer shown above the prices, with its landing page. */
+  offer?: { text: string; href: string; endsOn: string }
   /** Second line of the H1, under "<make> Paint Protection Film in Hackensack, NJ". */
   headline: string
   subtitle: string
@@ -73,18 +82,42 @@ export const MAKE_PAGES: MakePage[] = [
       'A 911 that sees the Parkway or a track day takes its chips low and along the sides, not only on the nose — which is what decides the coverage below.',
     ],
     coverage:
-      'For a 911 that is driven hard, the Highway & Track Package adds the rocker panels, the A-pillars, the roof leading edge and the rear wheel arches to the front end. Full Body Armor covers everything, which is what the GT3 RS has. Prices below are the Exotic / Supercar class in our calculator; a Cayenne or Macan is priced as an SUV.',
+      'For a 911 that is driven hard, the Highway & Track Package adds the rocker panels, the A-pillars, the roof leading edge and the rear wheel arches to the front end. Full Body Armor covers everything, which is what the GT3 RS has. Prices below are the Exotic class in our calculator. A Cayenne or Macan is priced as a Regular SUV.',
+  },
+  {
+    slug: 'g-class',
+    make: 'Mercedes G-Class',
+    plural: 'G-Classes',
+    matches: /G-Class|G63/,
+    models: 'G63 and Brabus',
+    headline: 'G63 and Brabus, Every Painted Panel.',
+    subtitle:
+      'Paint protection film on the G-Class from our own bay at 361 NJ-17 — patterns cut before the film touches the car, edges wrapped where the panel allows, and a 10-year manufacturer warranty.',
+    intro: [
+      'A Brabus G-Class and a factory-matte G63, both done in this studio. The photos are from the studio, not from a film catalogue.',
+      'Flat panels show everything: a knife line, a lifted edge, a dirt line along the film. That is why every G-Class panel is cut on the plotter before it reaches the car, and the film follows the body lines into the door gaps.',
+      "Factory matte paint can't be polished. On a matte G-Class, film is the only protection the paint has.",
+    ],
+    coverage:
+      'On a G-Class the sides take as much as the nose: the flat doors and rockers catch everything the front tires throw. Full Body Armor covers every painted panel, so no film edge stops in the middle of a door.',
+    offer: {
+      text: `Winter price: Full Body Armor on a G-Class for $${G_CLASS_WINTER.price.toLocaleString('en-US')} instead of $${G_CLASS_WINTER.regular.toLocaleString('en-US')} — through ${G_CLASS_WINTER.endsLabel}.`,
+      href: G_CLASS_WINTER.path,
+      endsOn: G_CLASS_WINTER.endsOn,
+    },
   },
 ]
 
 /** The install photos of one make, in gallery order. */
-export function makePhotos(make: string): WorkGalleryItem[] {
-  const photos = WORK_GALLERY.filter((item) => item.vehicle.startsWith(make + ' '))
-  if (photos.length === 0) throw new Error(`No WORK_GALLERY photos for ${make} — a make page needs its own cars`)
+export function makePhotos(page: Pick<MakePage, 'make' | 'matches'>): WorkGalleryItem[] {
+  const photos = WORK_GALLERY.filter((item) =>
+    page.matches ? page.matches.test(item.vehicle) : item.vehicle.startsWith(page.make + ' ')
+  )
+  if (photos.length === 0) throw new Error(`No WORK_GALLERY photos for ${page.make} — a make page needs its own cars`)
   return photos
 }
 
-/** Package ids on the site → the calculator's PPF options, for Exotic / Supercar prices. */
+/** Package ids on the site → the calculator's PPF options, for Exotic & Huge SUV prices. */
 export const EXOTIC_PPF_PRICE: Record<string, number> = {
   'front-end': PPF.frontEnd.prices.exotic,
   highway: PPF.highway.prices.exotic,
