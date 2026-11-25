@@ -175,8 +175,8 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-[#DADADA]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-roboto text-[#DADADA]/40 text-xs">
-            © {new Date().getFullYear()} HAUT Flagship Studio. All rights reserved.
+          <p className="font-roboto text-[#DADADA]/40 text-xs text-center sm:text-left">
+            © {new Date().getFullYear()} {STUDIO.name}, operated by {STUDIO.legalName}
           </p>
           <p className="font-roboto text-[#DADADA]/40 text-xs">
             {STUDIO.address} · {STUDIO.phone}

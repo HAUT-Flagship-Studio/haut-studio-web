@@ -214,6 +214,9 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+        <p className="max-w-5xl mx-auto mt-10 font-roboto text-[#DADADA]/60 text-sm">
+          {STUDIO.name} is operated by {STUDIO.legalName}, the New Jersey company that makes HAUT film.
+        </p>
       </section>
     </main>
   )

@@ -184,11 +184,12 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="November 22, 2026"
+      updated="November 25, 2026"
       intro={
         <p>
-          This policy explains what {STUDIO.name} ({STUDIO.address}) collects through this website, why, who it is
-          shared with, and how to stop it.
+          This website is operated by {STUDIO.legalName}, a New Jersey corporation, which runs {STUDIO.name} at{' '}
+          {STUDIO.address}. This policy explains what we collect through this website, why, who it is shared with,
+          and how to stop it.
         </p>
       }
       sections={SECTIONS}

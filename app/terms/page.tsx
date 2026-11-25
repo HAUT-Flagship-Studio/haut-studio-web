@@ -88,7 +88,7 @@ const SECTIONS: LegalSection[] = [
     heading: 'Limitation of liability',
     body: (
       <p>
-        To the fullest extent permitted by law, {STUDIO.name} is not liable for indirect, incidental or consequential
+        To the fullest extent permitted by law, {STUDIO.legalName} ({STUDIO.name}) is not liable for indirect, incidental or consequential
         damages arising from use of this website.
       </p>
     ),
@@ -107,8 +107,14 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms of Service"
-      updated="October 9, 2026"
-      intro={<p>These terms cover this website and work booked through it.</p>}
+      updated="November 25, 2026"
+      intro={
+        <p>
+          These terms apply to services provided by {STUDIO.name}, which is operated by {STUDIO.legalName}, a New
+          Jersey corporation, at {STUDIO.address} (&ldquo;{STUDIO.name}&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;).
+          They cover this website and work booked through it.
+        </p>
+      }
       sections={SECTIONS}
     />
   )

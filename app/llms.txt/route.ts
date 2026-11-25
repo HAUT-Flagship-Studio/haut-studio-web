@@ -79,8 +79,8 @@ is generated from the same data the website renders.
 - Hours: ${STUDIO.hours}
 - Coordinates: ${STUDIO.lat}, ${STUDIO.lng}
 - Website: ${SITE_URL}
-- Owner: HAUT Protection Film Inc. (https://haut-usa.com), the film's manufacturer.
-  This is the manufacturer's own installation bay. HAUT sells film only to a
+- Operated by ${STUDIO.legalName} (New Jersey) at 361 NJ-17, Hackensack. The same
+  company makes HAUT film; its brand site is https://haut-usa.com. HAUT sells film only to a
   deliberately small certified network — one shop per 250,000 residents — and
   this studio counts against that cap like any dealer. The brand's position,
   in its own words: https://haut-usa.com/why-haut

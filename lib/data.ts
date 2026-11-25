@@ -107,6 +107,11 @@ export interface VideoTestimonialItem {
 
 export const STUDIO = {
   name: 'HAUT Flagship Studio',
+  // The registered company that runs the studio, exactly as in the New Jersey
+  // corporate registry. Google Business Profile checks this against the
+  // profile's legal name; "HAUT Flagship Studio" is not a registered alternate
+  // name, so the site says "operated by", never "d/b/a".
+  legalName: 'HAUT Protection Film Inc.',
   phone: '+1 (201) 201-0170',
   phoneHref: 'tel:+12012010170',
   address: '361 NJ-17, Hackensack, NJ 07601',

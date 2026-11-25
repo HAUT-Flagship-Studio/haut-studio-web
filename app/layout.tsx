@@ -81,22 +81,18 @@ export const metadata: Metadata = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': ['AutomotiveBusiness', 'LocalBusiness'],
-  // One @id, referenced from haut-usa.com's Organization as its subOrganization.
-  // Two HAUT domains both say "Hackensack"; this pair of pointers is what tells
-  // Google which one is the installer when a local query comes in.
+  // The studio and the brand are one company, HAUT Protection Film Inc. They are
+  // tied by the same legalName on both domains, not by parentOrganization /
+  // subOrganization: a parent pointing at haut-usa.com made Google Business
+  // Profile read this site as belonging to a different business (2026-11-25).
   '@id': 'https://hautppfstudio.com/#studio',
   name: 'HAUT Flagship Studio',
+  legalName: STUDIO.legalName,
   image: 'https://hautppfstudio.com/assets/og-image.jpg',
   url: 'https://hautppfstudio.com',
   hasMap: STUDIO.mapsHref,
   sameAs: [STUDIO.mapsHref],
   brand: { '@type': 'Brand', name: 'HAUT' },
-  parentOrganization: {
-    '@type': 'Organization',
-    '@id': 'https://haut-usa.com/#organization',
-    name: 'HAUT Protection Film Inc.',
-    url: 'https://haut-usa.com',
-  },
   telephone: '+1-201-201-0170',
   address: {
     '@type': 'PostalAddress',
